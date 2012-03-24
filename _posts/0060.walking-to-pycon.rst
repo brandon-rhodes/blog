@@ -1,0 +1,141 @@
+---
+categories: Python
+date: 2012/03/13 02:59:10
+permalink: http://rhodesmill.org/brandon/2012/walking-to-pycon/
+tags: ''
+title: Walking to PyCon on your own two feet
+---
+
+Before arranging for a cab ride or airport shuttle,
+have you considered that your own body is designed
+for traveling long distances under load?
+
+Last Tuesday I simply walked the 5 miles (8 km)
+from the San Jose Airport
+to the `PyCon 2012 <https://us.pycon.org/2012/>`_ venue.
+My route included a stream lined with willow trees,
+a beautiful nature preserve whose educational displays
+used wonderful words like “chaparral,”
+and a glimpse at the games that employees get to play
+in the back yards of Silicon Valley companies.
+
+.. raw:: html
+
+   <a href="http://www.flickr.com/photos/brandonrhodes/6980374449/"><img src="/brandon/2012/guadalupe-river.jpg"></a>
+
+What could happen next year,
+if more people were interested in walking —
+could we designate a meeting place at the airport,
+and have a group of PyCon walkers leaving every hour
+to enjoy the journey together?
+
+5.1-mile nature route from SJC to PyCon
+---------------------------------------
+
+Several people have expressed interest in my walk,
+so here is a map and details about the route.
+I will be walking back to the airport on Wednesday morning —
+probably, judging from the forecast, in my wet-weather gear!
+
+.. raw:: html
+
+   <iframe width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/maps/ms?msa=0&amp;msid=202077053206811834443.0004bb22a1b15ecd9f7e5&amp;ie=UTF8&amp;t=m&amp;ll=37.388448,-121.953469&amp;spn=0.037596,0.048357&amp;output=embed"></iframe><br /><small>View <a href="http://maps.google.com/maps/ms?msa=0&amp;msid=202077053206811834443.0004bb22a1b15ecd9f7e5&amp;ie=UTF8&amp;t=m&amp;ll=37.388448,-121.953469&amp;spn=0.037596,0.048357&amp;source=embed" style="color:#0000FF;text-align:left">Walking to PyCon in Santa Clara</a> in a larger map</small>
+
+* Exit the airport, walk across both lanes of Airport Boulevard,
+  and you should find a bicycle trail that runs alongside it.
+  Turn left (north) and start walking along this trail.
+
+* When you get to the sign that forbids you from walking farther,
+  you are ready to turn off of Airport Boulevard.
+  There should be a bridge to your right
+  that crosses the Guadalupe River
+  and then enters a gated parking lot.
+  Cross the bridge and, instead of entering the parking lot,
+  take the ramp to your right that descends the bank toward the river,
+  doubles back, and heads north under the bridge
+  along the east riverbank.
+
+.. raw:: html
+
+   <iframe width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/maps/ms?msa=0&amp;msid=202077053206811834443.0004bb22a1b15ecd9f7e5&amp;ie=UTF8&amp;t=m&amp;source=embed&amp;ll=37.388448,-121.953469&amp;spn=0.037596,0.048357&amp;layer=c&amp;cbll=37.372909,-121.932852&amp;panoid=nenoPhwA46NeRw114_FKlA&amp;cbp=12,4.01,,1,2.7&amp;output=svembed"></iframe><br /><small>The bridge that turns right off of Airport Drive, crosses the Guadalupe River, and connects to the Guadalupe River Trail. You can see the Trail running right to left beneath the bridge.</small>
+
+* The first stretch of the trail is a bit bleak —
+  there is some green, but also many views of concrete.
+  You will pass under several bridges as cars roar above you,
+  including both bridges for US-101.
+  When you reach the bridge at Trimble Road,
+  you will learn a pattern that continues for the rest of the trail:
+  at each road crossing the bicycle trail
+  splits, with the right fork climbing to meet (and cross) the road,
+  while the left fork passes under the bridge
+  so bicycles can avoid dodging traffic.
+  Unless there is high water, always go under the bridges.
+
+* The long stretch between Trimble Road and the Montague Expressway
+  is more scenic — here, at last, is where I really relaxed
+  and something deep inside of me cried, “California!”
+  Mountains should be visible in the distance to either side.
+  Closer at hand you will see the landscaped campuses
+  of several technology companies.
+  If you are there around lunchtime, as I was,
+  you will see employees playing volleyball, basketball,
+  throwing frisbees, and running on well-manicured trails.
+  It will all look very idyllic.
+  Again, “California!”
+
+* But the real treat comes as you reach the pedestrian bridge
+  where River Oaks Parkway dead-ends into the river.
+  Turn left and cross the Guadalupe on this bridge,
+  turn turn right to continue your hike north past Thamien Park.
+  Soon, you will approach the Ulistac Natural Area.
+  The area around the river becomes even greener,
+  with numerous willow trees swaying in the breeze.
+  (The photo earlier in the article is from this section of the trail.)
+
+* Entering the Ulistac Natural Area was tricky.
+  There was construction,
+  with only a narrow path cutting down to the left
+  between chain-link fences,
+  from the height of the bicycle trail
+  to the level of the river bottoms.
+  But I found my way down,
+  and Ulistac is was really wonderful —
+  there are educational displays about the natural habitat,
+  and several areas where native plants were being grown
+  and protected.
+  If you have time, walk slowly and learn more
+  about the natural landscape in this area of California.
+
+* Wind your way through Ulistac
+  until you come to Lick Mill Boulevard,
+  turn right, and you will finally reach Tasman Drive.
+
+* The last segment of the walk is less scenic.
+  Turn left and walk west along Tasman Drive
+  until you reach the Hyatt and Convention Center.
+  Keep your eyes out for the restaurants on the north side of Tasman;
+  you might be walking back here during PyCon to have dinner!
+  As you climb the overpass where Tasman crosses Lafayette,
+  you will see the Santa Clara golf course ahead to your right
+  and the roller coasters of Great America against the sky to your left —
+  and, of course, yet another great view
+  of the mountains behind and in front of you.
+  The front entrance of the Convention Center on your right
+  will be the first PyCon venue that you reach
+  once you are past the golf course,
+  and the Hyatt and Hilton themselves come next.
+
+Attempt the hike
+only if you are familiar with walking similar distances at home,
+if you are sure that you can carry your luggage,
+and if you bring a water bottle or snack if you will need one.
+My
+`Rick Steves Convertible Carry On <http://www.amazon.com/dp/B003JZCQV4/ref=asc_df_B003JZCQV41934945>`_
+has built-in shoulder straps that convert it into a backpack,
+which was ideal.
+But if your bag has wheels you will probably find the trail
+unmanageable, since most of it is surfaced with gravel.
+Remember that even if you take more conventional transport to PyCon,
+you can always take a break later,
+walk east along Tasman to the Ulistac Natural Area,
+and enjoy this bit of beauty that Santa Clara offers!

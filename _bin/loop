@@ -1,9 +1,11 @@
 #!/bin/bash
 
+cd $(dirname "$0")/.. || exit
+
 inotifywait -m -e close_write -r _posts _templates brandon | while read line
 do
     echo 'Building...'
-    blogofile build
+    _v/bin/blogofile build
     cp -rp _site/. ~/_site
     echo 'Done.'
 done
