@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -e
+
+cd $(dirname "$0")
+cd ..
+rm -rf _v
+virtualenv -p /usr/bin/python3.2 _v
+
+cd _v
+. ./bin/activate
+
+pip install mock
+pip install lxml
+
+git clone git://github.com/EnigmaCurry/blogofile.git
+cd blogofile
+python setup.py develop
+cd ..
+
+git clone git://github.com/EnigmaCurry/blogofile_blog.git
+cd blogofile_blog
+python setup.py develop
+cd ..

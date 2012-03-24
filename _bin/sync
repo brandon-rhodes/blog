@@ -1,0 +1,9 @@
+#!/bin/bash
+
+cd $(dirname "$0")/..
+rsync -crlpv \
+ _site/.htaccess \
+ _site/brandon \
+ _site/css \
+ _site/favicon.ico \
+ wf-rhodesmill:sites/rhodesmill/html/

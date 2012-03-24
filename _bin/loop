@@ -1,0 +1,9 @@
+#!/bin/bash
+
+inotifywait -m -e close_write -r _posts _templates brandon | while read line
+do
+    echo 'Building...'
+    blogofile build
+    cp -rp _site/. ~/_site
+    echo 'Done.'
+done
