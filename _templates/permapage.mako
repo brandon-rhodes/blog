@@ -1,7 +1,7 @@
 <%inherit file="site.mako" />
 <article>
   <div class="date">
-    ${post.date.strftime('%Y %b %d').replace(' ', ' ')}
+    ${post.date.strftime('%Y %B %d').replace(' ', ' ')}
   </div>
   <h1>${post.title}</h1>
   ${post.content}
