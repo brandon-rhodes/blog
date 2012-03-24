@@ -25,7 +25,6 @@ header {
   top: 0px;
   left: 1%;
   right: 1%;
-  margin: 0px auto;
   padding-top: 0.8em;
   text-align: center;
   font-family: 'Gentium Book Basic', serif;
@@ -35,7 +34,6 @@ header {
 
   a.site-title {
     display: block;
-    width: 100%;
     color: $headertxt;
     text-decoration: none;
   }
@@ -53,6 +51,12 @@ header {
     height: 24px;
     width: 24px;
   }
+}
+
+footer {
+  line-height: 1em;
+  text-align: center;
+  @media screen and (min-width: 560px) {margin-left: 20%;}
 }
 
 article {

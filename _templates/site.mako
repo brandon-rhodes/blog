@@ -31,6 +31,9 @@
        ><img title="Flickr" src="/brandon/flickr24.png"></a>
   </span>
 </header>
+<footer>
+  <small>©2012 Brandon Rhodes<br>Code samples BSD-licensed</small>
+</footer>
 </body>
 
 <%def name="title()">${bf.config.blog.name}</%def>
