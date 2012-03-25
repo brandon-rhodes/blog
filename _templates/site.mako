@@ -8,6 +8,7 @@
   <link href="http://fonts.googleapis.com/css?family=Inconsolata"
         rel="stylesheet" type="text/css">
   <link rel="stylesheet" type="text/css" href="/brandon/screen.css" />
+  <link rel="stylesheet" type="text/css" href="/brandon/pygments_autumn.css" />
   <!--[if IE]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->

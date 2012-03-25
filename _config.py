@@ -45,6 +45,9 @@ blog.description = "Thoughts and ideas from Brandon Rhodes"
 ## blog_timezone -- the timezone that you normally write your blog posts from
 blog.timezone = "US/Eastern"
 
+## Pygments
+filters.syntax_highlight.style = 'autumn'
+
 ## Markdown extensions
 ## These are turned off by default, but turned on
 ## to show examples in /blog/2009/07/24/post-2/
@@ -61,6 +64,7 @@ blog.custom_index = True
 blog.disqus.enabled = True
 blog.disqus.name = 'rhodesmill'
 blog.posts_per_page = 9999
+blog.post.default_filters['html'] = 'rst_syntax_highlight'
 blog.post.default_filters['rst'] = 'rst, rst_syntax_highlight'
 blog.post_excerpts.enabled = True
 blog.post_excerpts.word_length = 50
