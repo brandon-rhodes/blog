@@ -1,0 +1,80 @@
+---
+categories: Computing, Python
+date: 2011/01/26 23:15:42
+guid: http://rhodesmill.org/brandon/?p=415
+permalink: http://rhodesmill.org/brandon/2011/grin-and-search-it/
+tags: ''
+title: Grin and search it
+---
+<p>
+I want to admit how much I am enjoying the
+<a href="http://pypi.python.org/pypi/grin">grin search tool</a>
+that lets you use Python regular expressions
+in recursive searches across your filesystem,
+automatically ignoring directories like <tt>.hg</tt>
+and files with extensions like <tt>.pyc</tt> and <tt>.jpg</tt>.
+</p>
+<p>
+Over the years I had already built a stable full
+of shell functions for doing <i>grep(1)</i> and <i>find(1)</i>
+in various combinations,
+and my functions even defaulted to using <i>pcregrep(1)</i> when available
+because Perl-style REs (which have nearly the same format used by Python)
+seem to require so many fewer backslashes for common cases.
+It hardly seemed worth the effort to move to another tool —
+and the <i>grin</i> output format seemed glarish and offensive at first glance,
+not at all like the austere output of traditional <i>grep</i>:
+</p>
+<pre>
+$ pip install grin
+$ cd Python-3.2b2
+$ grin autoGIL
+<span style="color: #080">./Doc/whatsnew/2.6.rst:</span>
+ 3167 :   :mod:`<span style="color: #990">autoGIL</span>`,
+<span style="color: #080">./Misc/HISTORY:</span>
+ 5577 : - There's a new module called "<span style="color: #990">autoGIL</span>", which
+</pre>
+<p>
+But I forced myself to try using it again a few weeks later,
+and when actually doing real work I could not help but notice
+that the results were far easier for my eyes to scan
+than <i>grep</i> output.
+This is an important point: so often, the issue of whether
+something <i>looks</i> like it will be easy to read is a quite different matter
+than whether it is actually difficult to read
+the moment you stop looking <i>at</i> it
+and start trying to look <i>through</i> it
+to see your data!
+Now I can clearly see where the output from one file ends
+and the next begins — which traditionally is quite difficult
+if you are looking through a series of files with very similar names.
+Long file paths no longer push matching lines to the right,
+splitting them across the right edge
+of my standard 80-column terminal window.
+In fact, one of my first objections to its layout
+had been the line consumed by each stand-alone file name;
+but in practice, I found, far more lines are gained
+because of the matches that are not split across the right edge.
+</p>
+<p>
+You can run <i>grin</i> against individual files or directories
+by naming them on the command line;
+adjust the set of files to which it pays attention;
+and even revert its output to a traditional <tt>file:line</tt> format
+if you want to pass the output to another program.
+You can, in other words, ask it to behave more like traditional <i>grep</i>.
+But its default behavior, I gradually realized
+after running it several hundred times, is by far the most common
+way that I had been using <i>grep</i> anyway —
+to search the source files beneath my working directory for a pattern.
+</p>
+<p>
+The author, Robert Kern, has answered emails promptly
+and was happy to accept a few patches.
+I now have a shell script that I run whenever I set up a new Unix account
+that builds a virtual environment,
+includes its <tt>bin</tt> directory in my <tt>PATH</tt>,
+and installs <i>grin</i> as one of the most important
+Python tools that I need always at my fingertips.
+Try it out!
+</p>

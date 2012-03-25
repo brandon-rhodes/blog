@@ -1,0 +1,154 @@
+---
+categories: Books, Computing, Python
+date: 2011/01/24 15:03:19
+guid: http://rhodesmill.org/brandon/?p=391
+permalink: http://rhodesmill.org/brandon/2011/foundations-of-python-network-programming/
+tags: ''
+title: 'Foundations of Python Network Programming: A Last Hurrah For Python 2'
+---
+<a class="image-reference">
+  <img src="http://rhodesmill.org/brandon/static/2011/fopnp-cover280.jpg"
+       alt="Book cover of Foundations of Python Network Programming"
+       width="280" height="346" />
+</a>
+<p>
+My long labor is at last at an end: Apress has
+<a href="http://www.amazon.com/gp/product/1430230037?ie=UTF8&tag=letsdisthemat-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=1430230037">published my rewrite</a><img src="http://www.assoc-amazon.com/e/ir?t=letsdisthemat-20&l=as2&o=1&a=1430230037" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+of John Goerzen's
+<i>Foundations of Python Network Programming</i> (2004)
+and I have released the example programs
+as both Python 2 and Python 3 code in
+<a href="https://bitbucket.org/brandon/foundations-of-python-network-programming/">a Bitbucket repository</a>
+and also as a zipfile on the Apress web site.
+I can finally return to more casual writing —
+this is my first blog post in many months! —
+and can be more active in Python projects again.
+</p>
+<p>
+I was amazed, as I studied the book's popular
+<a href="http://www.amazon.com/gp/product/1590593715?ie=UTF8&tag=letsdisthemat-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=1590593715">first edition</a><img src="http://www.assoc-amazon.com/e/ir?t=letsdisthemat-20&l=as2&o=1&a=1590593715" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />,
+at how far Python has come since 2004.
+None of the modern Python web frameworks existed;
+the book offered one chapter on CGI programming,
+another on <a href="http://www.modpython.org/">mod_python</a>,
+and never even mentioned Zope.
+Python 2.3 was the most recent version of Python.
+The book could cite FTP as one of the
+“most widely used protocols on the Internet.”
+Parsing HTML involved stepping through the markup with
+<a href="http://docs.python.org/library/htmlparser.html">HTMLParser</a>
+and the recommended approach to processing XML was the awkward
+<a href="http://docs.python.org/library/xml.dom.html">xml.dom</a>.
+JSON was not yet popular enough to even warrant mention.
+The author recommended the dependable
+<a href="http://docs.python.org/library/syslog.html">syslog</a> 
+module over the newfangled
+<a href="http://docs.python.org/library/logging.html">logging</a>
+package in the Standard Library,
+and remote administration tools like
+<a href="http://www.lag.net/paramiko/">paramiko</a>
+and <a href="http://docs.fabfile.org/0.9.3/">fabric</a>
+either did not exist or were not yet on the radar.
+</p>
+<p>
+Looking back, it appears that 2005 —
+the year following the first edition's publication —
+was a turning point for Python web technology in particular.
+<a href="http://www.cherrypy.org/">CherryPy</a> saw
+its first release in late 2004,
+and over the next year we were introduced to
+<a href="http://www.djangoproject.com/">Django</a>,
+<a href="http://pylonshq.com/">Pylons</a>,
+and <a href="http://turbogears.org/">Turbogears</a>,
+all on the heels of the Ruby on Rails “framework” phenomenon.
+And both of the web scraping technologies
+covered in my new edition of the book,
+<a href="http://www.crummy.com/software/BeautifulSoup/">BeautifulSoup</a>
+and
+<a href="http://codespeak.net/lxml/">lxml</a>,
+also came out in 2005.
+In the face of all these changes, the web chapters
+received a full rewrite based on the latest technology.
+</p>
+<p>
+I also rewrote the introductory chapters
+so that UDP and TCP each get their own chapter,
+focused on the protocol itself,
+instead of leaving the information about each protocol split
+between a client socket chapter and a server socket chapter.
+I have replaced the separate chapters on forking, threading,
+and event-driven servers with a single chapter
+that takes an example network server,
+rewrites that same server six different ways —
+including Twisted and a raw polling event loop —
+and then uses <a href="http://funkload.nuxeo.org/">funkload</a>
+to study the resulting performance.
+And even though an editor objected
+that it lacked unity,
+I insisted that a chapter be dedicated to
+<a href="http://memcached.org/">memcached</a>,
+message queues, and map-reduce,
+since they are so important to scaling modern Internet services.
+</p>
+<p>
+Apress had already slated the project for Python 2
+based on the advice of a well-known Python programmer,
+and I heartily supported his recommendation.
+His wisdom is bourne out by the result:
+as you can see from
+<a href="https://bitbucket.org/brandon/foundations-of-python-network-programming/src"
+   >the <tt>README.txt</tt> that I included with the source code bundle</a>,
+fully one-quarter (22/86) of the programs
+will simply not run today under Python 3 because of missing dependencies.
+I see this new <i>Foundations of Python Network Programming</i>
+as the perfect companion for Python 2.7 —
+which was released as I was writing —
+since the book will bring you up to date
+with the final features of the Python 2 series
+and the third party libraries that support it.
+</p>
+<a class="image-reference">
+  <img src="http://rhodesmill.org/brandon/static/2011/apress-type-size.png"
+       alt="Type size comparison"
+       width="280" height="283" />
+</a>
+<p>
+I enjoyed working with the Apress team;
+<a href="http://www.liveandletwrite.com/">Laurin Becker</a> is a great
+managing editor who was always on my side,
+and <a href="http://www.michaelbernstein.com/">Michael Bernstein</a> as technical editor gave great feedback which made this an even better book.
+There were only two annoyances that I encountered with the book's release.
+First, as the accompanying image illustrates,
+Apress used a much more compact layout than in the first edition.
+This not only makes the book appear much shorter than its predecessor,
+but also makes it (to my eyes) visually crowded and more tiring to read.
+Second, Apress was not prompt about changing the project title
+after their decision to target Python 2,
+with the result that Amazon had “Python 3” in the title
+all the way through the book's release in late December —
+resulting in 1-star reviews for the first few weeks!
+</p>
+<p>
+I will, by the way, soon be blogging
+about my experience rewriting the book's
+example code to work under Python 3.
+This should help two groups of people:
+anyone porting a Python 2 network application to Python 3
+will probably run into the same issues I did;
+and people who are already experimenting with Python 3
+will want to know how to apply the book's techniques
+to the newer version of the language.
+</p>
+<p>
+Feel free to submit questions about the book
+or its example programs to the
+<a href="https://bitbucket.org/brandon/foundations-of-python-network-programming"
+   >Bitbucket source code repository</a>
+where the code is stored.
+The revision took far more effort than I had expected,
+but I am very happy to have found a format
+into which I could distill so much of my own —
+and the Python community's —
+network programming experience,
+so that it will help programmers for years to come.
+Enjoy!</p>

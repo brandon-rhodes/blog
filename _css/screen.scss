@@ -103,8 +103,11 @@ article {
     color: $titletxt;
     @include adjust-font-size-to(16px, 1, 18px);
   }
-  .image-reference {
+  img, .image-reference {
     display: block;
+    margin: 1em auto;
+  }
+  .image-reference {
     text-align: center;
     @media screen and (min-width: 560px) {
       float: right;

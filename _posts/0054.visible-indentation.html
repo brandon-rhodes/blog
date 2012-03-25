@@ -1,0 +1,18 @@
+---
+categories: Books, Computing, Document processing, Python
+date: 2011/02/20 23:00:28
+guid: http://rhodesmill.org/brandon/?p=445
+permalink: http://rhodesmill.org/brandon/2011/visible-indentation/
+tags: ''
+title: Visible Indentation in Python Publishing
+---
+<p>It suddenly occurred to me that I managed to write <a href="http://rhodesmill.org/brandon/2011/foundations-of-python-network-programming/">an entire blog post about my new book last month</a> without so much as mentioning that it represents a landmark, so far as I know, in Python publishing.</p>
+<a class="image-reference">
+  <img src="http://rhodesmill.org/brandon/static/2011/chevron-sample.png"
+       alt="Sample Python code with indentation marked"
+       width="320" height="296" />
+</a>
+<p>What was my big idea? That in printed Python code, indentation should be visible.</p>
+<p>Any of you who have had to read many Python listings printed in books will immediately recognize the problem that I wanted solved. When a listing is long enough to run on to a second page, it is often less than clear whether the code there is continuing at the same level of indentation, or whether the page break has just happened to correspond to a point in the code where it dedented out to the previous level. Languages with braces or explicit “end” statements to close blocks never have to worry about this. But in Python — especially where a script or code snippet ends without ever returning to the outermost level of indentation — the last few lines of the script feel as though they are left hanging if they stand alone at the top of a new page of text.</p>
+<p>Of course, there were several practical considerations that had to be settled. A symbol for indentation had to be chosen, for example. I selected the Unicode double-chevron because it is a character that is never valid in actual Python code. Then the publisher had to be convinced to try the experiment; it helped that I had the full support of my editor, <a href="http://www.liveandletwrite.com/">Laurin Becker</a>, who also prepared the layout people for the fact that these chevrons were <i>not</i> part of the code and would need to remain visually distinct from it. Finally — because I had no desire to insert and color each chevron by hand — I had to write an <a href="http://lxml.de/">lxml</a> script to insert the chevrons into my OpenOffice documents, then go back and ruefully remove by hand the chevrons that got nonsensically inserted into snippets of other languages like HTML.</p>
+<p>But now I want to hear what readers think! I have not yet seen a review that mentions whether the visible indentation helps, hurts, or is simply irrelevant to the Python listings. If you happen to have seen the new edition of <a href="http://www.amazon.com/gp/product/1430230037?ie=UTF8&tag=letsdisthemat-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=1430230037">Foundations of Python Network Programming</a><img src="http://www.assoc-amazon.com/e/ir?t=letsdisthemat-20&l=as2&o=1&a=1430230037" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />, let me know what you think. While creating the effect cost some time and effort, I will happily do it again in my next book if turns out to have actually helped readers scan the program listings.</p>
