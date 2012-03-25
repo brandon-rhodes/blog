@@ -52,7 +52,8 @@ title: 'pyron: Making Python package development DRY to the point of no return'
   reminding me of the old Adventure game's
   “maze of twisty passages, all alike”:
 </p>
-$$code(lang=python)
+<pre>
+#!python
 from setuptools import setup
 setup(
     name = 'cursive.tools',
@@ -63,14 +64,15 @@ setup(
     packages = ['cursive.tools', 'cursive'],
     namespace_packages = ['cursive'],
     )
-$$/code
+</pre>
 <p>
   The first <tt>__init__.py</tt> file shown above of course looks like:
 </p>
-$$code(lang=python)
+<pre>
+#!python
   import pkg_resources
   pkg_resources.declare_namespace(__name__)
-$$/code
+</pre>
 <p>
   Meanwhile, my stub <tt>README.txt</tt> and <tt>__init__.py</tt> files
   down in the bottom directory contained just enough information to get

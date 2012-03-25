@@ -30,7 +30,8 @@ Monkey patching the <tt>open()</tt> built-in to create files with their close-on
 <p>
 In the end, the simplest solution seemed to be the creation of a little CherryPy plug-in that, as the very last shutdown action, would loop over all existing file descriptors and set their close-on-exec flag. Here is the plug-in, in case the pattern helps anyone else:
 </p>
-$$code(lang=python)
+<pre>
+#!python
 """Make sure file descriptors close when CherryPy exec's."""
 
 import os
@@ -51,7 +52,7 @@ class CloexecPlugin(SimplePlugin):
             fcntl.fcntl(fd, fcntl.F_SETFD, flags | fcntl.FD_CLOEXEC)
 
     stop.priority = 99
-$$/code
+</pre>
 <p>
 Of course, I suspect that this problem was happening all along, even before we added extra logging and then integrated ØMQ into our application. But back then, with maybe only one or two stray file descriptors surviving each restart, it would have taken five hundred or a thousand CherryPy restarts for the problem to be noticed — and, apparently, none of us developers ever reached that impressive total. Now we know to be careful!
 </p>

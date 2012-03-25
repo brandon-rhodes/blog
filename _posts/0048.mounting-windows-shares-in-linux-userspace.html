@@ -42,13 +42,14 @@ title: Mounting Windows shares in Linux userspace
   to be given CIFS mounting superpowers
   is through a manual intervention like:
 </p>
-$$code(lang=bash)
+<pre>
+#!bash
 # Even with the "user" option in fstab, user
 # mounting of CIFS shares under Ubuntu require:
 
 chmod u+s /sbin/mount.cifs
 chmod u+s /sbin/umount.cifs
-$$/code
+</pre>
 <p>
   But I want a safe solution,
   that requires neither root permissions
@@ -94,14 +95,15 @@ CIFS VFS: cifs_mount failed w/return code = -22
   It also is available as an Ubuntu package,
   so I installed it and was immediately up and running!
 </p>
-$$code(lang=bash)
+<pre>
+#!bash
 $ mkdir ~/win
 $ smbnetfs ~/win
 $ ls ~/win
 ALAN/   KB/    TOSH/
 IRMA/   SAM/   W2K/
 KAREN/  TEST/
-$$/code
+</pre>
 <p>
   As you can see, this filesystem is far more dynamic
   than a single-share CIFS mount point:
@@ -117,16 +119,18 @@ $$/code
   whether it appears in the directory listing or not,
   by simply naming it and seeing what happens:
 </p>
-$$code(lang=bash)
+<pre>
+#!bash
 $ ls ~/win/BRANDON-PC
 Brandon/  Python26/  project/
-$$/code
+</pre>
 <p>
   There!
   We can see both of the shares that my virtual machine makes available,
   and can start editing files with equal ease:
 </p>
-$$code(lang=bash)
+<pre>
+#!bash
 $ cd ~/win/BRANDON-PC/project/src
 $ svn st
 ?       trace.out
@@ -134,7 +138,7 @@ M       setup.py
 $ svn up
 At revision 3677.
 $ emacs setup.py
-$$/code
+</pre>
 <p>
   After a minute of work in my new playground, however,
   I was stymied when Emacs suddenly ground to a halt —
@@ -160,7 +164,8 @@ $$/code
   Take a look at how long two sample file accesses take
   when invoked from the command line:
 </p>
-$$code(lang=bash)
+<pre>
+#!bash
 # Looking for a machine named ".git": 20 seconds!
 
 $ time ls win/.git
@@ -172,7 +177,7 @@ ls: cannot open directory ...: Input/output error
 $ time ls win/BRANDON-PC/.git
 ls: cannot open directory ...: No such file or directory
 ... 1.227 total
-$$/code
+</pre>
 <p>
   I probably wasted a half hour
   playing with the Emacs setting <tt>vc-ignore-dir-regexp</tt>
@@ -207,13 +212,14 @@ $$/code
   My first experiment, which failed, was to create a symlink
   and then ask Emacs to edit files under the link instead:
 </p>
-$$code(lang=bash)
+<pre>
+#!bash
 # Does not actually fix the problem
 
 $ ln -s win/BRANDON-PC/project/src ~/winsrc
 $ cd ~/winsrc
 $ emacs setup.py
-$$/code
+</pre>
 <p>
   Unfortunately,
   Emacs is not so easily fooled.
@@ -238,14 +244,15 @@ $$/code
   which, as usual, has already been packaged by the Ubuntu folks!
   Here is what it looks like in action:
 </p>
-$$code(lang=bash)
+<pre>
+#!bash
 $ mkdir ~/winsrc
 $ bindfs ~/win/BRANDON-PC/project/src ~/winsrc
 $ cd ~/winsrc
 $ svn up
 At revision 3677.
 $ emacs setup.py
-$$/code
+</pre>
 <p>
   Success!
   Emacs now behaves normally,
@@ -264,7 +271,8 @@ $$/code
   here is the entire procedure for mounting my development directory
   on a newly installed Ubuntu system:
 </p>
-$$code(lang=bash)
+<pre>
+#!bash
 # The whole shebang
 
 $ sudo aptitude install smbnetfs bindfs
@@ -272,4 +280,4 @@ $ mkdir -p ~/win ~/winsrc
 $ smbnetfs ~/win
 $ bindfs ~/win/BRANDON-PC/project/src ~/winsrc
 $ cd ~/winsrc
-$$/code
+</pre>

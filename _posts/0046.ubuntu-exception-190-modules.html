@@ -17,7 +17,8 @@ Some quick experiments revealed that my only sin
 was having the temerity to raise an exception.
 Let's try raising a simple <tt>NameError</tt>:
 </p>
-$$code(lang=python)
+<pre>
+#!python
 >>> import sys
 >>> len(sys.modules)
 35
@@ -26,7 +27,7 @@ $$code(lang=python)
 NameError: name 'foo' is not defined
 >>> len(sys.modules)
 225
-$$/code
+</pre>
 <p>
 That's 190 extra modules —
 merely importing them takes around 60 ms on my laptop!

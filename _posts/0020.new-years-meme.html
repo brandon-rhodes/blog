@@ -102,7 +102,8 @@ to display it at a more traditional speed;
 you might want to light a candle and play some Christmas music
 while the animation is displaying:
 </p>
-$$code(lang=python)
+<pre>
+#!python
 #!/usr/bin/env python
 """Display the 'train' file, slowly."""
 import sys, time
@@ -110,7 +111,7 @@ for c in open('train').read():
     sys.stdout.write(c)
     sys.stdout.flush()
     time.sleep(1.0/9600.0) # (drat, really sleeps 0.01s)
-$$/code
+</pre>
 <p>
 Though Dad probably retained the files only through the Christmas season,
 I was fascinated by watching them

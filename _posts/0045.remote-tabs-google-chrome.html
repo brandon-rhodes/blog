@@ -47,24 +47,26 @@ Thanks to this simple package,
 a four-line program (not counting the shebang and comment)
 is now all that I need to ask Google Chrome to open a new tab:
 </p>
-$$code(lang=python)
+<pre>
+#!python
 #!/usr/bin/env python
 # Name this file "google-chrome-open-url"
 import sys
 import chrome_remote_shell
 shell = chrome_remote_shell.open()
 shell.open_url(sys.argv[-1])
-$$/code
+</pre>
 <p>
 To teach Emacs to start using Google Chrome when I clicked on a link,
 I only needed to supply it with two new settings:
 </p>
-$$code(lang=scheme)
+<pre>
+#!scheme
 (setq browse-url-browser-function
       'browse-url-generic)
 (setq browse-url-generic-program
       "google-chrome-open-url")  
-$$/code
+</pre>
 <p>
 And now everything works.
 I hope that these notes prove useful to someone else.

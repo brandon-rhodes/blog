@@ -55,7 +55,8 @@ title: The September 2009 issue of Python Magazine
   I somehow managed to omit one of the most crucial lines,
   shown here in bold:
 </p>
-$$code(lang=python)
+<pre>
+#!python
 def log(function):
     def log_wrapper(*args):
         print "called %s%s" % (
@@ -63,7 +64,7 @@ def log(function):
             )
         <b>return function(*args)</b>
     return log_wrapper
-$$/code
+</pre>
 <p>
   I suppose I will now need remedial cut-and-paste training of some sort.
 </p>

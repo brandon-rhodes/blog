@@ -135,7 +135,8 @@ and then saving the result.
 To add modest 10-point margins to the Arecibo message,
 for example, we can create this <tt>wmargins.py</tt> script:
 </p>
-$$code(lang=python)
+<pre>
+#!python
 from pyPdf import PdfFileWriter, PdfFileReader
 pdf = PdfFileReader(file('arecibo.pdf', 'rb'))
 p = pdf.getPage(0)
@@ -148,7 +149,7 @@ for box in (p.mediaBox, p.cropBox, p.bleedBox,
 output = PdfFileWriter()
 output.addPage(p)
 output.write(open('arecibo2.pdf', 'wb'))
-$$/code
+</pre>
 <p>
 You can test this yourself by installing pyPdf
 in a convenient temporary directory with <tt>virtualenv</tt>,

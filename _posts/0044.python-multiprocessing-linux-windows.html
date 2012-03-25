@@ -62,7 +62,8 @@ that existed in the parent process
 is still sitting there, open and ready to use, in the child.
 Consider this small program:
 </p>
-$$code(lang=python)
+<pre>
+#!python
 from multiprocessing import Process
 f = None
 
@@ -74,7 +75,7 @@ if __name__ == '__main__':
     p = Process(target=child)
     p.start()
     p.join()
-$$/code
+</pre>
 <p>
 On Linux, the open file <tt>f</tt> keeps its value in the child process;
 the child has inherited an open connection from its parent:
