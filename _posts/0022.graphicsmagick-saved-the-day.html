@@ -1,0 +1,122 @@
+---
+categories: Computing, Document processing
+date: 2009/03/10 12:32:55
+guid: http://rhodesmill.org/brandon/?p=58
+permalink: http://rhodesmill.org/brandon/2009/graphicsmagick-saved-the-day/
+tags: ''
+title: GraphicsMagick saved the day
+---
+<p>
+I had never heard of
+<a href="http://www.graphicsmagick.org/">GraphicsMagick</a> until yesterday,
+when I discovered that the venerable, if clunky,
+<a href="http://www.imagemagick.org/">ImageMagick</a> suite
+was ruining one of my customer's print jobs
+by producing invalid PDF files.
+This is actually the third major failure
+that this particular project has encountered
+because of flaws in standard open-source document tools.
+In this and my next two blog posts,
+I will outline the bugs that I have encountered,
+in the hopes of saving some future reader
+the time that it took me to track them down.
+</p>
+<p>
+But I will begin the series rather simply,
+with the first two lessons that I learned during the project:
+</p>
+<dl>
+<dt><b>1. Always verify PDF correctness with Adobe Acrobat.</b></dt>
+<dd>
+<p>
+The trusty <a href="http://www.foolabs.com/xpdf/">Xpdf</a>
+viewer, with which I have viewed PDF files for years,
+turns out to have a remarkable ability
+to decipher and display even somewhat damaged PDF files.
+That's a great feature — <i>if</i> someone else has produced the PDF,
+and you just need to read it, whether it's damaged or not.
+But this “feature” becomes a problem
+if you have just <i>produced</i>
+a PDF, and want to know about any errors in the file
+before your customer does!
+</p>
+<p>
+In this situation, Adobe's
+<a href="http://get.adobe.com/reader/">Acrobat Reader</a>
+should be your viewer of choice.
+Not only is it probably the software
+that your customers will be using anyway,
+but it is — and this seems intentional on Adobe's part —
+a very stringent interpreter.
+The error it displays for a corrupt PDF, I must admit,
+is among the least-informative I have seen this month:
+</p>
+<pre>
+There was a problem reading this document (14)
+</pre>
+<p>
+But the information that this <i>does</i> yield is invaluable:
+your customer will not be able to see or print this PDF
+until you find the bug in your toolchain and fix the result.
+It is, of course, objectionable and problematic
+to have to install a closed-source product
+on what might otherwise be a completely clean development system;
+but I have found it irreplaceable
+for its ability to show me problems
+before my customers see them.
+</p>
+<p>
+This mistake cost me more time than you might imagine.
+The tool chain I built for my customer generates
+several intermediate PDF files,
+and it turns out that the error was happening
+fairly early in the process —
+so that one of the first files produced,
+and therefore each subsequent PDF,
+was invalid and could not be opened with Acrobat.
+But because I was viewing them all with Xpdf,
+I spent many minutes looking at the final step in the chain
+and wondering why that PDF tool was often dying,
+when the PDFs it was consuming looked so good in my viewer!
+</p>
+</dd>
+<dt><b>2. Avoid <a href="http://www.imagemagick.org/">ImageMagick</a>
+6.3.7 when producing PDFs;
+try <a href="http://www.graphicsmagick.org/">GraphicsMagick</a> instead!</b>
+</dt>
+<dd>
+<p>
+More recent versions of ImageMagick might not have any problem
+producing PDF files from PNG images,
+but the ImageMagick that currently ships with Debian unstable,
+version 6.3.7,
+seems to have routine problems trying to turn some of my customer's
+PNG files into valid PDFs.
+To avoid having to compile, install, and maintain
+my own version of ImageMagick,
+I cast around for an alternative,
+and was startled when Google brought me to
+the <a href="http://www.graphicsmagick.org/">GraphicsMagick</a> project!
+Here was ImageMagick done right:
+instead of creating dozens of commands on your system,
+as though this were the 1970s,
+GraphicsMagick defines a single <tt>gm</tt> binary
+with multiple sub-commands:
+</p>
+<pre>
+$ gm convert watermark.png watermark.pdf
+</pre>
+<p>
+Check out their web site for more great features;
+but I'm simply happy that the PDFs it has produced so far
+have been clean, correct, and consistent.
+</p>
+</dd>
+</dl>
+<p>
+A question for my readers:
+can a good, open-source PDF checker be found somewhere,
+that is at least as stringent as Adobe Acrobat?
+Leave a comment below if you have a suggestion;
+such a tool would have made this project considerably easier!
+</p>

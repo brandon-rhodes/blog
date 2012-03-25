@@ -1,0 +1,91 @@
+---
+categories: Computing, Emacs, Python
+date: 2009/02/25 18:25:15
+guid: http://rhodesmill.org/brandon/?p=30
+permalink: http://rhodesmill.org/brandon/2009/emacs-python-virtualenv/
+tags: ''
+title: Installing Python packages for Emacs with virtualenv
+---
+The only rough edge I have found amidst the otherwise exceptional advice on Ryan McGuire's <a href="http://www.enigmacurry.com/">Enigma Curry blog</a> is that Ryan recommends installing Python packages with:
+<pre>
+$ sudo easy_install <i>package_url</i>
+</pre>
+This means that his Emacs configuration — which, very generously, <a href="http://www.enigmacurry.com/2009/01/19/my-emacs-config-on-github/">he has started maintaining as a project on github</a> so that other people can use it themselves, or branch their own versions — requires root access merely to install.
+
+Like Ryan, I also keep my Emacs configuration under version control, so that improvements I check in from one account are easy to check out into all of my other accounts. Although my setup is probably too simple to be interesting as a public project, there is one aspect of it that I should share: unlike Ryan, I use the advanced technology of a <a href="http://pypi.python.org/pypi/virtualenv"><tt>virtualenv</tt></a> to hold the Python packages that Emacs needs. The virtual environment lives under my own account, and is easy to create, access, and rebuild, even in the absence of root privileges on a particular machine. Even better, packages that I install or upgrade inside of the virtual environment cannot interfere with Python programs running elsewhere on the system.
+
+<!--more-->
+
+A “virtual environment” is a little self-contained Python install, whose essential files are copied from your main system Python; no additional compilation is necessary! A virtual environment can be created under any directory on your system.
+
+For example, on a Unix system, the default Python probably lives under the <tt>/usr</tt> directory, and looks like this:
+<pre>
+/usr/bin/easy_install             # to add new packages
+/usr/bin/python                   # the main executable
+/usr/lib/python2.5/               # normal packages
+/usr/lib/python2.5/site-packages/ # 3rd party packages
+</pre>
+To create a virtual environment where my Emacs-related packages can live in peace by themselves, I simply instruct <tt>virtualenv</tt> to reproduce a directory structure like the one outlined above, but in a more convenient location — in this case, hidden beneath my <tt>~/.emacs</tt> directory:
+<pre>
+$ virtualenv ~/.emacs/usr
+</pre>
+This means that I now have a little Python directory hierarchy of my own, but writable with my normal user file permissions, and easy to remove and re-create:
+<pre>
+/home/bcr/.emacs/usr/bin/easy_install
+/home/bcr/.emacs/usr/bin/python
+/home/bcr/.emacs/usr/lib/python2.5/
+/home/bcr/.emacs/usr/lib/python2.5/site-packages/
+</pre>
+Whenever you run the <tt>easy_install</tt> and <tt>python</tt> commands that <tt>virtualenv</tt> has created under this new directory, they will install packages to, and load packages from, the <tt>site-packages</tt> directory sitting right there in the virtual environment with them.
+
+But how, you ask, does the <tt>virtualenv</tt> command itself get installed? Doesn't <i>that</i>, at least, require root access to <tt>easy_install</tt>? Not at all! The command is entirely self-contained; just grab the <tt>virtualenv.py</tt> file from inside of the <tt>virutalenv</tt> tar archive on <a href="http://pypi.python.org/pypi/virtualenv">its page at the Python Package Index</a>. I always simply include a copy of <tt>virtualenv</tt> in the files that I push to a new home directory whenever I get a new account somewhere.
+
+Here is the real-life <tt>build.sh</tt> shell script (yes, I am old-fashioned) that I keep in version control along with the <tt>.tar.gz</tt> archives of the Python packages that I want Emacs to use:
+<pre class="literal-block">
+#!bash
+# Brandon's ~/.emacs.d/src/build.sh
+# Change to the directory containing this script.
+
+cd $(dirname "$0")
+
+# Clean up directories left over from previous run.
+
+DIRS=(Pymacs-0.23 rope-0.9.2 ropemacs-0.6 pyflakes-0.3.0)
+rm -rf ../usr ${DIRS[@]}
+
+# Create the virtualenv.
+
+python2.5 virtualenv.py ../usr
+source ../usr/bin/activate
+
+# Unpack the four Python packages that Emacs needs.
+
+tar xvfz Pymacs.tar.gz
+tar xvfz rope-0.9.2.tar.gz
+tar xvfz ropemacs-0.6.tar.gz
+tar xvfz pyflakes-0.3.0.tar.gz
+
+# Install them in "~/.emacs/usr" (the "python2.5" that
+# gets called here is the one in the virtualenv, thanks
+# to my having sourced its "activate" script up above).
+
+for D in ${DIRS[@]}
+do cd $D; python2.5 setup.py install; cd ..; done
+
+# Make fresh pymacs.el symlink from ~/.emacs
+
+rm -f ../pymacs.el
+ln -s src/Pymacs-0.23/pymacs.el ../pymacs.el
+</pre>
+Without having to assume an elevated privilege even once, this script removes any old <tt>virtualenv</tt> sitting in the way, builds a new one, and installs the four Python packages into it. As a final step, it creates an easy-to-find symlink to the <tt>pymacs.el</tt> so that my main Emacs file does not have to remember the name of its source directory, which changes with each new version.
+
+My <tt>~/.emacs.d/init.el</tt> file simply has to point Emacs at the Python executable inside the virtual environment, and everything works:
+<pre class="literal-block">
+#!scheme
+;; From Brandon's ~/.emacs.d/init.el
+(add-to-list 'load-path "~/.emacs.d")
+(setenv "PYMACS_PYTHON" "~/.emacs.d/usr/bin/python2.5")
+</pre>
+Actually, <a href="/brandon/static/2009/init.sample.el">the real file is a bit more complicated</a> because several LISP commands are required to set up each feature, but you get the idea: by always running commands from the <tt>bin</tt> directory of the virtual environment, Emacs can have access to any number of Python packages without my having to touch the system Python install at all!
+
+With this one improvement, I have a portable Emacs configuration that can quickly be installed on new machines — which makes it easy whenever Ryan discovers new improvements for my favorite editor! While his original “<a href="http://www.enigmacurry.com/2008/05/09/emacs-as-a-powerful-python-ide/">Emacs as a powerful Python IDE</a>” post was what got me started turning Emacs into a modern IDE, <a href="http://www.enigmacurry.com/category/emacs/">Ryan continues to find new gems</a> from among the many Emacs packages and features floating around on the Internet. I'll be watching!

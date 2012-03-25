@@ -1,0 +1,364 @@
+---
+categories: Computing, Python
+date: 2009/04/22 16:34:49
+guid: http://rhodesmill.org/brandon/?p=120
+permalink: http://rhodesmill.org/brandon/2009/pyron-no-return/
+tags: ''
+title: 'pyron: Making Python package development DRY to the point of no return'
+---
+<p>
+  I finally snapped last week.
+</p>
+<p>
+  After years of writing verbose and repetitive <tt>setup.py</tt> files
+  for my Python packages,
+  I am unable to write another.
+  Instead, I have started writing
+  <a href="http://pypi.python.org/pypi/pyron/"
+     >Pyron</a>,
+  a tool that gathers the same information
+  by inspecting a Python package itself.
+  Not only does this mean that I get to
+  <b>stop repeating myself</b>,
+  but that my projects will become much more uniform
+  because package metadata will be represented through
+  <b>common conventions</b> instead of explicit (and repetitive) configuration.
+  Though Pyron is still very primitive,
+  it has already allowed me to reduce simple packages
+  to only a <tt>README.txt</tt> plus their actual Python source code.
+</p>
+<!--more-->
+<h2>The start of the trouble</h2>
+<p>
+  What happened is that I wanted to create a simple Python package
+  full of tools for professional authors
+  working with <a href="http://docutils.sourceforge.net/rst.html">rst</a>
+  documents, so that they could monitor their word count while writing,
+  and convert their <i>rst</i> files into the proprietary formats
+  used by various publications.
+  But just to start a new Python project
+  required me to create <i>four</i> entire files,
+  and almost as many directories:
+</p>
+<pre>
+./cursive.tools/setup.py
+./cursive.tools/cursive/__init__.py
+./cursive.tools/cursive/tools/README.txt
+./cursive.tools/cursive/tools/__init__.py
+</pre>
+<p>
+  The <tt>setup.py</tt> file itself
+  repeats the project name over, and over, and over again,
+  reminding me of the old Adventure game's
+  “maze of twisty passages, all alike”:
+</p>
+$$code(lang=python)
+from setuptools import setup
+setup(
+    name = 'cursive.tools',
+    version = '0.1',
+    description = 'Tools for restructured text files',
+    author = 'Brandon Craig Rhodes',
+    author_email = 'brandon@rhodesmill.org',
+    packages = ['cursive.tools', 'cursive'],
+    namespace_packages = ['cursive'],
+    )
+$$/code
+<p>
+  The first <tt>__init__.py</tt> file shown above of course looks like:
+</p>
+$$code(lang=python)
+  import pkg_resources
+  pkg_resources.declare_namespace(__name__)
+$$/code
+<p>
+  Meanwhile, my stub <tt>README.txt</tt> and <tt>__init__.py</tt> files
+  down in the bottom directory contained just enough information to get
+  me started, whether I wanted to start by writing documentation and
+  tests or get started by writing actual code:
+</p>
+<pre>
+``cursive.tools`` -- Tools for restructured text files
+------------------------------------------------------
+
+The routines in this ``cursive.tools`` package are
+designed for authors.  They provide command-line tools
+that can examine Restructured Text files.
+</pre>
+<pre>
+"""Command-line routines for Restructured Text authors."""
+
+__version__ = '0.1'
+</pre>
+<p>
+  And, having created these files, I stopped, and stared in horror.
+</p>
+<p>
+  For an <i>entire hour</i> I tried to move on.
+  I tried to start writing actual code and actual documentation.
+  I tried to just ignore the stupidity of what I had just written.
+  Or, in the case of <tt>setup.py</tt>, what I had just
+  written by cutting and pasting
+  from another project on my hard drive —
+  yes, it's actually become <i>that bad</i>,
+  that we cut-and-paste file contents between Python projects
+  because our boilerplate requires so much repetition
+  while carrying so little information.
+</p>
+<p>
+  But, try though I might, I could not move on to writing code;
+  I was finally defeated.
+  The Python language has done such a wonderful job over the past decade
+  of honing my asthetics and sharpening my senses
+  that I am now unable to use its own standard packaging techquies!
+  This new package would have to wait
+  until I had resolved the problems
+  that sat staring me in the face.
+  Let us review them, one by one.
+</p>
+<ol>
+  <li>
+    After stating so carefully
+    that this package was named <tt>cursive.tools</tt>,
+    I then had to inform <tt>setup()</tt>
+    that the project <tt>name</tt> would also be —
+    who would have guessed? —
+    <tt>cursive.tools</tt> as well!
+    This is idiotic.
+    <i>Of course</i> I am giving this project the same name
+    as the package it contains;
+    that is a best-practice from which modern Python projects
+    have no excuse to dissent.
+    Who wants to have to remember
+    that you need the <tt>ZODB3</tt> package
+    when all you want to do is import <tt>persistent</tt>?
+    Who wants to remember to depend on <tt>pyephem</tt>
+    when all you want is to import <tt>ephem</tt>
+    (a problem that I, myself, created
+    in my own misguided Python youth)?
+    Not me.
+    And not, if they have any sense, my users.
+  </li>
+  <li>
+    This package is named <tt>cursive.tools</tt>.
+    <i>Of course</i> I want <tt>cursive</tt> to be a namespace package!
+    That is so painfully obvious that it should not even require mention;
+    it should be inferred.
+  </li>
+  <li>
+    Similarly, the mention that <tt>cursive</tt> is a package
+    in the <tt>packages</tt> declaration is redundant.
+    <i>Of course</i> if <tt>a.b</tt> is a package
+    then <tt>a</tt> is going to be a package as well!
+    There's not even a way to avoid that in the Python language,
+    so far as I know.
+    Why even make me type it?
+  </li>
+  <li>
+    The entire top-level <tt>__init__.py</tt> file —
+    the one inside of the <tt>cursive</tt> directory —
+    is <i>utterly and entirely</i> a boilerplate cut-and-paste.
+    Given that <tt>cursive</tt> is already stated
+    to be a namespace package,
+    it should not even be necessary to provide the contents
+    of its <tt>__init__.py</tt>;
+    it's standard
+    and can be copied straight from
+    <a href="http://www.python.org/dev/peps/pep-0382/">PEP-382</a>.
+  </li>
+  <li>
+    The package, you will note, has started out lacking
+    a <tt>long_description</tt>
+    despite the fact
+    that it has a perfectly serviceable <tt>README.txt</tt> file.
+    Many packages jump through the hoops of path manipulation
+    just to find their own <tt>README.txt</tt>
+    so that they can include it as their long description;
+    but why, in the absence of an override,
+    shouldn't its inclusion as the long description be the default?
+  </li>
+  <li>
+    This raises the larger question of where, exactly,
+    should a project <tt>README.txt</tt> even go —
+    where on the filesystem, that is, should it be placed?
+    There seems to be no consistency on this
+    between different Python packages.
+    Some people place it directly at the project top-level,
+    next to the <tt>setup.py</tt> file,
+    which is friendliest to developers
+    checking out the source code from a public repository —
+    but which makes the <tt>README.txt</tt> invisible
+    to users!
+    Others place it down inside of the package directory itself
+    so that it will be included in their distribution,
+    which is better;
+    and still other Python projects
+    have <i>two</i> separate <tt>README.txt</tt> files
+    so that they have both bases covered!
+  </li>
+  <li>
+    The package version is kept in two different places here:
+    in the <tt>setup.py</tt> and also in the <tt>__version__</tt>
+    symbol of the module itself.
+    When the version advances,
+    both places will have to be updated —
+    if the developer remembers!
+    The alternative is for the <tt>setup.py</tt> to grow
+    more complex by including its own bootstrap code
+    that uses path manipulations
+    to find and introspect the <tt>__version__</tt> symbol
+    inside of the module.
+  </li>
+  <li>
+    The name of the package occurs
+    both at the top of <tt>README.txt</tt>
+    and inside of <tt>setup.py</tt>.
+  </li>
+  <li>
+    The short description is repeated twice:
+    once in the title of the <tt>README.txt</tt>
+    and once in the <tt>setup()</tt> stanza of the <tt>setup.py</tt>.
+  </li>
+  <li>
+    Finally, the directory structure of this project is ridiculous.
+    If, as the <tt>setup.py</tt> clearly states,
+    I am writing the <tt>cursive.tools</tt> module,
+    why should I even include both a <tt>cursive</tt>
+    and a <tt>tools</tt> directory?
+    Since the <i>only legitimate activity</i>
+    that I can undertake in constructing this module
+    is to place files <i>inside</i> of <tt>cursive.tools</tt>,
+    why do directories exist where files could collect outside
+    of this one depository?
+  </li>
+</ol>
+<p>
+  Obviously,
+  the above arguments hold only for pure-Python packages;
+  when C extensions and other special effects come into play,
+  then excellent reasons arise for a complicated directory structure,
+  sophisticated metadata,
+  and possibly documentation above and beyond that distributed
+  with binary versions of the package.
+  But for normal packages,
+  I am finished with writing and distributing a <tt>setup.py</tt>
+  by hand.
+</p>
+<h2>Toward perfecting Pyron</h2>
+<p>
+  My new tool for Python package building,
+  <a href="http://pypi.python.org/pypi/pyron"
+     >Pyron</a> —
+  which, for those keeping score, is my very first
+  <a href="http://bitbucket.org/brandon/pyron/"
+     >bitbucket-hosted project</a>
+  (and I am very much enjoying these first few weeks of using Mercurial,
+  since Guido made the
+  <a href="http://mail.python.org/pipermail/python-dev/2009-March/087931.html"
+     >big decision</a> at the end of PyCon last month) —
+  is not yet mature enough to warrant a first release on PyPI.
+  Please check out the development version
+  if you want to take a first look at Pyron.
+  And, yes, Pyron currently has to include a <tt>setup.py</tt>
+  of its own,
+  which will not disappear until I release the first version
+  and it can become self-hosting!
+</p>
+<p>
+  Please note that Pyron is <i>only</i> for developers!
+  The <tt>sdist</tt> archives and the eggs produced
+  for a Pyron-powered project
+  are completely standard;
+  the end users and developers installing a module
+  will not be affected by your choice to use Pyron.
+  It simply keeps your project repository cleaner
+  by inferring package metadata on the fly
+  rather than making you maintain a <tt>setup.py</tt>
+  in version control along with your Python package.
+</p>
+<p>
+  A package developed with <tt>pyron</tt>
+  only needs two files:
+  <tt>README.txt</tt> and <tt>__init__.py</tt>.
+  The two files quoted above will work just fine.
+  These simply need to sit in the same directory,
+  like this:
+</p>
+<pre>
+./cursive.tools/README.txt
+./cursive.tools/__init__.py
+</pre>
+<p>
+  See?
+  All of the actual meat of the <tt>cursive.tools</tt> module
+  remains when the files are stored like this,
+  while the while repetition and boilerplate disappears!
+  Check out the Pyron <tt>README.txt</tt>
+  (or, of course, the same information as formatted in its
+  <a href="http://pypi.python.org/pypi/pyron/"
+     >project page on PyPI</a>)
+  for more details about how it works;
+  here, I will just make three last observations:
+</p>
+<ul>
+  <li>
+    Sometimes I had to choose between best practices
+    when deciding how Pyron would operate.
+    Where, for example, should it find the package name?
+    Instead of looking at the title of the <tt>README.txt</tt>,
+    as it currently does,
+    one could imagine my having written it
+    to look somewhere in <tt>__init__.py</tt>
+    (but there seems to be no agreed-upon place
+    for a package to name itself),
+    or even at the name of the directory
+    in which the package is sitting
+    (but often the directory will not be named <tt>cursive.tools</tt>,
+    but something like <tt>branches/0.1</tt>
+    or even just <tt>trunk</tt>).
+    In each case,
+    I have tried to choose the most obvious
+    and easy-to-maintain convention,
+    and the real point is that there be <i>some</i> common idiom
+    for everyone to fall into line with
+    as more and more packages in the future
+    abandon their <tt>setup.py</tt> files
+    and start using Pyron.
+  </li>
+  <li>
+    Sometimes no best practice existed,
+    and I had to, frankly, make things up.
+    Where should the author of a package go,
+    without a <tt>setup.py</tt> file?
+    In a special metadata file that I would have to invent?
+    In some formatted region of the <tt>README.txt</tt> file?
+    By choosing instead that it go
+    inside an <tt>__author__</tt> symbol in <tt>setup.py</tt>,
+    I hope that I have at least preserved symmetry
+    with an existing best-practice
+    while, again, making future Python projects as readable as possible
+    should Pyron use become widespread.
+  </li>
+  <li>
+    Pyron should become more sophisticated in the future,
+    and eliminate even more repitition.
+    It currently needs project dependencies,
+    for example,
+    to be defined as a <tt>__requires__</tt> constant
+    in a package's <tt>__init__.py</tt> file.
+    In the future,
+    Pyron will hopefully gain the ability
+    to inspect a project's <tt>import</tt> statements
+    and make intelligent guesses about its dependencies
+    that could often eliminate any need
+    for explicit dependency declarations.
+  </li>
+</ul>
+<p>
+  Thanks to Pyron,
+  I am now happily working away on my <tt>cursive</tt> packages,
+  and they should soon see their first releases.
+  I can now sleep at night,
+  knowing that boilerplate and repetition
+  have finally vanished from my development code.
+</p>

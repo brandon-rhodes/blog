@@ -1,0 +1,180 @@
+---
+categories: Computing, Document processing, Python
+date: 2009/03/15 23:24:26
+guid: http://rhodesmill.org/brandon/?p=85
+permalink: http://rhodesmill.org/brandon/2009/pdf-watermark-margins/
+tags: ''
+title: Adding margins to PDF watermarks
+---
+<p>
+This is the second article in my series
+on adding “watermark” images to PDF files,
+which sit behind any text and graphics that were already on the page.
+Last week I outlined
+<a
+href="http://rhodesmill.org/brandon/2009/graphicsmagick-saved-the-day/"
+>the first two lessons that I learned
+while developing this watermark process</a>:
+first, always use Adobe Acrobat
+to verify that you are creating valid PDFs in your toolchain,
+and second, the version of GraphicsMagick
+that currently comes with Debian unstable
+produces better PDF files
+than the version of ImageMagick they ship.
+</p>
+<p>
+Then I digressed with a blog entry on a slightly different topic,
+<a href="http://rhodesmill.org/brandon/2009/nested-comprehensions/"
+>nested list comprehensions in Python</a>,
+because I happened to write one
+while creating the image we will use as our sample watermark.
+It shows the famous Arecibo space message,
+and is a <a href="/brandon/static/2009/arecibo.png">tiny image</a>
+of only 23×73 pixels
+that looks like this when enlarged:
+</p>
+<div class="caption">
+<img src="http://rhodesmill.org/brandon/static/2009/arecibo-big.png" alt="Arecibo message" />
+</div>
+<p>
+The basic watermarking process itself is very simple
+thanks to a wonderful tool that I discovered
+called <a href="http://www.pdfhacks.com/pdftk/"><tt>pdftk</tt></a>
+(short for “PDF toolkit”)
+which, as usual, Debian has already packaged for me.
+It can rotate documents,
+extract pages,
+concatenate several files together,
+and help fill out PDF forms from data in a file.
+Of particular interest here is its ability to either “stamp” an image
+on top of each page of a document,
+or to place one in the background as a watermark.
+</p>
+<p>
+The watermark image itself has to be a PDF file —
+<tt>pdftk</tt> does not deal in any other file formats —
+which is why I needed GraphicsMagick
+to convert the Arecibo image into a PDF in the first place.
+Putting the two steps together,
+one has a primitive but workable process
+for using a PNG image as a watermark:
+</p>
+<pre>
+$ gm convert arecibo.png arecibo.pdf
+$ pdftk in.pdf background arecibo.pdf output wmark1.pdf
+</pre>
+<div class="caption">
+<a href="http://rhodesmill.org/brandon/static/2009/wmark1.pdf"
+><img src="http://rhodesmill.org/brandon/static/2009/wmark1.png"
+alt="Letter with basic watermark" />
+</a><strong>Hefty watermark (click for PDF).</strong>
+A first attempt at watermarking results in a huge watermark
+that reaches both to the top and bottom edges of the page.
+</div>
+<p>
+As you can see,
+<tt>pdftk</tt> automatically adjusts the size of the watermark image
+to reach precisely to the edges of the page being marked —
+which is a huge favor
+given the difficulty I would have had
+in resizing the watermark myself
+to match the page size of the input file.
+But, in the above case,
+the result seems less than perfectly attractive;
+watermarks usually sit tidily near the center of a page,
+rather than running all the way against its edges.
+</p>
+<p>
+Clearly, we want to add some margins to the watermark.
+And though margins are easy to add to some image formats —
+they would be simple to add
+to the <tt>arecibo.png</tt> file that we are using
+in this example —
+in actual practice I need to support watermarks
+that might be in vector formats like SVG or EPS.
+While I could go through each possible input format
+and contrive some way of adjusting its margins,
+it would obviously be much more convenient
+to convert everything to PDF first,
+and then add margins directly to the PDFs.
+</p>
+<p>
+I used Debian's <tt>apt-cache</tt> <tt>search</tt> command
+to look for additional tools that might help me
+(which is how I found <tt>pdftk</tt> in the first place!)
+and found an old command called <tt>pdfcrop</tt>
+that was part of the <tt>texlive</tt> series of packages;
+it supports a <tt>--margins</tt> option
+with which whitespace can be added around a PDF file.
+But I found that it often would refuse to process
+a perfectly good PDF file
+with a horribly uninformative error message like:
+</p>
+<pre>
+Error: Cannot move `tmp-pdfcrop-10631.pdf' to `out.pdf'!
+</pre>
+<p>
+I tried to investigate the error message,
+but discovered that <tt>pdfcrop</tt> is actually a Perl script
+that writes LaTeX macros
+which are then run against the target PDF file.
+And it was last updated in 2004.
+I have, alas, elected not to make it part of my toolchain.
+</p>
+<p>
+Then I discovered that Python itself
+has a <a href="http://pybrary.net/pyPdf/"
+>quite serviceable PDF package named pyPdf</a>,
+with the bonus that it is written in pure Python
+and therefore requires no external libraries!
+Thanks to its ability to adjust the “bounding box”
+that defines the edges of an image in PDF coordinates,
+adding margins was as simple as loading the image,
+doing some addition and subtraction,
+and then saving the result.
+To add modest 10-point margins to the Arecibo message,
+for example, we can create this <tt>wmargins.py</tt> script:
+</p>
+$$code(lang=python)
+from pyPdf import PdfFileWriter, PdfFileReader
+pdf = PdfFileReader(file('arecibo.pdf', 'rb'))
+p = pdf.getPage(0)
+for box in (p.mediaBox, p.cropBox, p.bleedBox,
+                                    p.trimBox, p.artBox):
+    box.lowerLeft = (box.getLowerLeft_x() - 10,
+                     box.getLowerLeft_y() - 10)
+    box.upperRight = (box.getUpperRight_x() + 10,
+                      box.getUpperRight_y() + 10)
+output = PdfFileWriter()
+output.addPage(p)
+output.write(open('arecibo2.pdf', 'wb'))
+$$/code
+<p>
+You can test this yourself by installing pyPdf
+in a convenient temporary directory with <tt>virtualenv</tt>,
+running the above script, then calling <tt>pdftk</tt> on the result:
+</p>
+<pre>
+$ virtualenv vpython
+$ vpython/bin/easy_install pyPdf
+$ vpython/bin/python wmargins.py
+$ pdftk in.pdf background arecibo2.pdf output wmark2.pdf
+</pre>
+<div class="caption">
+<a href="http://rhodesmill.org/brandon/static/2009/wmark2.pdf"
+><img src="http://rhodesmill.org/brandon/static/2009/wmark2.png"
+alt="Watermark with margins" />
+</a><strong>Watermark with margins (click for PDF).</strong>
+Margins prevent the watermark from reaching the page edges,
+which allows the blocks of text to assume the role
+of defining the visual shape of the page.
+</div>
+<p>
+All pretty simple, right?
+Well, it turns out that there was one final complication —
+and that, before I was finished, I actually wound up spending
+more than an hour reading the PDF specification
+in order to understand what, exactly, was going wrong!
+But that will be the topic for <a href="http://rhodesmill.org/brandon/2009/pdf-watermarks-upside-down/">my last blog post in this series.</a>
+Stay tuned.
+</p>

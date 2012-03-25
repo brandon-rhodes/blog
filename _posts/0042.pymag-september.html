@@ -1,0 +1,93 @@
+---
+categories: Computing, Document processing, Python
+date: 2009/10/20 01:41:07
+guid: http://rhodesmill.org/brandon/?p=266
+permalink: http://rhodesmill.org/brandon/2009/pymag-september/
+tags: ''
+title: The September 2009 issue of Python Magazine
+---
+<a class="image-reference">
+  <img src="http://rhodesmill.org/brandon/static/2009/pymag-september.jpg"
+       alt="Cover of September 2009 Python Magazine"
+       width="200" height="258" />
+</a>
+<p>
+  The September issue of Python Magazine
+  appeared on the web late last week
+  and only now, as a new week has started,
+  am I finally sitting down to announce it!
+  The articles range from technically heavy development topics
+  to high-level thoughts about the whole Python community,
+  with plenty in between.
+</p>
+<p>
+  I have to say that our prettiest article this month
+  is “Using Python to Create Beautiful Documents” by Yusdi Santoso,
+  who shares the basic secrets to document generation
+  that he learned when building the
+  <a href="http://www.europython.eu/">EuroPython 2009</a> brochure
+  using a Python program.
+  Traditional typesetting and computer typography
+  were both interests of mine when I was growing up,
+  so it was fun to read Yusdi's introduction to using
+  <a href="http://www.reportlab.org/">ReportLab</a>
+  to generate PDF documents.
+  I look forward to his follow-up article
+  that we will soon be publishing,
+  on the specific techniques that he used in creating
+  the EuroPython booklet.
+</p>
+<p>
+  The other technical articles are an introduction
+  to using <a href="http://www.w3.org/TR/soap/">SOAP</a> in Python;
+  a guide to displaying objects in a Mac OS X GUI created with PyObjC;
+  an article introducing Python's own built-in
+  <a href="http://docs.python.org/library/tkinter.html">Tkinter</a>
+  GUI toolkit;
+  and a small excursion of my own
+  that attempts to explain the popular “trick”
+  (well, it really confused <i>me</i> the first time I saw it!)
+  of defining a decorator using a pair of nested functions.
+  I should confess that my own article
+  contains what is probably this issue's biggest mistake,
+  as pointed out quite promptly by alert reader Emanuel Woiski:
+  in the code sample that is its whole crux of my example,
+  I somehow managed to omit one of the most crucial lines,
+  shown here in bold:
+</p>
+$$code(lang=python)
+def log(function):
+    def log_wrapper(*args):
+        print "called %s%s" % (
+            function.__name__, tuple(args)
+            )
+        <b>return function(*args)</b>
+    return log_wrapper
+$$/code
+<p>
+  I suppose I will now need remedial cut-and-paste training of some sort.
+</p>
+<p>
+  Finally, the issue is rounded out
+  by three articles that move back from Python coding
+  and step out to wider vantage points.
+  Justin Lilly provides an excellent guide
+  to customizing your Vim setup
+  so that it becomes a powerful Python
+  integrated development environment.
+  Steve Holden muses about why diveristy is so difficult
+  and reveals some of the recent goings-on
+  surrounding the diversity statement
+  that the Python Software Foundation has been working on.
+  And my own editorial seeks to point any Python Magazine readers
+  who do not yet have a strong connection with the wider community
+  in the direction of greater engagement
+  with the world of Python.
+</p>
+<p>
+  All in all, I think the issue
+  is a nice mix of fact, experience, and opinion.
+  Please consider subscribing if you would like to hear more
+  about what people are doing with Python, and how.
+  I enjoy reading it; so might you.
+</p>

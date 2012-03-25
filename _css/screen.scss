@@ -83,8 +83,15 @@ article {
     color: $titletxt;
     font-weight: normal;
   }
-  blockquote {
+  blockquote, .caption {
     color: darken($contentbg, 70%);
+  }
+  .caption {
+    text-align: center;
+    margin: 0.3em 10%;
+    padding-top: 1em;
+  }
+  blockquote {
     border-top: 1px solid darken($contentbg, 10%);
     border-bottom: 1px solid darken($contentbg, 10%);
     padding: 0.3em 0em;
@@ -105,10 +112,14 @@ article {
   tt {
     color: $titletxt;
     @include adjust-font-size-to(16px, 1, 18px);
+    a {color: $titletxt;}
   }
   img, .image-reference {
     display: block;
-    margin: 1em auto;
+    margin: 0.2em auto 1em;
+  }
+  img.inline {
+    display: inline;
   }
   .image-reference {
     text-align: center;

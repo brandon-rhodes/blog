@@ -1,0 +1,171 @@
+---
+categories: Computing, Document processing
+date: 2009/04/07 23:49:33
+guid: http://rhodesmill.org/brandon/?p=109
+permalink: http://rhodesmill.org/brandon/2009/pdf-watermarks-upside-down/
+tags: ''
+title: Applying PDF watermarks upside down
+---
+<p>
+Now that the excitement
+of PyCon 2009 is over,
+it is time for me to finish this brief series of blog posts
+on watermarking PDF files.
+In the
+<a href="/brandon/2009/graphicsmagick-saved-the-day/"
+   >first post I outlined how GraphicsMagick and Adobe Reader</a>
+proved essential to the project
+for their ability to produce correct PDF files
+and then help me verify their correctness.
+The
+<a href="/brandon/2009/pdf-watermark-margins/"
+   >second post showed how an image can be applied as a watermark</a>
+using the <a href="http://www.pdfhacks.com/pdftk/">pdftk</a>
+PDF Toolkit utility.
+The resulting watermark,
+after some margins had been added using a Python script,
+looked rather attractive:
+</p>
+<div class="caption">
+<a href="http://rhodesmill.org/brandon/static/2009/wmark2.pdf"
+><img src="http://rhodesmill.org/brandon/static/2009/wmark2.png"
+alt="Watermark with margins" />
+</a><strong>Watermarked page (click for PDF).</strong>
+The light blue design is a PDF file
+that <tt>pdftk</tt> resizes and centers
+on the target document.
+</div>
+<p>
+My last challenge was that, on certain pages,
+the watermark we were using
+had to be turned upside down.
+“Simple,” I thought, “I'll use <tt>pdftk</tt>
+to turn the watermark over before applying it!”
+I just had to process the watermark image
+with the letter <tt>S</tt> (“south”),
+which tells <tt>pdftk</tt> to rotate the image by 180°,
+and then use the result as the watermark:
+</p>
+<pre>
+$ pdftk arecibo2.pdf cat 1S output arecibo3.pdf
+$ pdftk in.pdf background arecibo3.pdf output wmark3.pdf
+</pre>
+<div class="caption">
+<a href="http://rhodesmill.org/brandon/static/2009/wmark3.pdf"
+><img src="http://rhodesmill.org/brandon/static/2009/wmark3.png"
+alt="Watermark with margins" />
+</a><strong>Upside-down watermark (click for PDF).</strong>
+Whoops! After turning the watermark upside down,
+<tt>pdftk</tt> lost the ability to properly center it.
+</div>
+<!--more-->
+<p>
+Actually, the situation with my real customer's documents
+was even worse than in this artifical example:
+the real watermark was a bit smaller,
+and positioned differently,
+such that it actually got moved <i>entirely</i> off of the page
+thanks to this misplacement bug in <tt>pdftk</tt>!
+So I did not even start my investigation
+with the knowledge that the watermark was misplaced;
+for all I knew, it was simply missing from the output file.
+</p>
+<p>
+That is why I got to spend an afternoon
+with some coffee and the
+<a href="http://www.adobe.com/devnet/pdf/pdf_reference.html"
+   >PDF specification</a>
+(thank you, Adobe web site!)
+examining the raw files for myself
+to discover what had happened.
+</p>
+<p>
+Actually, <tt>pdftk</tt> proved indispensable
+even while I was investigating its own misbehavior!
+It was its <tt>uncompress</tt> command
+that made the internals of the PDF files visible to my text editor.
+The important difference turned out to be in a simple instruction,
+which you can see for yourself
+if you use <tt>pdftk</tt> to uncompress
+the two PDF files that are linked to from the above images,
+and then use <tt>diff</tt> <tt>-u</tt> to compare them:
+</p>
+<pre>
+ q
+-q 8.52 0 0 8.52 208.06 85.16 cm /Xi0 Do Q
++q -8.52 0 0 -8.52 574.26 877.16 cm /Xi0 Do Q
+ Q
+</pre>
+<p>
+Here, <tt>diff</tt> is using
+the leading <tt>-</tt> and <tt>+</tt> characters
+to indicate that the first long line has been removed
+and replaced with the second.
+The numbers that you see are a coordinate matrix
+that specifies where the watermark image
+is being placed on the page.
+What has happened is that the offsets
+for the upside down watermark
+are wrong —
+and are wrong by <i>exactly</i> the size
+of the margins that we added in the previous blog post!
+</p>
+<p>
+The problem quickly became clear,
+once I drew some boxes on graph paper and did some sums.
+Very nearly every PDF file in existence
+has a bounding box whose lower-left coordinates are (0,0).
+But in the previous blog post in this series,
+we quickly added margins to our PDF
+by adjusting these coordinates outward so that they lay
+at the very uncommon values of (-10,-10).
+You can check this by running the wonderful <tt>pdfinfo</tt> command
+against the
+<a href="http://rhodesmill.org/brandon/static/2009/arecibo2.pdf"
+   >arecibo2.pdf</a>
+file yourself:
+</p>
+<pre>
+$ pdfinfo -box arecibo2.pdf
+...
+Page size:      43 x 93 pts
+...
+CropBox:          -10.00   -10.00    33.00    83.00
+...
+</pre>
+<p>
+When we ask <tt>pdftk</tt> to apply a watermark that is right side up,
+all is well.
+But when we apply a watermark upside down,
+<tt>pdftk</tt> forgets to apply a negative sign
+to our negative bounding box coordinates,
+and they wind up shifting the image
+in the opposite direction.
+</p>
+<p>
+It took me more than an hour of crazy experiments
+before I realized that I could work around the bug quite simply
+by turning the <i>document</i> upside down with <tt>pdftk</tt>,
+applying the watermark,
+and then turning the document upright again!
+I had spent time looking for a complicated solution
+that would fool <tt>pdftk</tt> into doing the right thing,
+when all I needed to do
+was to step back and figure out how to avoid
+the whole problem of upside down watermarks in the first place.
+How? With upside down documents!
+</p>
+<pre>
+$ pdftk in.pdf cat 1S output in-u.pdf
+$ pdftk in-u.pdf background arecibo2.pdf output wmark4-u.pdf
+$ pdftk wmark4-u.pdf cat 1N output wmark4.pdf
+</pre>
+<div class="caption">
+<a href="http://rhodesmill.org/brandon/static/2009/wmark4.pdf"
+><img src="http://rhodesmill.org/brandon/static/2009/wmark4.png"
+alt="Watermark with margins" />
+</a><strong>Upside-down watermark (click for PDF).</strong>
+Why turn your watermark over once,
+when you can turn your whole document over twice instead?
+The obvious solution always takes so long to discover.
+</div>

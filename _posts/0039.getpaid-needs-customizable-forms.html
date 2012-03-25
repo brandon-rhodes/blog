@@ -1,0 +1,277 @@
+---
+categories: Computing, Plone, Python, Zope
+date: 2009/09/10 00:25:46
+guid: http://rhodesmill.org/brandon/?p=144
+permalink: http://rhodesmill.org/brandon/2009/getpaid-needs-customizable-forms/
+tags: ''
+title: GetPaid needs customizable forms
+---
+<div class="dropshadow alignright">
+  <a href="http://www.plonegetpaid.com/">
+    <img src="http://rhodesmill.org/brandon/static/2009/getpaid-logo.png"
+         alt="GetPaid for Plone logo"
+         width="330" height="83" />
+  </a>
+</div>
+<p>
+  I would like some advice from Zope and Plone folks
+  about how to create forms
+  that are not only easy for other developers to specialize,
+  but which allow <i>several</i> specializations to be composed together.
+  While I have used <tt>zope.formlib</tt> and <tt>z3c.form</tt> before
+  for simple tasks,
+  I have not yet been able to tell
+  whether they support these more advanced kinds of operations.
+</p>
+<p>
+  Some background:
+  I am doing some work
+  on <a href="http://www.plonegetpaid.com/">GetPaid for Plone</a>
+  with the generous funding of Derek Richardson who,
+  if his dreams had not carried him away from grad school
+  at the end of the Spring semester,
+  would have tackled this same work
+  as part of the 2009 Google Summer of Code.
+</p>
+<p>
+  The current mechanisms that GetPaid provides
+  for customizing its checkout process are very primitive,
+  and my task is to improve them.
+  That is why I have been thinking about customizing forms.
+</p>
+<!--more-->
+<h2>Plugging in payment processors</h2>
+<p>
+  When a Plone user has filled their shopping cart with goods
+  and presses the “Checkout” button,
+  GetPaid begins stepping them through a checkout process
+  of several forms that must all be satisfied
+  before, finally, the user's credit card will be charged
+  and their purchase recorded.
+  GetPaid's current definition of a “Payment Processor”
+  requires only that it provide three functions
+  <tt>authorize()</tt>, <tt>capture()</tt>, and <tt>refund()</tt>
+  that talk on GetPaid's behalf to an online merchant account.
+</p>
+<p>
+  This design works fine
+  for traditional payment processors
+  that are comfortable letting Plone handle the credit card information,
+  but these days site owners usually want to delegate
+  the dangerous task of handling card numbers
+  to an “off-site” payment site.
+  And these off-site payment processors turn out to be
+  but one example
+  of the many ways in which GetPaid expansion modules
+  want to customize (or hijack?) the GetPaid checkout wizard.
+  Consider the following scenarios:
+</p>
+<ul>
+  <li>
+    <div class="image-reference">
+      <img src="https://checkout.google.com/buttons/checkout.gif?merchant_id=&w=160&h=43&style=trans&variant=text&loc=en_US"
+           alt="Google Checkout sample button" />
+    </div>
+    Something like Google Checkout
+    is comfortable taking the whole checkout process
+    out of your hands;
+    the “Checkout” button at the bottom of your shopping cart
+    is replaced with a branded “Google Checkout” button
+    that sends the user right to Google.
+    Currently in Getpaid, that button can only be customized
+    by providing completely new page templates for the shopping cart
+    that duplicate everything already there,
+    but which have a Google image on the checkout button.
+  </li>
+  <li>
+    Services like PxPay (at least the way we use them)
+    let the GetPaid checkout process
+    take care of collecting the customer's address
+    and shipping information,
+    but then need the user redirected off of the Plone site.
+    Again, entire views get replaced
+    just to provide an alternate submit button.
+  </li>
+  <li>
+    Many site owners want to allow several payment processors,
+    with the user choosing which one gets used
+    since the user might already have an account with Google Checkout
+    or be previously registered with PayPal.
+    This suggests the need for a “meta” payment processor
+    which can be given a list of payment processors and,
+    when the user reaches the first checkout step
+    for which those payment processors differ,
+    presents the user with a screen
+    from which they select the processor that they like.
+  </li>
+  <li>
+    Some sites have specialized information
+    that they need to collect from users:
+    they want to ask for extra address information,
+    or extra shipping options for certain products,
+    or need more contact information from the user
+    when they are checking out.
+  </li>
+</ul>
+<p>
+  So, currently, in pretty much every one of the above situations,
+  the answer to, “How do I tweak the GetPaid checkout process?”
+  is, “Override the <i>entire</i> view or module
+  that you need to customize,
+  by providing your own copy
+  that looks exactly the same as the default one,
+  except for the one thing you need changed.”
+</p>
+<p>
+  If you are curious, I have created
+  <a href="http://rhodesmill.org/brandon/static/2009/getpaid-overrides.png"
+   >a diagram showing which payment processors
+    have to override which parts of GetPaid</a>.
+</p>
+<p>
+  Not only does this wanton overriding
+  mean that modules have to meticulously track
+  the changes that GetPaid makes to the forms they are overriding,
+  but it means that customizations are inherently not composable:
+  you can't put two of them together.
+</p>
+<p>
+  The problem of composability is a big one.
+  Imagine that you live in Argentina
+  and want to install a module that adjusts GetPaid's mailing address form
+  to match the way postal addresses are formatted locally,
+  but that you also want to use an off-site payment processor
+  that needs to insert its custom “Checkout” button
+  on the bottom of the mailing address form.
+  Since the two modules will provide competing versions
+  of the entire mailing address form,
+  only one of them can “win”,
+  and the customization that the other module wants to present
+  will not be displayed.
+</p>
+<h2>Four crazy ideas</h2>
+<p>
+  How might checkout process customizations
+  become operations that could be combined and composed,
+  instead of each one of them being a fragile, blanket replacement
+  of an entire part of GetPaid?
+  Here are four ideas that I have thought through
+  today as I sat with my trusty pencil and yellow pad:
+</p>
+<ul>
+  <li>
+    <b>Plug-in points.</b>
+    Currently, GetPaid just has those three functions mentioned above
+    (<tt>authorize()</tt>, <tt>capture()</tt>, and <tt>refund()</tt>)
+    where payment processors can plug into its checkout logic.
+    One way of solving the problems we are encountering
+    is simply to provide a <i>lot</i> more plug-in points
+    where GetPaid's default behavior can be adjusted or subverted.
+    It looks like this would have to include separate views
+    for every button, for the body of every major form,
+    and for the transitions between forms.
+    It is doable within the time I have left for this project,
+    and serves as my default, conservative option
+    if nothing more spectacular can happen right now.
+    But it's very brittle:
+    every time in the future that someone thinks of a new way
+    of adjusting or tweaking GetPaid,
+    they have to ask us to create a new plug-in point.
+  </li>
+  <li>
+    <b>Request-level wrapper.</b>
+    It might be possible
+    (I mention this technique only for the sake of completeness,
+    to spur our imaginations)
+    to implement an off-site change processor
+    as a wrapper around GetPaid
+    that interacted at the bare level of incoming HTTP requests
+    and outgoing HTML pages or redirections.
+    If you have chosen Google Checkout,
+    a special wrapper would be installed
+    that would rewrite the shopping cart “Checkout” button with its own.
+    If you need another field added to the final checkout page,
+    you would create a wrapper that adds the field
+    when it sees the HTML for that form going out,
+    and that intercepts the additional field on its way back in.
+    Such wrappers would at least be composable:
+    you could have several active at once,
+    that each made their own modification to a single page
+    so that the user could see an address form
+    that was formatted for Argentina
+    <i>and</i> that had the correct checkout button on the bottom.
+  </li>
+  <li>
+    <b>Wrap a form that provided an API.</b>
+    What do forms “look like” to the code that calls them?
+    If we imagine a form library
+    where a <tt>Form</tt> is separate
+    from the <tt>FormRenderer</tt>
+    that introspects and traverses the properties of each form
+    to turn it into HTML,
+    then each GetPaid extension
+    could be a wrapper around the GetPaid form object(s)
+    that passes through most requests intact,
+    leaving most parts of most forms alone,
+    but that intercepts certain requests
+    and returns different answers than GetPaid would return.
+    The Argentina module would wrap the default GetPaid shipping form
+    and, when traversed for its sub-forms and fields,
+    would return a series of fields specific to Argentina.
+    The off-site payment processor wrapper
+    would just adjust the properties of the checkout button
+    before returning them.
+    And, these two wrappers would be composable!
+    If you wrapped them,
+    in any order,
+    around the default GetPaid checkout forms,
+    then you could enjoy both customizations.
+  </li>
+  <li>
+    <b>Forms as modifiable objects.</b>
+    What if forms — or even a small collection of forms,
+    like the GetPaid checkout process — were objects
+    that you could adjust and edit and modify
+    before asking them to be rendered?
+    Then, each GetPaid customization could be written
+    as a small routine that takes, as its argument,
+    a description of the <i>entire</i> checkout process,
+    and that modifies that description by tweaking, adding,
+    and removing everything that it needs to.
+    Before rendering a view for the user,
+    GetPaid would construct a copy of the checkout process,
+    and then pass it, in turn, to each module.
+    The Argentina module would reach in and tweak some address fields.
+    The off-site processor would reach in and adjust the checkout
+    button sitting below them.
+    And the result could then be rendered.
+    The one problem, when we compare this approach
+    to the previous scenario,
+    would be how to intercept new data that would be coming in
+    as a result of added form fields.
+    I suppose the form descriptions
+    would have to include callback functions
+    for processing them,
+    and that extension modules would just add their own callbacks.
+  </li>
+</ul>
+<p>
+  Is there anything here worth trying?
+</p>
+<p>
+  These are just the ideas that have come to me today,
+  as I've scribbled and sketched
+  and sat down to re-read all of the design patterns
+  in <a href="http://www.amazon.com/gp/product/0201633612?ie=UTF8&tag=letsdisthemat-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=0201633612">the Gang of Four Book</a><img class="inline" src="http://www.assoc-amazon.com/e/ir?t=letsdisthemat-20&l=as2&o=1&a=0201633612" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+  looking for inspiration.
+  (You might recognize the third option above
+  as something like the “decorator” design pattern!)
+  Does <tt>zope.formlib</tt> or <tt>z3c.form</tt>
+  or anything else like that in the Zope universe
+  provide the kind of services I would need from a form library
+  to implement the ideas outlined above?
+</p>
+<p>
+  If you're a Zope or Plone person with an inkling of an answer,
+  then please let me know!
+</p>

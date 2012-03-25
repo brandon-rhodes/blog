@@ -1,0 +1,190 @@
+---
+categories: Computing, Python
+date: 2009/07/15 00:59:49
+guid: http://rhodesmill.org/brandon/?p=176
+permalink: http://rhodesmill.org/brandon/2009/eby-magic/
+tags: ''
+title: The terrible magic of setuptools
+---
+<p>
+  I am providing a bit of assistance to the wonderful
+  <a href="http://www.nltk.org/">Natural Language Toolkit</a> Project,
+  who have implemented a wide array
+  of language processing algorithms in Python
+  atop a common set of very sleek — and cleanly Pythonic —
+  data structures for representing natural language.
+  If you are at all interested,
+  check out their recent book,
+  <a href="http://www.amazon.com/gp/product/0596516495?ie=UTF8&tag=letsdisthemat-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=0596516495">Natural Language Processing with Python,</a><img class="inline" src="http://www.assoc-amazon.com/e/ir?t=letsdisthemat-20&l=as2&o=1&a=0596516495" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+  which does a great job of showing how the NLTK works
+  at the same time as it explains
+  the computer science concepts of language processing.
+</p>
+<p>
+  The NTLK project wants to support
+  installing their package as a Python egg,
+  so they asked me to tidy up their <tt>setup.py</tt> file
+  and prepare everything for distribution via the Python Package Index.
+</p>
+<p>
+  As usual,
+  my desire for simple and reproducible behavior
+  when distributing Python packages
+  has run aground on the tangled magic
+  for which <tt>setuptools</tt> is so justly famous.
+</p>
+<!--more-->
+<p>
+  The NLTK package's original <tt>setup.py</tt>,
+  powered by the standard <tt>distutils</tt>,
+  produced a tidy source <tt>tar.gz</tt> of around 850 KB.
+  My fancy egg-capable version, on the other hand, wound up disgorging
+  a source archive of no less than 24.7 MB in size.
+  The NLTK people added a note to our open issue that
+  <a href="http://code.google.com/p/nltk/issues/detail?id=56"
+     >politely asked me why their source distribution
+  was now thirty times its original size</a>
+  without the package's <tt>MANIFEST.in</tt>
+  file having been changed in the least.
+</p>
+<p>
+  I recognized the problem immediately, of course,
+  as will many of you who have transitioned a project
+  from the <tt>distutils</tt> to <tt>setuptools</tt> before.
+  In order to make our lives so vastly grand and convenient,
+  <tt>setuptools</tt> includes in a source distribution
+  not only all of the files described in the package's manifest,
+  but also every file in the area
+  that is currently checked into Subversion!
+  This introduces a thicket of potential problems:
+  a project started without version control
+  will suddenly behave differently when checked into Subversion;
+  files disappear from the source distribution
+  if you upgrade from Subversion to a version control system
+  of which <tt>setuptools</tt> is ignorant;
+  and, of course,
+  any attempt to build your project
+  from a clean <tt>svn</tt> <tt>export</tt>
+  can result in a source archive with hundreds of files missing.
+</p>
+<p>
+  Since the NLTK has been distributed successfully for years
+  using only <tt>distutils</tt> and a well-written project manifest,
+  I simply wanted to turn off the magic.
+  It would be possible, I suppose,
+  to instruct packagers to run <tt>svn</tt> <tt>export</tt>
+  before running the <tt>sdist</tt> command,
+  but it offends good sense
+  that you should have to check out a project
+  in some special way just to get predictable behavior.
+  The whole point of version control
+  is that it's supposed to be <i>meta</i>-data
+  that keeps up with history while having <i>no effect</i>
+  on how an application builds and runs.
+</p>
+<p>
+  Having been bitten by this <tt>setuptools</tt> feature
+  several times in the past,
+  I decided that, this time,
+  I would actually learn how to disable the behavior
+  instead of trying to work around it yet again.
+  “Where,” I thought, “is the switch?
+  Where is the option?”
+  After an exhausting search of the
+  <a href="http://peak.telecommunity.com/DevCenter/setuptools"
+     >setuptools documentation</a>
+  and then, finally, its source code,
+  I am perplexed to report
+  that the only recourse left to us seems to be violence!
+  You must actually damage <tt>setuptools</tt>
+  before running the <tt>setup()</tt> function
+  if you want to prevent it from trying to muck about with Subversion.
+  The cleanest attack on the problem —
+  or should we say the “cleanest surgery?” —
+  seems to be:
+</p>
+<pre class="literal-block">
+#!python
+# Add this to setup.py before you call setup()
+
+from setuptools.command import sdist
+del sdist.finders[:]
+</pre>
+<p>
+  With this change,
+  <tt>setuptools</tt> peacefully ignores
+  whether the project
+  happens to have been checked out of version control or not,
+  and with a bit of tweaking
+  the same source distribution can be produced
+  as would have been generated by the <tt>distutils</tt>.
+</p>
+<p>
+  Now, at this point, you probably think that this blog post
+  is shaping up to be a complaint against how <tt>setuptools</tt>
+  pays attention to Subversion
+  while providing no way to turn this intrusive feature off.
+  But, in fact, that is all really just a side issue:
+  it was a minor adventure that I wanted to share
+  on the way toward my main point.
+  I am not even sure whether the remedy suggested above
+  is a good idea;
+  I have
+  <a href="http://stackoverflow.com/questions/1129180/how-can-i-make-setuptools-ignore-subversion-inventory"
+     >asked the question on Stack Overflow</a>,
+  so we can see if someone else figures out a better approach.
+</p>
+<p>
+  The <i>actual</i> complaint of this blog post
+  is that <tt>setuptools</tt> displays
+  a troublesome, undocumented, and downright obfuscatory hysteresis
+  with respect to the list of files
+  that gets included in a source package.
+  The fact is, after I discovered
+  the <tt>sdist.finders</tt> trick quoted above,
+  <i>I actually thought it didn't work
+    because the next source archive I created
+    was exactly the same size as before</i>.
+</p>
+<p>
+  The problem?
+  It turns out that <tt>setuptools</tt>
+  will choose to keep including a given file in your source archive,
+  <i>even if you have removed it from your manifest</i>,
+  until you force <tt>setuptools</tt>
+  to rebuild the package's file list
+  by destroying its <tt>SOURCES.txt</tt> file:
+</p>
+<pre>
+$ python setup.py sdist
+$ wc -c dist/nltk-2.0b4.tar.gz
+25648109
+$ rm nltk.egg-info/SOURCES.txt
+$ python setup.py sdist
+$ wc -c dist/nltk-2.0b4.tar.gz
+868517
+</pre>
+<p>
+  Only with this removal will files
+  that are no longer listed in the manifest,
+  or governed by version control,
+  quietly and finally drop out of the source archives
+  you are creating.
+  That is my complaint:
+  that <tt>setuptools</tt> refuses to remove files
+  from your source distribution
+  unless you know to go remove a magic file from under its nose.
+</p>
+<p>
+  As I now go to close out that NLTK ticket,
+  should I explain that packagers
+  always need to manually remove <tt>SOURCES.txt</tt>
+  before preparing an official source distribution
+  for upload to the Python Package Index?
+  Or should I be brave
+  and add an <tt>os.remove()</tt> call to <tt>setup.py</tt> myself
+  that always destroys the file
+  before the <tt>setup()</tt> call gets underway?
+  Is there any danger to that approach?
+  Leave a comment and let me know!
+</p>

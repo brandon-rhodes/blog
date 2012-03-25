@@ -1,0 +1,120 @@
+---
+categories: Computing, Python
+date: 2009/03/11 16:22:47
+guid: http://rhodesmill.org/brandon/?p=71
+permalink: http://rhodesmill.org/brandon/2009/nested-comprehensions/
+tags: ''
+title: I finally understand nested comprehensions
+---
+<p>
+This entire blog post
+can be summarized in the words of Guido himself
+that I have just discovered down at the bottom of
+<a href="http://www.python.org/dev/peps/pep-0202/">PEP-202</a>
+(“List Comprehensions”):
+</p>
+<blockquote><p>
+The form <tt>[... for x... for y...]</tt> nests, with the last index
+varying fastest, just like nested for loops.
+</p></blockquote>
+<p>
+Have you ever seen a Python list comprehension like that,
+with <i>two</i> or more <tt>for</tt> loops inside?
+I have just written my first one!
+It was only recently that I discovered they were even possible,
+when I encountered several in a draft of the upcoming
+<a href="http://www.amazon.com/gp/product/0596516495?ie=UTF8&tag=letsdisthemat-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=0596516495">Natural
+Language Processing with Python</a> book.
+(Which should be great — watch for O'Reilly to publish it!)
+They almost never turn up in other code that I encounter,
+and perhaps for good reason:
+they were deeply confusing the first time I saw them!
+</p>
+<p>
+The code I have just written is shown below.
+It uses the
+<a href="http://www.pythonware.com/products/pil/">Python Imaging Library</a>
+to produce an image I will use
+in the series of blog posts that
+<a href="http://rhodesmill.org/brandon/2009/graphicsmagick-saved-the-day/"
+   >I started yesterday on watermarking PDF files</a>.
+The code requires a small
+<tt><a href="/brandon/static/2009/arecibo.txt">arecibo.txt</a></tt>
+file, detailing the radio message
+that was sent from the Arecibo Observatory
+in November 1974 to any other civilizations that might be listening.
+As you can see, I have successfully used two <tt>for</tt> clauses
+in the list comprehension that generates the image's pixels:
+</p>
+<pre class="literal-block">
+#!python
+"""Draw the Arecibo message (blue on transparent)."""
+from PIL import Image
+image = Image.new("RGBA", (23, 73))
+image.putdata([
+    (192,224,255,255) if char == '1' else (0,0,0,0)
+    for line in open('arecibo.txt')
+    for char in line.strip()
+    ])
+image.save('arecibo.png')
+</pre>
+<p>
+Each pixel is a four-value tuple, by the way,
+because an RGBA image not only has a red, green, and blue
+channel for each pixel,
+but also an “A channel” specifying its opacity or transparency.
+The colors in use here are a completely opaque light blue,
+and a completely transparent color (the four zeros).
+The result looks something like:
+</p>
+<div class="caption">
+<img src="http://rhodesmill.org/brandon/static/2009/arecibo-big.png"
+     alt="Arecibo message" />
+</div>
+<p>
+My mistake in reading the multiple <tt>for</tt> clauses
+was that, old C-language programmer that I am,
+I was expecting the comprehension structure to be concentric.
+That is, I thought that the last <tt>for</tt> must “enclose”
+the ones above it,
+creating a mess of lists inside of lists inside of lists.
+But it turns out that they are much simpler to read than that.
+<i>Just read them like normal loops,</i>
+with the “big loop” described first
+and the subsequent loops nested inside of it:
+</p>
+<pre class="literal-block">
+#!python
+# The list comprehension said:
+  [ <i>expression</i>
+    for line in open('arecibo.txt')
+    for char in line.strip() ]
+
+# It therefore meant:
+for line in open('arecibo.txt'):
+    for char in line.strip():
+        <i>list</i>.append(<i>expression</i>)
+</pre>
+<p>
+So, to read the comprehension,
+just picture colons appended to each <tt>for</tt> clause
+and, finally, the <i><tt>expression</tt></i>
+moved down inside of the innermost <tt>for</tt> loop.
+</p>
+<p>
+Now that I have made this conceptual leap,
+I can “picture” the normal <tt>for</tt> loops
+each time I see a complicated list comprehension,
+and they are trivial to read and write!
+It still, I admit, feels odd that the <i><tt>expression</tt></i>,
+which would be deep inside of normal <tt>for</tt> loops,
+goes in front of them in a comprehension instead.
+And I am not sure that double comprehensions
+should become part of my normal coding style.
+(How many other Python programmers understand them?
+Has everyone else been using them without problems?)
+But they are a neat trick to have up my sleeve
+when I need to iterate over an image quickly
+and want to pack everything into a single,
+easily-bloggable expression.
+</p>

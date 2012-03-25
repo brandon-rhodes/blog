@@ -1,0 +1,284 @@
+---
+categories: Computing, Python
+date: 2009/08/01 16:48:59
+guid: http://rhodesmill.org/brandon/?p=185
+permalink: http://rhodesmill.org/brandon/2009/the-road-to-webfaction/
+tags: ''
+title: The Road to WebFaction
+---
+<p>
+  I am very happy with my first weeks of hosting sites at WebFaction.
+  They have taken so much responsibility off of my shoulders.
+  They run <a href="http://nginx.net/">nginx</a>
+  in front of my web applications on my behalf.
+  I fill out a simple form,
+  placing Pylons under <tt>/</tt> and Wordpress under <tt>/blog</tt>,
+  and they write all of the redirect rules to accomplish it.
+  I list the domains and sub-domains on which my site should appear,
+  and they configure the virtual hosting for me.
+</p>
+<p>
+  WebFaction has even finally wrested domain name control from my fingers.
+  Gone are the installations of
+  <a href="http://en.wikipedia.org/wiki/BIND">bind</a>
+  that used to be running everywhere,
+  and the smattering of shell scripts with which I wrapped “nsupdate”
+  to publish new host names.
+  Now, I accomplish host name changes in a few moments
+  through the control panel on WebFaction.
+  This gives me more time to do creative things for my customers,
+  and gives me one less daemon that I have to keep upgraded
+  if I want to avoid security problems.
+  (If you want to try them out for yourself,
+  <a href="http://www.webfaction.com/?affiliate=rhodesmill"
+     >using this WebFaction sign-up link</a>
+  will credit me as the one who recommended them.)
+</p>
+<p>
+  This move to making WebFaction
+  my default choice for hosting new client projects
+  is only the most recent chapter in the very long story
+  of my devolving responsibilities on to other people.
+  The previous steps went something like this:
+</p>
+<!--more-->
+<ul>
+  <li><b>Late 1980s: Letting C write my machine code.</b>
+    It was difficult to give up control over the actual opcodes
+    that my programs invoked on a 6809 or 68010 processor,
+    especially since C seemed to produce some of the most verbose
+    and overwrought machine language I had ever seen.
+    Programs were <i>thousands</i> of bytes longer
+    than ones that I coded by hand!
+    The C language was a crazed memory and performance hog.
+    How could I trust it with my code?
+    It was, I think, its very sleek design
+    that helped me make the switch,
+    combined with how pleasant it was
+    to work with very high-level concepts, such as functions,
+    rather than low-level concepts,
+    like manually allocated stack frames.
+  </li>
+  <li><b>Early 1990s: Letting stdio buffer my I/O.</b>
+    Not only was stdio traditionally slow,
+    but you always had to remember to run <tt>flush()</tt>
+    before users could see the next few characters of output.
+    And don't even get me started
+    on the pain of early versions of <tt>scanf()</tt>
+    that required you to allocate memory for an incoming string
+    before you even knew what size it was!
+    But, somehow, the day eventually arrived
+    when I had written my own I/O buffering routines enough times,
+    and I succumbed to letting the standard library authors
+    worry about it instead.
+  </li>
+  <li><b>Mid 1990s: Letting Red Hat keep track of packages.</b>
+    Slackware gave users so much control!
+    It was the obvious choice when I got my first Linux machine
+    from Apache Digital in April 1996.
+    (Their competitors were a little company called VA Linux,
+    whose web site was very primitive
+    compared to Apache Digital's,
+    lacking a sophisticated web form
+    for choosing the case, motherboard, and PCI cards
+    that you wanted in your custom Linux machine.
+    I gave VA Linux little chance of surviving.
+    Surprisingly
+    <a href="http://sourceforge.net/">they seem to be the ones
+      who are still around!</a>).
+    But after several years,
+    the seams started to show around the edges
+    of tar-archive-driven system packaging,
+    and I was ready to acquiesce
+    and allow deeply mysterious binary Red Hat packages
+    to take care of installing packages for me.
+    I just didn't have time to compile everything myself
+    that Slackware had not thought of packaging themselves.
+    Instead, I wanted to go online,
+    find a good Red Hat Package archive,
+    spend several minutes searching
+    to find the package I wanted,
+    then search and find and download its dependencies,
+    and then become root to get it installed.
+    So simple!
+    Life was good.
+  </li>
+  <li><b>Late 1990s: Letting Python manage memory for me.</b>
+    This step was actually a very easy one.
+    By this point I was exhausted from trying
+    to <tt>malloc()</tt> and <tt>free()</tt>
+    the memory I needed by hand,
+    so much so that <a href="http://www.amazon.com/gp/product/020107981X?ie=UTF8&tag=letsdisthemat-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=020107981X">AWK</a><img class="inline" src="http://www.assoc-amazon.com/e/ir?t=letsdisthemat-20&l=as2&o=1&a=020107981X" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+    became my standard tool for every programming task
+    for which it was even remotely suited.
+    And then Python appeared!
+    Python was sleek, it was elegant,
+    and it used most of the same operators as
+    the C language with the brilliant extension
+    of using “%” for percent-sign string interpolation.
+    Thus I was relieved of duty with respect to <tt>malloc()</tt>.
+  </li>
+  <li><b>Around 2000: Letting Debian manage dependencies for me.</b>
+    I used to like selecting exactly what went on to my system,
+    because I liked sleek and carefully installed machines
+    that cede not even an extra byte of disk space
+    for a tool that I have not asked for and will not use.
+    But the process of finding all of the library dependencies
+    for even a moderately sophisticated application
+    became ruinously expensive in terms of time.
+    The extra satisfaction
+    of choosing exactly what was on my hard drive
+    was just not worth the effort;
+    and, when the time came to remove an application
+    that I was no longer using,
+    even my small army of RPM dependency-diving shell scripts
+    were an inconvenient way of keeping my system trim.
+    With a switch to Debian,
+    I suddenly had a sophisticated tool —
+    <a href="http://wiki.debian.org/Aptitude">aptitude</a> —
+    that <i>both</i> download packages and their dependencies
+    directly off the Internet for me,
+    and then cleaned up and removed the dependencies later
+    when I was done.
+    It was a great solution, and I still use it to this day;
+    I just used aptitude to install a package a few minutes ago.
+  </li>
+  <li><b>June 2008: Letting Slicehost power my web server.</b>
+    With my web server needs growing,
+    and tired of bouncing between friends
+    with extra space on their colocated boxes,
+    I opted for my first virtual host.
+    Research led me quickly to Slicehost
+    (again, here is a
+    <a href="https://manage.slicehost.com/customers/new?referrer=22cffa1fe839f89b8dfdbb7122f243e9"
+       >referral link if you want to try them out
+    and blame me for it later</a>)
+    who used an open-source virtualization system
+    to provide virtual servers.
+    They are famous for not punishing their users
+    by over-allocating servers.
+    With the exception of an hour of downtime
+    when a kernel upgrade went awry
+    (the new kernel that I needed was not compatible
+    with the older server on which my slice was allocated,
+    and the tech did not notice the mismatch until my slice
+    failed to reboot over the next several minutes),
+    I have found their service to be flawless,
+    and have always found their support to be technically acute
+    and very friendly.
+    With the move to a virtual server,
+    a whole range of concerns about power,
+    disk replacements, and RAID and LVM settings
+    passed entirely out of my purview.
+    I have not missed those responsibilities
+    or thought about them since.
+  </li>
+  <li><b>April 2009: Letting Ubuntu fill my hard drive with packages.</b>
+    This has been one of the most exciting transitions I have made!
+    After experiencing several system breakages
+    through the early months of 2009
+    as Debian Unstable became more and more chaotic,
+    I found myself squeezed between two unfortunate options.
+    I could either downgrade to Debian Stable
+    and wait three entire years between operating system releases —
+    and thus be using <i>very</i> old copies of Firefox and Emacs
+    by the end of each release cycle —
+    or I could stay on Debian Unstable
+    and face increasingly frequent chaos.
+    The release schedule of <a href="http://www.ubuntu.com/">Ubuntu</a>,
+    it turned out,
+    was a perfect balance:
+    like Debian Stable it usually features only security upgrades,
+    but unlike Debian it guarantees a release every six months
+    so that the software I am using
+    never has time to become too old.
+    Thanks to the community's “Emacs snapshot” packages,
+    the most important package I used stays current every single week!
+    And the number of features Ubuntu enables by default
+    is simply stunning.
+    My network card <i>just worked</i> under 9.04
+    without needing the usual hours of fiddling with
+    <a href="http://sourceforge.net/projects/ndiswrapper/">ndiswrapper</a>
+    and proprietary Windows driver downloads.
+    And, to take command-line completion as another example,
+    my most recent shock was typing “django-admin.py”
+    followed, accidentally, by <i>tab</i>,
+    only to receive the entire list of Django admin command-line
+    operations in return!
+    I now feel that Debian was
+    “Linux with all of the features turned off”
+    unless I knew about them and deliberately turned them on;
+    with Ubuntu, it's like walking into a house
+    with the lights already on, the air conditioning already running,
+    and food already in the fridge.
+  </li>
+  <li><b>July 2009: Letting WebFaction run my web services.</b>
+    Finally, the transition that instigated this blog post!
+    I have always been such a nuts-and-bolts guy
+    that I never imagined giving up control
+    over every single character in the configuration files
+    that power my web applications.
+    It has probably been this first year
+    of being on my own as a consultant
+    that has changed my attitude:
+    with well-defined projects and contractual deadlines,
+    I feel much more viscerally whether my time
+    is being spent as productively as possible for my customers.
+    And writing yet another Apache configuration
+    just to set up virtual hosting,
+    wonderful as it was to feel my hands on the knobs and dials,
+    is simply not how I want to be spending my time.
+    The way that WebFaction sets up hosting accounts is very clever —
+    they use POSIX access lists,
+    which I had never encountered in production before,
+    to very finely tune which of their applications
+    can see which areas of your account —
+    and it's a very fun environment to work in.
+  </li>
+</ul>
+<p>
+  Two quick notes before closing.
+</p>
+<p>
+  First, I should stress that the earlier steps in this process
+  would have been difficult to skip.
+  To this day, writing input and output code in Python
+  is often helped by knowing something
+  about what the buffering code underneath must look like.
+  Making final tweaks to my WebFaction hosting accounts
+  is helped by having written end-to-end Apache configurations before,
+  so that I recognize the options I am looking at
+  when one of them needs to be tweaked.
+  And so forth.
+  That is why I try never to show impatience
+  when I tell another programmer about some wonderful convenience
+  which I have discovered,
+  and they frown
+  and say they would rather do it themselves:
+  they are probably obeying a deep and important engineering instinct,
+  that tells them to understand a layer of functionality quite thoroughly
+  before letting it disappear into an additional layer of abstraction.
+  Sometimes an inexperienced person
+  has to do it themselves first,
+  however imperfectly,
+  before they can move on.
+  Think, for example,
+  of all that the Django guys must have learned by now.
+</p>
+<p>
+  Second, I should note that I have told this story for its own sake,
+  and not for the smattering of referral links above.
+  They are included simply because I myself enjoy the chance
+  to reward people who point out new services to me.
+  Please just ignore the links
+  if they make you feel like you are reading an advertisement!
+  This blog post grew organically out of the post
+  that I will now sit down to write next,
+  about compiling lxml under one of my WebFaction accounts.
+  I started explaining what it has meant
+  for me to give up control over my front-end web server
+  by moving to WebFaction,
+  and once I was a few paragraphs in
+  I realized that I had a whole separate blog post on my hand.
+  I hope you have enjoyed it!
+</p>

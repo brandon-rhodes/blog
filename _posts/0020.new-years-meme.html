@@ -1,0 +1,167 @@
+---
+categories: Computing, Python, Web Notes
+date: 2009/01/01 14:27:57
+guid: http://rhodesmill.org/brandon/?p=31
+permalink: http://rhodesmill.org/brandon/2009/new-years-meme/
+tags: ''
+title: 'New Year&#039;s meme: What are the oldest files in your home directory?'
+---
+<p>
+Celebrate the new year with a blog post
+discussing the oldest files
+that are still sitting somewhere beneath your home directory!
+The procedure is simple:
+</p>
+<ol>
+<li>Run the following script in your home directory.
+(You might want to use <i>less</i> to read the output.)</li>
+<li>Ignore files whose date does not reflect your own activity.</li>
+<li>List the oldest files in a blog post and discuss!</li>
+</ol>
+<pre class="literal-block">
+#!python
+#!/usr/bin/env python
+"""Print last-modified times of files beneath '.', oldest first."""
+import os, os.path, time
+paths = ( os.path.join(b,f) for (b,ds,fs) in os.walk('.') for f in fs )
+for mtime, path in sorted( (os.lstat(p).st_mtime, p) for p in paths ):
+    print time.strftime("%Y-%m-%d", time.localtime(mtime)), path
+</pre>
+<p>
+Only include files whose last-modified time
+is a date on which you really touched the file.
+The file's time should neither result from an error
+(a few files beneath my own home directory
+have an incorrect date of 1970-01-01),
+nor from unpacking someone else's archive
+that has old files inside of it.
+For example,
+I myself have excluded
+the following pair of nearly 17-year-old files
+because their dates reflect their age
+inside of the Python 3.0 source archive,
+instead of the actual moment last month
+when they became part of my home directory:
+</p>
+<pre>
+1992-03-02 ./src/Python-3.0/Demo/scripts/wh.py
+1992-03-02 ./src/Python-3.0/Tools/scripts/dutree.doc
+</pre>
+<p>
+But there is no requirement that the actual <i>content</i>
+of each file you list be your own.
+Whether you wrote the file yourself long ago,
+or downloaded it from some ancient and forgotten FTP site,
+you have a story to share!
+</p>
+<p>
+Within the rules given above,
+here are the oldest files beneath my own home directory:
+</p>
+<!--more-->
+<pre>
+# My oldest five files!
+# (The links return their content.)
+
+1989-05-17 ./archive/unixpc/cee/crobots/<a href="http://rhodesmill.org/brandon/static/2009/BCRMAD.R.txt">BCRMAD.R</a>
+1989-05-17 ./archive/unixpc/cee/crobots/<a href="http://rhodesmill.org/brandon/static/2009/BCRONE.R.txt">BCRONE.R</a>
+1990-01-18 ./archive/unixpc/ref/<a href="http://rhodesmill.org/brandon/static/2009/train">train.gz</a>
+1990-01-18 ./archive/unixpc/ref/<a href="http://rhodesmill.org/brandon/static/2009/xmas">xmas.gz</a>
+1990-05-18 ./archive/unixpc/save/Rhodes/<a href="http://rhodesmill.org/brandon/static/2009/treasure">treasure</a>
+</pre>
+<p>
+You can see that these files were moved, long ago,
+into an archive directory for files
+that are no longer part of an active project.
+These files all date from the era
+when my home directory was hosted
+on the <span class="sc">Unix</span> PC which my father,
+a Bell Laboratories engineer,
+brought home in the 1980s as our personal computer.
+</p>
+<p>
+We should start with the zipped files from January 1990,
+since they actually contain even older content,
+from December 1987 —more than twenty years ago!
+My father received them as Christmas greetings
+from fellow engineers at the Labs.
+You can view
+<tt><a href="http://rhodesmill.org/brandon/static/2009/xmas">xmas</a></tt>
+right in your browser,
+since it is a simple ASCII-art holiday greeting
+(the name “Merrimack Valley” at the bottom
+refers to the particular Bell Labs location
+at which my father worked).
+Viewing
+<tt><a href="http://rhodesmill.org/brandon/static/2009/train">train</a></tt>
+is more difficult, since it contains a VT-100 animation
+that will display much too quickly
+if you dump the file to a modern terminal.
+Instead, download the file and use this Python program
+to display it at a more traditional speed;
+you might want to light a candle and play some Christmas music
+while the animation is displaying:
+</p>
+$$code(lang=python)
+#!/usr/bin/env python
+"""Display the 'train' file, slowly."""
+import sys, time
+for c in open('train').read():
+    sys.stdout.write(c)
+    sys.stdout.flush()
+    time.sleep(1.0/9600.0) # (drat, really sleeps 0.01s)
+$$/code
+<p>
+Though Dad probably retained the files only through the Christmas season,
+I was fascinated by watching them
+scroll silently across the black screen
+in glowing, green, phosphoric characters
+that seemed to leave trails behind them like shooting stars,
+and so I kept the files
+long after many subsequent Christmases had come and gone.
+</p>
+<p>
+The other three files are all plain-text files,
+and are all of my own making.
+The <tt><a href="http://rhodesmill.org/brandon/static/2009/BCRMAD.R.txt">BCRMAD.R</a></tt>
+and <tt><a href="http://rhodesmill.org/brandon/static/2009/BCRONE.R.txt">BCRONE.R</a></tt>
+programs were experiments in
+<a href="http://en.wikipedia.org/wiki/Crobots">the old
+<span class="sc">crobots</span> game</a>,
+where you wrote small C-language programs
+to control robots that drove around on the screen
+and shot at each other.
+The names seem to refer to the fact
+that the first file simulates a “mad bull”
+that drives straight at targets
+shooting as fast as it can,
+while the second program always takes “one shot” at a target
+then flees to another location on the screen.
+This would have been one of my very first forays into C programming —
+perhaps my very first —
+and so the algorithms are, I must admit,
+not exactly pinnacles of sophistication.
+</p>
+<p>
+The last file is named
+<tt><a href="http://rhodesmill.org/brandon/static/2009/treasure">treasure</a></tt>,
+and it is, indeed, a real treasure of a file
+to have discovered this New Year's morning!
+It is my long-lost account,
+carefully annotated with the venerable <tt>mm</tt> macro package
+(as you can see from the <i>troff</i> include directive
+on the first line),
+of the day in early 1990
+when I discovered buried treasure
+that my father had hidden as a child on my grandparent's property!
+I actually saw the “treasure” last week
+(an ancient coffee can with old toys inside)
+sitting on a shelf when I visited my grandmother on Christmas Day.
+I will have to pull it down from the shelf
+and put some pictures on Flickr, along with excerpts
+from this long-lost story of its discovery!
+</p>
+<p>
+In the meantime: what are the oldest files under <i>your</i>
+home directory?
+</p>
