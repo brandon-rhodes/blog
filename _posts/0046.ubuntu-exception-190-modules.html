@@ -1,0 +1,62 @@
+---
+categories: Computing, Python
+date: 2010/02/25 23:16:32
+guid: http://rhodesmill.org/brandon/?p=301
+permalink: http://rhodesmill.org/brandon/2010/ubuntu-exception-190-modules/
+tags: ''
+title: 'Ubuntu Python: raise an exception, import 190 modules'
+---
+<p>
+Imagine my surprise, while writing my first
+<a href="http://www.python.org/dev/peps/pep-0302/">PEP 302</a>
+compliant import hook this afternoon,
+to carefully watch <tt>sys.modules</tt> for the results of my import
+but see it suddenly grow by nearly two hundred modules!
+What on earth had I done wrong?
+Some quick experiments revealed that my only sin
+was having the temerity to raise an exception.
+Let's try raising a simple <tt>NameError</tt>:
+</p>
+$$code(lang=python)
+>>> import sys
+>>> len(sys.modules)
+35
+>>> foo
+...
+NameError: name 'foo' is not defined
+>>> len(sys.modules)
+225
+$$/code
+<p>
+That's 190 extra modules —
+merely importing them takes around 60 ms on my laptop!
+Where are they all coming from?
+And how could an exception cause so many imports,
+including such illustrious modules as <tt>email</tt>,
+<tt>mimetools</tt>, and <tt>xml</tt>?
+</p>
+<p>
+After reading Ubuntu's <tt>sitecustomize.py</tt> file
+and all of its consequences, the situation became clear.
+Their <a href="https://wiki.ubuntu.com/Apport">apport</a>
+crash-reporting subsystem instruments Python
+with an exception hook that, when invoked,
+discovers that my system says <tt>enabled=0</tt>
+in my <tt>/etc/default/apport</tt> file
+and so it undertakes no special crash logging.
+But, on the way to loading the routine
+that performs this simple check,
+it performs two quite flagrant and unnecessary imports,
+pulling in both <tt>apt</tt>
+(that brings with it 83 packages)
+and <tt>apport</tt>
+(an additional 107 packages).
+</p>
+<p>
+The solution?
+I have removed the <tt>python-apport</tt> package,
+along with the <tt>ubuntuone-client</tt> suite that depends on it.
+After the uninstall, exceptions are — wonderfully enough —
+not causing a <i>single</i> import of a new module!
+Now, finally, I can continue writing my import hook in peace.
+</p>

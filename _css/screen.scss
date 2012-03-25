@@ -83,6 +83,12 @@ article {
     color: $titletxt;
     font-weight: normal;
   }
+  blockquote {
+    color: darken($contentbg, 70%);
+    border-top: 1px solid darken($contentbg, 10%);
+    border-bottom: 1px solid darken($contentbg, 10%);
+    padding: 0.3em 0em;
+  }
   ul {
     padding-left: 1em;
     @media screen and (min-width: 480px) {
@@ -93,10 +99,7 @@ article {
     margin-top: 1em;
     margin-bottom: 1em;
   }
-  img {
-    max-width: 100%;
-  }
-  iframe {
+  img, iframe {
     max-width: 100%;
   }
   tt {

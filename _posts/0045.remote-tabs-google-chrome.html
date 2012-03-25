@@ -1,0 +1,72 @@
+---
+categories: Computing, Emacs, Python
+date: 2010/02/24 23:07:06
+guid: http://rhodesmill.org/brandon/?p=291
+permalink: http://rhodesmill.org/brandon/2010/remote-tabs-google-chrome/
+tags: ''
+title: Opening tabs remotely in Google Chrome
+---
+<p>
+Now that I use
+<a href="http://www.google.com/chrome">Google Chrome</a>
+almost exclusively,
+I miss the fact
+that a running <a href="http://www.firefox.com">Firefox</a> instance
+could be controlled from the command line so that Emacs could call for a new tab
+when I clicked on a URL.
+It would run a command something like this:
+</p>
+<pre>
+firefox -remote 'openURL(http://example.com/, new-tab)'
+</pre>
+<p>
+But after a few months of manually cutting and pasting URLs into Chrome —
+which wasn't actually <i>that</i> bad,
+since the address bar in Chrome is such a convenient and large target —
+I decided that I needed a real solution.
+After not finding anything like a <tt>-remote</tt> option,
+I discovered that Chrome can at least be run
+with a debugging port open:
+</p>
+<pre>
+google-chrome --remote-shell-port=9222
+</pre>
+<p>
+The protocol that Chrome speaks is primitive enough
+that it was quick work to implement a small client in Python.
+Rather than merely cutting and pasting its code here on my blog,
+or even be satisfied with
+<a href="http://bitbucket.org/brandon/chrome_remote_shell/"
+   >making it available on bitbucket</a>,
+I decided to place the code inside of a new Python package
+and make it generally available on PyPI as <a href="http://pypi.python.org/pypi/chrome_remote_shell/"
+   >chrome_remote_shell</a>.
+</p>
+<p>
+Thanks to this simple package,
+a four-line program (not counting the shebang and comment)
+is now all that I need to ask Google Chrome to open a new tab:
+</p>
+$$code(lang=python)
+#!/usr/bin/env python
+# Name this file "google-chrome-open-url"
+import sys
+import chrome_remote_shell
+shell = chrome_remote_shell.open()
+shell.open_url(sys.argv[-1])
+$$/code
+<p>
+To teach Emacs to start using Google Chrome when I clicked on a link,
+I only needed to supply it with two new settings:
+</p>
+$$code(lang=scheme)
+(setq browse-url-browser-function
+      'browse-url-generic)
+(setq browse-url-generic-program
+      "google-chrome-open-url")  
+$$/code
+<p>
+And now everything works.
+I hope that these notes prove useful to someone else.
+Enjoy!
+</p>

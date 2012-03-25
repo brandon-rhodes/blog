@@ -1,0 +1,156 @@
+---
+categories: Computing, Python
+date: 2010/05/14 12:27:05
+guid: http://rhodesmill.org/brandon/?p=333
+permalink: http://rhodesmill.org/brandon/2010/python-multiprocessing-linux-windows/
+tags: ''
+title: Python multiprocessing is different under Linux and Windows
+---
+<p>
+One of the great recent advances in the Python Standard Library
+is the addition of the
+<a href="http://docs.python.org/library/multiprocessing.html"
+   >multiprocessing</a> module,
+maintained by <a href="http://jessenoller.com/">Jesse Noller</a>
+who has also blogged and written
+about several other concurrency approaches for Python —
+<a href="http://jessenoller.com/2009/01/29/a-gentle-overview-of-kamaelia-or-its-axon-stupid/"
+   >Kamaelia</a>,
+<a href="http://jessenoller.com/2009/01/31/circuits-event-driven-components/"
+   >Circuits</a>,
+and
+<a href="http://jessenoller.com/2009/02/23/stackless-you-got-your-coroutines-in-my-subroutines/"
+   >Stackless</a> Python.
+</p>
+<p>
+I have wanted to try the multiprocessing module out for some time,
+and now have a consulting project that will really benefit from multiple processes:
+they will let our application run third-party plugins
+without having to worry that any bugs or indiscretions which they commit
+might damage or hang our main server,
+which can remain safe in another process.
+</p>
+<p>
+First, one can only stand in awe at the achievement —
+and the amount of work —
+that the multiprocessing module represents.
+I cannot imagine the time that it would have taken our team
+to figure out all of the differences between Linux and Windows
+when it comes to processes, shared memory, and concurrency mechanisms.
+In fact, the approach we are taking might not even have been feasible
+under those circumstances.
+By figuring out how to get locks, queues, and shared data structures
+all working cleanly on such different architectures,
+the multiprocessing authors
+save Python programmers out on the street like me
+from reinventing a dozen wheels
+when we need to support multi-platform concurrency.
+</p>
+<p>
+Well, <i>almost.</i>
+</p>
+<p>
+There is one rather startling difference
+which the multiprocessing module does <i>not</i> hide:
+the fact that while every Windows process must spin up
+independently of the parent process that created it,
+Linux supports the <i>fork(2)</i> system call
+that creates a child processes already in possession
+of exactly the same resources as its parent:
+every data structure, open file, and database connection
+that existed in the parent process
+is still sitting there, open and ready to use, in the child.
+Consider this small program:
+</p>
+$$code(lang=python)
+from multiprocessing import Process
+f = None
+
+def child():
+    print f
+
+if __name__ == '__main__':
+    f = open('mp.py', 'r')                                                      
+    p = Process(target=child)
+    p.start()
+    p.join()
+$$/code
+<p>
+On Linux, the open file <tt>f</tt> keeps its value in the child process;
+the child has inherited an open connection from its parent:
+</p>
+<pre>
+$ python mp.py
+&lt;open file 'mp.py', mode 'r' at 0xb7734ac8&gt;
+</pre>
+<p>
+Under Windows, however, where the multiprocessing module
+has to spawn a fresh copy of the Python interpreter
+to which it gives special instructions
+to just run the function <tt>f()</tt>,
+the module is a clean slate without an open file inside:
+</p>
+<pre>
+C:\Users\brandon\dev>python mp.py
+None
+</pre>
+<p>
+Now, my complaint is not exactly
+that the multiprocessing documentation is misleading on this point;
+under its section on
+<a href="http://docs.python.org/library/multiprocessing.html#programming-guidelines"
+   >Programming guidelines</a>,
+it makes it quite clear that:
+</p>
+<blockquote>
+On Unix a child process can make use of a shared resource created in a
+parent process using a global resource. However, it is better to pass
+the object as an argument to the constructor for the child process.
+</blockquote>
+<p>
+I have no quarrel with this advice;
+if I am careful to pass everything the child needs
+in its list of arguments,
+then I can be sure that my code will work under both Linux and Windows.
+</p>
+<p>
+But I do wish that the multiprocessing module
+provided more support for testing this condition
+more rigorously under Linux.
+In particular, I wish that there were some way of turning
+the simple forking logic <i>off</i> —
+of saying, “Yes, I know that Linux will let you create a child process
+very simply using <i>fork(2)</i>, but for my sanity would you please
+create the child process from scratch like you do under Windows so
+that I can test whether my code accidentally depends on residual
+state from the parent process that I did not see that I was using?”
+I looked at the multiprocessing "forking.py" module
+to see whether I could turn on the Windows-style process spawning
+even from inside of Linux,
+but the mechanism is chosen
+by a bare module-level check of "sys.platform"
+and if I overwrite that variable with 'win32'
+the code then dies when it tries to import "msvcrt"
+which is available only under Windows.
+</p>
+<p>
+There is, thus, even in principle, no way
+that I can test my multiprocessing application under Linux
+which will give me any assurance that my child processes
+are not accidentally taking advantage of data structures
+and open connections left lying around by the parent process;
+only by actually moving over to Windows itself
+can I see how my child code really behaves on its own.
+I have <a href="http://bugs.python.org/issue8713">created a feature request</a>
+in the Python bug tracker to see whether this situation can be improved.
+</p>
+<p>
+But even with this one inconvenience —
+which is troubling me much less, now that I at least understand
+why my application was behaving so differently under Windows —
+the multiprocessing module is still a huge leap forwards
+for Python programmers who need to run code
+in heavyweight processes with all of the isolation and safety
+that they provide.
+Thanks again to Jesse and the multiprocessing team!
+</p>

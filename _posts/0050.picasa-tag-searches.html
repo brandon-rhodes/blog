@@ -1,0 +1,70 @@
+---
+categories: Computing, Web Notes
+date: 2010/06/15 12:56:09
+guid: http://rhodesmill.org/brandon/?p=360
+permalink: http://rhodesmill.org/brandon/2010/picasa-tag-searches/
+tags: ''
+title: Changed rules for Picasa tag searches
+---
+<p>
+  Well, drat.
+</p>
+<p>
+  Several images disappeared from the
+  <a href="http://www.ourfreshworld.com/">Our Fresh World</a>
+  green-building web site
+  because Google changed their Picasa API recently —
+  and I must not be subscribed to the proper mailing list or blog
+  to have been warned ahead of time.
+  Where are incompatible Google API tweaks announced?
+</p>
+<img border="0" src="http://rhodesmill.org/brandon/static/2010/solar-power.jpg"/>
+<p>
+  The site owner and his photographer use
+  <a href="http://picasaweb.google.com/">Picasa web albums</a>
+  to upload, edit, and maintain their image collection.
+  They simply give special tags to their favorite photos,
+  and my application code then knows
+  that it is supposed to display those photos on the web site.
+  I almost used <a href="http://flickr.com/">Flickr</a>
+  for this application,
+  both because I am an avid Flickr user myself
+  and because I consider its web interface more usable.
+  But, perhaps predictably, Picasa had the much stronger search API —
+  whereas you can either ask Flickr for the photos in a particular set,
+  <i>or</i> ask for all of someone's photos that share a particular tag,
+  Picasa lets you can combine the two queries
+  and ask for only the photos that are in a particular set
+  <i>and</i> that also share a specific tag.
+  And since search is what attaches pictures to this web site,
+  Picasa was my choice.
+</p>
+<p>
+  All was going well,
+  with each page getting populated by searches like:
+</p>
+<pre>
+http://picasaweb.google.com/data/feed/api/user/<i>name</i><br/>?kind=photo&tag=solar-power
+</pre>
+<p>
+  Then I received an email from the site owner,
+  complaining that many of the photographs had disappeared!
+  After seeing some complaints in the Picasa forums
+  about recent versions of the user interface
+  treating certain “special characters” in tags as spaces instead,
+  I suddenly wondered whether the hyphen in several of our tags
+  (like the “solar-power” tag in the URL above)
+  was the cause of our trouble.
+  I adjusted my code so that this search became:
+</p>
+<pre>
+http://picasaweb.google.com/…?kind=photo&tag=solar+power
+</pre>
+<p>
+  And, voilà, the images returned and were again visible!
+  Does anyone know what forum or blog I should have been following
+  to be informed of this critical change by Google?
+  It is dismaying to have a site break in front of a customer
+  when the very reason that I chose a Google product
+  was because of their powerful API for integrating my application.
+</p>

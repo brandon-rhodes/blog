@@ -1,0 +1,167 @@
+---
+categories: Books, Computing, Grok, Python, Zope
+date: 2010/06/10 22:32:52
+guid: http://rhodesmill.org/brandon/?p=350
+permalink: http://rhodesmill.org/brandon/2010/grok-has-book-book-good/
+tags: ''
+title: Grok has book. Book good!
+---
+<p>
+  I little suspected the great chasm that lies
+  between the simple act of agreeing to review a book,
+  and the actual exercise of sitting down later to write the review.
+  It feels quite pleasant, really,
+  to jot off a positive reply to the publisher's polite question.
+  One feels magnanimous for agreeing to help advance our civilization
+  by reviewing a book about Python,
+  and for helping out the publisher in what,
+  after all, are such hard economic times.
+  It is fun when the free copy arrives,
+  crisp and smartly bound.
+</p>
+<p>
+  But then, eventually, one has to write the actual review.
+</p>
+<a class="image-reference" href="http://www.amazon.com/gp/product/1847197485?ie=UTF8&tag=letsdisthemat-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=1847197485"><img border="0" src="http://rhodesmill.org/brandon/static/2010/grok-book.jpg"></a><img src="http://www.assoc-amazon.com/e/ir?t=letsdisthemat-20&l=as2&o=1&a=1847197485" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<p>
+  And so,
+  a full four months after that friendly email from Packt Publishing,
+  it is time that I sit down
+  and put together some thoughts
+  about Carlos de la Guardia's first book,
+  <a href="http://www.amazon.com/gp/product/1847197485?ie=UTF8&tag=letsdisthemat-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=1847197485"
+     >Grok 1.0 Web Development</a>.
+  Carlos is a long-time veteran of the Zope and Plone communities,
+  and <a href="http://grok.zope.org/">Grok</a>,
+  of course,
+  is the web framework
+  that places a simple and agile convention-driven engine
+  atop the otherwise notoriously XML-ridden Zope application framework.
+  Grok is an important project,
+  because it packages the technology of Python's oldest
+  and most experienced community of web developers
+  in a way that makes it easy to extend and use.
+</p>
+<!--more-->
+<p>
+  First, one notices that the book does exhibit the kind of typos
+  for which Packt are well known;
+  but not so many, in this case, as to distract me from the text.
+  The book tackles increasingly complicated topics
+  in roughly the same order as every book in the web development genre:
+  first installation, then views, models, forms, and so forth.
+  But even here one notices an initial difference!
+  Because this is the land of Zope,
+  the search engine chapter appears quite early in the book —
+  in Chapter 6, in fact.
+  While some web frameworks can only support search
+  through the installation of a special database extension,
+  or perhaps through an entirely separate third-party application,
+  Grok comes with search already integrated into its object database.
+  This lets the concept be introduced early
+  as a natural part of the framework,
+  rather than being a difficult exercise in product integration
+  best left for after the user has learned deployment.
+</p>
+<p>
+  Not that third-party products are bad!
+  In fact, I am happy to see that in many cases Carlos teaches his readers to use them.
+  Barely twenty pages into the book,
+  the new developer is being taught about using
+  <a href="http://pypi.python.org/pypi/virtualenv">virtualenv</a>
+  to maintain an installation of Python packages;
+  and near the end,
+  Carlos teaches deployment using the modern and sleek
+  <a href="http://code.google.com/p/modwsgi/">mod_wsgi</a> module.
+  Some books feel myopically focused on one software community;
+  this one, instead, feels expansive,
+  a place where best practices from all across the Python ecosystem meet.
+</p>
+<p>
+  It is particularly notable
+  that at one point Carlos steps outside of Zope entirely
+  and, for an entire chapter, describes how Grok integrates support
+  for relational databases through
+  <a href="http://www.sqlalchemy.org/">SQLAlchemy</a>,
+  Python's most outstanding ORM.
+  This both reflects credit upon the flexibility of Grok —
+  whose abstractions must be working extremely well
+  to build atop an entirely different database model,
+  one that is not even native to Zope —
+  and it evidences Carlos's determination
+  to teach a very wide set of skills in his book.
+  In fact, he even goes in the other direction at one point,
+  and teaches the interested developer
+  how to use the ZODB <i>without</i> Grok
+  in case they want to access it from another application!
+</p>
+<p>
+  The book tends to be quite clear in what it explains,
+  but it sometimes feels as though a few more side trips
+  in its examples would be welcome —
+  it was not always clear to me whether a beginner,
+  after plowing through an example,
+  would understand what alternatives Carlos faced at each step,
+  and why Carlos chose to build the solutions in the way he did.
+</p>
+<p>
+  Though the book does cover testing,
+  it is not test <i>driven</i> —
+  testing is confined to its own chapter near the end of the book,
+  rather than motivating the design of each sample application.
+  A more interesting omission
+  is that the book says nothing about web services,
+  despite the fact that XML-RPC and REST are two things that Grok does particularly well!
+  A chapter on building web APIs would be a great subject
+  for a second edition of this book,
+  especially if it then proceeded
+  to show how easily Grok can support the Ajax design pattern.
+</p>
+<p>
+  It did strike me as decidedly old-fashioned
+  that Carlos repeats the weary canard
+  that the Zope template language's awkwardness and verbosity
+  are worth it,
+  because it allows your templates to remain valid HTML,
+  because your designers might, at any moment,
+  want to open up and tweak a raw template in their browsers!
+  This, of course, only works if your templates are each an entire page —
+  if you fail to avail yourself, in other words, of <i>any</i> of the power
+  of the macros, slots, and viewlets
+  that Carlos goes on to describe later.
+  And, in fact, many of his later templates
+  are indeed mere un-styled HTML snippets
+  that no designer in their right mind would view in isolation.
+  All of which leads to the question of why
+  <a href="http://genshi.edgewall.org/">Genshi</a>,
+  another template language popular with Grok developers,
+  does not warrant any mention in the book —
+  especially since the book in so many other cases
+  is careful to mention more widely deployed Python technologies
+  that Grok is able to use.
+</p>
+<p>
+  Finally, I can attest that a concept
+  I never managed to learn when I was active with Grok —
+  the tangle of concepts that surround
+  viewlets, viewlet managers, layers, and skins —
+  became quite clear as I sat down
+  and read Chapter 8 in close detail.
+  On the one topic which I could truly approach as a newcomer, therefore,
+  I found Carlos's approach to be very direct and understandable.
+</p>
+<p>
+  Grok has good online documentation,
+  but unless you are already an experienced developer
+  you will have difficulty putting the pieces together
+  into a story that runs smoothly from model to view to deployment.
+  If you need help getting the whole picture
+  of how Grok apps fit together,
+  you will certainly want this book.
+  You can purchase it from either
+  <a href="http://www.amazon.com/gp/product/1847197485?ie=UTF8&tag=letsdisthemat-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=1847197485"
+     >Amazon</a>
+  or directly from its publisher,
+  <a href="http://www.packtpub.com/grok-1-0-web-development/book?utm_source=rhodesmill.org&utm_medium=bookrev&utm_content=blog&utm_campaign=mdb_002483"
+     >Packt Publishing</a>.
+</p>

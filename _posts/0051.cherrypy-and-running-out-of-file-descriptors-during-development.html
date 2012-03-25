@@ -1,0 +1,57 @@
+---
+categories: Computing, Python
+date: 2010/10/19 22:45:44
+guid: http://rhodesmill.org/brandon/?p=378
+permalink: http://rhodesmill.org/brandon/2010/cherrypy-and-running-out-of-file-descriptors-during-development/
+tags: ''
+title: CherryPy and running out of file descriptors during development
+---
+<p>
+Well, that was interesting! A fellow developer complained that, following my recent introduction of <a href="http://www.zeromq.org/">ØMQ</a> into our project, he could only go through a few cycles of editing the source code, saving his changes, and watching <a href="http://www.cherrypy.org/">CherryPy</a> automatically restart before it would fail with:
+</p>
+<pre>
+IOError: [Errno 24] Too many open files
+</pre>
+<p>
+An <tt>lsof</tt> against the process confirmed that more files were open after every restart. My guess was that leftover references were keeping a few Python file objects alive from one CherryPy reload to the next, and I remembered having once used a neat utility for exploring the object heap. After some investigation I re-discovered that it was <a href="http://guppy-pe.sourceforge.net/">Heapy</a>. So I added a <tt>pdb</tt> breakpoint, did some investigating, and was puzzled to find that after each restart only four Python file objects existed — one for each log file in our application.
+</p>
+<p>
+(I also tried using <a href="http://mg.pov.lt/objgraph/">objgraph</a>, which is far easier to use than Heapy, but it could not tell that there were file objects in memory at all.  I have no idea why.)
+</p>
+<p>
+Well, this was a puzzle. How could the number of open file descriptors increase without bound when Python was clearly deleting all of the old file objects? The answer, once I finally tried reading the source code to the <tt>Autoreloader</tt> plug-in, was of course very simple: CherryPy performs each restart by doing an <tt>exec()</tt> to completely wipe out the process image and replace it with a new instance of the CherryPy application. Which is certainly a very thorough approach! Except for one thing: file descriptors in Unix are set, by default, to survive an <tt>exec()</tt> call, but the new instance of Python that spins up inside of the process does not know that they are there, so they never get closed. It appeared that suddenly calling ØMQ out of existence with an <tt>exec()</tt> also left a few sockets lying around.
+</p>
+<p>
+Several possible solutions came to mind. What if a more thorough effort was made to delete all Python objects before running the <tt>exec()</tt> call? That sounded daunting, though — it might take a lot of effort to march through all of the application object trees closing everything down. I could have focused my efforts just on finding the file objects, but that approach felt fragile; what would happen the next time one of our developers wrote a new module that opened a log file?
+</p>
+<p>
+Monkey patching the <tt>open()</tt> built-in to create files with their close-on-exec flag already set is, of course, too terrible a solution even to contemplate.
+</p>
+<p>
+In the end, the simplest solution seemed to be the creation of a little CherryPy plug-in that, as the very last shutdown action, would loop over all existing file descriptors and set their close-on-exec flag. Here is the plug-in, in case the pattern helps anyone else:
+</p>
+$$code(lang=python)
+"""Make sure file descriptors close when CherryPy exec's."""
+
+import os
+import sys
+from cherrypy.process.plugins import SimplePlugin
+
+class CloexecPlugin(SimplePlugin):
+    def stop(self):
+        if hasattr(sys, 'getwindowsversion'):
+            return
+        import fcntl  # not available under Windows
+        max = os.sysconf('SC_OPEN_MAX') if hasattr(os, 'sysconf') else 1024
+        for fd in range(3, max):  # skip stdin/out/err
+            try:
+                flags = fcntl.fcntl(fd, fcntl.F_GETFD)
+            except IOError:
+                continue
+            fcntl.fcntl(fd, fcntl.F_SETFD, flags | fcntl.FD_CLOEXEC)
+
+    stop.priority = 99
+$$/code
+<p>
+Of course, I suspect that this problem was happening all along, even before we added extra logging and then integrated ØMQ into our application. But back then, with maybe only one or two stray file descriptors surviving each restart, it would have taken five hundred or a thousand CherryPy restarts for the problem to be noticed — and, apparently, none of us developers ever reached that impressive total. Now we know to be careful!
+</p>

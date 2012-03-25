@@ -1,0 +1,275 @@
+---
+categories: Computing, Emacs
+date: 2010/06/09 17:33:30
+guid: http://rhodesmill.org/brandon/?p=341
+permalink: http://rhodesmill.org/brandon/2010/mounting-windows-shares-in-linux-userspace/
+tags: ''
+title: Mounting Windows shares in Linux userspace
+---
+<p>
+  A current project has forced me into the clunky world of Windows,
+  to verify that a Python program compiles and runs there
+  just like it runs under Linux.
+  Instead of trying to port my entire development environment to Windows —
+  which includes two decades of customizations
+  and a small empire of tools like
+  <a href="http://www.gnu.org/software/emacs/"
+     >Emacs</a>,
+  <a href="http://pypi.python.org/pypi/pyflakes"
+     >pyflakes</a>, and
+  <a href="http://rope.sourceforge.net/"
+     >Rope</a> —
+  I want to simply mount my Windows home directory under Linux
+  so that I can run my normal editor and version control tools
+  in a more familiar environment.
+</p>
+<p>
+  I have worked out an elegant solution
+  by combining <i>two</i> of the powerful user-space filesystems
+  available through the <a href="http://fuse.sourceforge.net/">FUSE</a>
+  mechanism in the Linux kernel.
+  Let me take you through the story of how I put them together!
+</p>
+<!--more-->
+<p>
+  Mounting and unmounting a "cifs" mount point —
+  the most basic and low-level way of mounting a Windows share
+  under the Linux filesystem —
+  unfortunately requires root privileges under Ubuntu,
+  even if one is careful to specify the "user" option
+  in <tt>/etc/fstab</tt> when creating the share.
+  The only way, therefore, for all users
+  to be given CIFS mounting superpowers
+  is through a manual intervention like:
+</p>
+$$code(lang=bash)
+# Even with the "user" option in fstab, user
+# mounting of CIFS shares under Ubuntu require:
+
+chmod u+s /sbin/mount.cifs
+chmod u+s /sbin/umount.cifs
+$$/code
+<p>
+  But I want a safe solution,
+  that requires neither root permissions
+  nor any editing of the master <tt>fstab</tt>
+  each time the details about a particular Windows share change.
+  Plus, the error messages from the system mounting logic
+  are a bit cryptic for my taste!
+  Can you guess the meaning of the following error message,
+  which was deposited unceremoniously into my <tt>syslog</tt> file?
+</p>
+<pre>
+CIFS VFS: cifs_mount failed w/return code = -22
+</pre>
+<p>
+  It means that I forgot to install
+  the <tt>smbfs</tt> Ubuntu package before attempting the mount.
+  I should have guessed.
+</p>
+<p>
+  So I turned my attention to userspace filesystems,
+  those wonderful inventions that let normal users
+  create and delete mount points under their home directories.
+  Linux keeps the scheme secure
+  by imposing a few reasonable restrictions
+  on the owners and modes of the files inside the filesystem,
+  so that users cannot elevate their privileges
+  through indiscretions like SUID binaries.
+  For years, as an example,
+  I have been using the userspace <tt>sshfs</tt>
+  to make remote source trees visible to my editor here on my laptop,
+  and now I just needed to do the same magic for a Windows filesystem.
+</p>
+<p>
+  My first Google searches on the subject
+  lead me to old pages mentioning something called <tt>fusesmb</tt>,
+  which, it turns out, is still available as an Ubuntu package.
+  But after several frustrating attempts
+  resulted only in empty mount points,
+  I did further some investigation and discovered
+  that a new project named <tt>smbnetfs</tt>
+  is now carrying the torch
+  and maintaining compatibility with the most recent kernel versions.
+  It also is available as an Ubuntu package,
+  so I installed it and was immediately up and running!
+</p>
+$$code(lang=bash)
+$ mkdir ~/win
+$ smbnetfs ~/win
+$ ls ~/win
+ALAN/   KB/    TOSH/
+IRMA/   SAM/   W2K/
+KAREN/  TEST/
+$$/code
+<p>
+  As you can see, this filesystem is far more dynamic
+  than a single-share CIFS mount point:
+  it makes your entire Network Neighborhood visible,
+  and lets you browse both workgroups and individual machines
+  by simply visiting the directories beneath it!
+</p>
+<p>
+  The virtual Windows machine that contains my development environment
+  is not actually visible to the master browser
+  that generated the listing shown above,
+  but that is okay: we can list any machine's shares,
+  whether it appears in the directory listing or not,
+  by simply naming it and seeing what happens:
+</p>
+$$code(lang=bash)
+$ ls ~/win/BRANDON-PC
+Brandon/  Python26/  project/
+$$/code
+<p>
+  There!
+  We can see both of the shares that my virtual machine makes available,
+  and can start editing files with equal ease:
+</p>
+$$code(lang=bash)
+$ cd ~/win/BRANDON-PC/project/src
+$ svn st
+?       trace.out
+M       setup.py
+$ svn up
+At revision 3677.
+$ emacs setup.py
+$$/code
+<p>
+  After a minute of work in my new playground, however,
+  I was stymied when Emacs suddenly ground to a halt —
+  then, after a minute, continued running again.
+  By judiciously running <tt>strace</tt> against the editor
+  during these morbid pauses,
+  I discovered the problem.
+  The Emacs version control logic
+  often climbs up the directory tree from the current file,
+  looking for version control directories
+  that might provide context to the current buffer.
+  This usually happens so fast that, actually,
+  I had never known that Emacs was performing this check —
+  after all, how much time can it take
+  to quickly verify whether a containing directory contains
+  an <tt>.svn</tt>, <tt>.git</tt>, or <tt>{arch}/=tagging-method</tt> file?
+</p>
+<p>
+  Well, it turns out that it can take quite some time,
+  when one of the containing directories
+  is a virtual filesystem that scans the network for Windows machines
+  each time an unknown filename is accessed!
+  Take a look at how long two sample file accesses take
+  when invoked from the command line:
+</p>
+$$code(lang=bash)
+# Looking for a machine named ".git": 20 seconds!
+
+$ time ls win/.git
+ls: cannot open directory ...: Input/output error
+... 20.701 total
+
+# Looking for a share named ".git": >1 second
+
+$ time ls win/BRANDON-PC/.git
+ls: cannot open directory ...: No such file or directory
+... 1.227 total
+$$/code
+<p>
+  I probably wasted a half hour
+  playing with the Emacs setting <tt>vc-ignore-dir-regexp</tt>
+  in a vain attempt to explain to my editor
+  that the <tt>~/win</tt> directory was not an appropriate place
+  to search for version control files
+  but, despite my considerable talent with Emacs regular expressions,
+  I could never get the setting to have any effect.
+  And, anyway, I soon noticed that other Emacs mechanisms
+  were also filesystem recursive —
+  such as the search for <tt>.dir-locals.el</tt> files
+  that is now a feature of Emacs 23 —
+  and I determined that trying to subvert them all
+  would be a long and losing battle.
+</p>
+<p>
+  I toyed with the idea of tackling the problem from the other end,
+  because <tt>smbnetfs</tt> supports a “workaround depth” setting
+  in its configuration file
+  by which you can protect its top few directory levels
+  from user agents that check for special file names.
+  Unfortunately, though, this list of files is hard-coded in the binary,
+  and includes only one of the many version control directories
+  for which Emacs searches
+  (because it is only trying to protect Konqueror and Gnome Terminal
+  from hanging, and they search for only three particular files).
+</p>
+<p>
+  Having failed to solve the problem from either direction,
+  I saw clearly that the only way out
+  was to hide the <tt>~/win</tt> directory from Emacs altogether.
+  My first experiment, which failed, was to create a symlink
+  and then ask Emacs to edit files under the link instead:
+</p>
+$$code(lang=bash)
+# Does not actually fix the problem
+
+$ ln -s win/BRANDON-PC/project/src ~/winsrc
+$ cd ~/winsrc
+$ emacs setup.py
+$$/code
+<p>
+  Unfortunately,
+  Emacs is not so easily fooled.
+  To help programmers avoid all of the problems
+  that arise when you try to edit the same file
+  under several different pathnames,
+  Emacs always resolves any symlinks in a file's path
+  during the process of opening it —
+  so that I found myself, in Emacs, editing the <tt>setup.py</tt> file
+  deep inside of the <tt>~/win</tt> directory anyway.
+  So I removed the symlink and took a different approach.
+</p>
+<p>
+  The user filesystem toolbox has a feature
+  that addresses exactly this case —
+  where you need a given directory
+  to appear somewhere else on your filesystem.
+  This kind of mount is called a <i>bind</i>
+  because it simply creates another name for an already-mounted file,
+  rather than connecting to a new share or block device.
+  And it is supported by a FUSE-powered <tt>bindfs</tt> command
+  which, as usual, has already been packaged by the Ubuntu folks!
+  Here is what it looks like in action:
+</p>
+$$code(lang=bash)
+$ mkdir ~/winsrc
+$ bindfs ~/win/BRANDON-PC/project/src ~/winsrc
+$ cd ~/winsrc
+$ svn up
+At revision 3677.
+$ emacs setup.py
+$$/code
+<p>
+  Success!
+  Emacs now behaves normally,
+  my editing operations finish quickly,
+  and the editor's version control features
+  can be invoked and run without hanging.
+  All thanks to a simple user-mode command
+  that lets me mount a directory from inside of another mount
+  and thereby draw my tools' attention away
+  from the powerful but expensive virtual directory
+  that dynamically searches the network for Windows computers and shares.
+</p>
+<p>
+  In case I have managed to obscure the actual solution
+  by describing all of my wrong turns,
+  here is the entire procedure for mounting my development directory
+  on a newly installed Ubuntu system:
+</p>
+$$code(lang=bash)
+# The whole shebang
+
+$ sudo aptitude install smbnetfs bindfs
+$ mkdir -p ~/win ~/winsrc
+$ smbnetfs ~/win
+$ bindfs ~/win/BRANDON-PC/project/src ~/winsrc
+$ cd ~/winsrc
+$$/code

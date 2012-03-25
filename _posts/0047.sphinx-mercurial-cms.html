@@ -1,0 +1,30 @@
+---
+categories: Computing, Document processing, Python
+date: 2010/03/21 22:58:28
+guid: http://rhodesmill.org/brandon/?p=318
+permalink: http://rhodesmill.org/brandon/2010/sphinx-mercurial-cms/
+tags: ''
+title: Sphinx + Mercurial = My favorite CMS
+---
+<p>
+Though I write and maintain some of the content for our <a href="http://pyatl.org/">Python Atlanta web site</a>, updates and additional content often come in from other users. For example, our Plone interest group — headed up by <a href="http://www.ifpeople.net/about/people/cjj">Christopher Johnson</a> — has their <a href="http://pyatl.org/plone">own page on our web site</a>. And the information about our <a href="http://pyatl.org/bookclub">book club</a> is both written and regularly updated by <a href="http://www.doughellmann.com/">Doug Hellmann</a>.
+</p>
+<a class="image-reference" href="http://pyatl.org/">
+  <img src="http://rhodesmill.org/brandon/static/2010/pyatl-thumb.png"
+       alt="Python Atlanta web site"
+       width="240" height="135" />
+</a>
+<p>
+How can a collaborative site like ours best be edited and updated? Well, I would like to report some modest initial success with an experimental approach: I now maintain the site as a <a href="http://sphinx.pocoo.org/">Sphinx-powered</a> documentation system stored in a <a href="http://bitbucket.org/brandon/pyatl.org/">BitBucket repository</a> into which I pull changes made by my collaborators. The advantages are several.
+</p>
+<ul>
+<li>The change management tools supported by traditional CMS systems, even at their best, seem somehow anemic when compared to the toolkit provided by a good DVCS like <a href="http://mercurial.selenic.com/">Mercurial</a>. Where, for example, does even a capable CMS like Plone provide anything like Mercurial's “backout” or “blame” commands?
+</li>
+<li>Markup as well-designed as <a href="http://docutils.sourceforge.net/rst.html">reStructuredText</a> is not only a lot of fun to use, bit it also very cleanly separates content from design. Authors working in plain text tend to produce clean, readable content without the messy markup often associated with visual HTML editors, or, worse yet, the disaster that is Microsoft Word.
+</li>
+<li>Staging — a feature I find essential, but which seems missing from many default CMS configurations — occurs automatically! Each author can see locally how the site will look with their changes, and after doing a pull I can review the site's appearance on my laptop before finally deploying the new content to the production site.
+</li>
+</ul>
+<p>
+To top it all off, authors get to use their own editor-of-choice when making contributions, and we all get extra practice cloning and merging in my favorite DVCS. I am optimistic about this direction, but I will post again if we wind up hitting snags in the future. Finally, of course, feel free to clone our repository if you want to see how Sphinx looks when running a generic web site.
+</p>
