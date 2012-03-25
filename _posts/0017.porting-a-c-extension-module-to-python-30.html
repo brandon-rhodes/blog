@@ -1,0 +1,244 @@
+---
+categories: Computing, Grok, PyEphem, Python, Zope
+date: 2008/12/09 04:18:16
+guid: http://rhodesmill.org/brandon/?p=25
+permalink: http://rhodesmill.org/brandon/2008/porting-a-c-extension-module-to-python-30/
+tags: ''
+title: Porting a C extension module to Python 3.0
+---
+<p>
+With several packages already advertising
+<a href="http://pypi.python.org/pypi?:action=browse&c=214&c=534"
+ >Python 3.0 compatibility</a>,
+it seemed high time to look into releasing my
+<a href="http://rhodesmill.org/pyephem/">PyEphem astronomy package</a>
+in an edition compatible with the new language.
+But I hesitated:
+how difficult is it <i>really</i>,
+and how many hours of work will it consume,
+to port a C-language extension module to Python 3.0?
+</p>
+<p>
+The answer is that,
+while the necessary changes were surprisingly easy,
+they took lots of time to figure out
+because I did not find them documented in any one place.
+I offer the following notes to assist
+any other adventurers who want to experiment
+with porting their extension modules to 3.0.
+These notes might also suggest
+useful additions to the official documentation.
+</p>
+<p>
+But, first, I need to issue three cautions.
+To develop under 3.0, you may have to forego several Python tools
+that you probably thought you could no longer do without.
+The world of 3.0 is a windswept and icy landscape
+from which the glaciers have just receded,
+and you will find the stone tools rather primitive
+when compared to the comforts of civilization
+that you enjoy under Python 2.
+To wit:
+</p>
+<ul>
+<li>I cannot find
+ <a href="http://pypi.python.org/pypi/virtualenv/1.3.1">virtualenv</a>
+ for 3.0,
+ which is a disaster.
+ This means that you have to create a separate Python 3.0 install,
+ built with a different <tt>--prefix</tt> option to <tt>./configure</tt>,
+ for each development environment you want to create on your box.
+</li>
+<li>I cannot find a version of the
+ <a href="http://peak.telecommunity.com/DevCenter/setuptools">setuptools</a>
+ available for 3.0.
+ This means limiting your <tt>setup.py</tt> instructions
+ to the primitive vocabulary of the <tt>distutils</tt> package.
+ For example,
+ I find myself unable to run the PyEphem test suite at this late hour
+ because I have been running it for so long with:
+ <pre>$ python setup.py test</pre>
+ that I am not sure how to get it running otherwise.
+</li>
+<li>Should you succeed in porting your extension module,
+ it is not at <i>all</i> clear how to distribute it.
+ I had expected either a new PyPI to spring into being —
+ since every package will need an entirely different version under 3.0 —
+ or for a sophisticated scheme to appear
+ for registering one <tt>pyephem.tar.gz</tt> as the Python 2 version
+ and another <tt>pyephem.tar.gz</tt> for 3.0.
+ But while the most recent version of your package can
+ mark itself as
+ <a href="http://pypi.python.org/pypi?:action=browse&c=214&c=527"
+  >2-compatible</a> or
+ <a href="http://pypi.python.org/pypi?:action=browse&c=214&c=533"
+  >3-compatible</a> (or both)
+ using classifiers,
+ there is no way to have <i>two</i> “most recent” versions
+ of a package.
+ Are we supposed to start distributing a single <tt>tar.gz</tt>
+ that includes the source code for both Python series,
+ and that selects the right code by detecting the interpreter version
+ at the top of the <tt>setup.py</tt> file?
+</li>
+</ul>
+<p>
+So if you make the effort to port your code right now,
+you might find that the shiny new version of your module
+is all dressed up, but has no place to go.
+If you experiment with the following steps, though,
+you will at least be ready
+when an official distribution channel does appear
+for releasing your package into the wilds of 3.0.
+</p>
+<!--more-->
+<h2>Four Steps To 3.0</h2>
+<p>
+Yes, four steps were all that were necessary
+to convert my quite complex extension module to Python 3.0!
+</p>
+<ol>
+<li><b>Use PyModule_Create().</b>
+ The old mechanism that I had been using
+ to initialize my extension module,
+ the rather clunkily-named <tt>Py_InitModule3()</tt>,
+ happily does not even exist in the Python 3.0 header files.
+ Instead, call the <tt>PyModule_Create()</tt> function
+ which you can find described
+ in the <a href="http://docs.python.org/3.0/extending/extending.html#the-module-s-method-table-and-initialization-function"
+  >Module Initialization</a>
+ section of the <a href="http://docs.python.org/3.0/extending/"
+  >Extending and Embedding</a> document.
+ And be sure to keep its return value:
+ unlike in older Pythons,
+ you now have to return the module object it creates
+ as the return value from your module initialization function.
+</li>
+<li>
+ <p>
+ <b>Adjust all Python object headers.</b>
+ Each type object in my code started with a macro
+ to set up the common fields that all Python objects share.
+ This was then followed by the <b>ob_size</b> field,
+ which in my code always is always zero,
+ and then the type name:
+ </p>
+<pre>
+#!c
+/* For Python 2 */
+
+static PyTypeObject BinaryStarType = {
+     PyObject_HEAD_INIT(NULL)
+     0,                   /* ob_size */
+     "ephem.BinaryStar",  /* tp_name */
+     ...
+</pre>
+ <p>
+ Though the Python 3.0 documentation
+ <a href="http://docs.python.org/3.0/extending/newtypes.html"
+  ><i>still</i> shows this as the way to create types</a>,
+ this technique will now completely fail.
+ (The <a href="http://bugs.python.org/issue4385">bug indicating
+ that the documentation gets this wrong</a> has,
+ as its most recent comment,
+ the helpful note
+ “I'm lowering the priority so it doesn't block the release.”)
+ Anyway, the solution is simple:
+ the first two lines in the struct shown above
+ simply have to be combined into a single macro call:
+ </p>
+<pre>
+#!c
+/* For Python 3.0 */
+
+static PyTypeObject BinaryStarType = {
+     PyVarObject_HEAD_INIT(NULL, 0)
+     "ephem.BinaryStar",  /* tp_name */
+     ...
+</pre>
+ <p>
+ With this change, my objects are now operating fine.
+ </p>
+</li>
+<li><b>Use plain “static.”</b>
+ PyEphem inherits code from an era
+ when it was popular to use variations on the <tt>static</tt> keyword
+ so that Python could work around problems
+ with various troublesome C compilers.
+ This filled my code with <tt>staticforward</tt> declarations
+ like the one you can see at the top of the old Python 2.2
+ <a href="http://www.python.org/doc/2.2/ext/dnt-basics.html"
+  >Defining New Types</a> page.
+ It turns out that for well-behaved compilers
+ these were always simply synonyms for the <tt>static</tt> keyword,
+ which is what you must replace them with
+ when porting your code to 3.0.
+</li>
+<li><b>Upgrade to Unicode.</b>
+ Python 3.0 makes a clean and sharp distinction
+ between strings, which are sequences of Unicode characters,
+ and byte arrays, which can represent anything.
+ To reflect this sea change down at the C level,
+ the decision was made
+ to eliminate <i>everything</i> from the C API
+ whose name started with <tt>PyString</tt>.
+ The obvious compiler errors that result from this
+ provide a clear signal to programmers
+ that they have to decide,
+ everywhere that they had been using an old-style Python string,
+ whether they should now represent that data
+ with the <tt>PyUnicode</tt> or the <tt>PyBytes</tt> type.
+ This was a brilliant decision;
+ the transition could have been a nightmare
+ had it remained possible for old code to compile
+ without having been properly converted!
+ <p>
+ When migrating the PyEphem code base,
+ I found that most of the Unicode transition was very easy.
+ Everywhere that my code handled or created a string object,
+ I simply changed the prefix of the function to <tt>PyUnicode</tt>
+ and everything worked:
+ </p>
+ <pre>
+ PyString_Check      ... becomes ... PyUnicode_Check
+ PyString_FromString ... becomes ... PyUnicode_FromString
+ PyString_FromFormat ... becomes ... PyUnicode_FromFormat
+</pre>
+ <p>
+ Well, okay, the trick does not work <i>everywhere</i>;
+ this one was harder to guess:
+ </p>
+ <pre>
+ PyString_Size ... becomes ... PyUnicode_GET_SIZE
+</pre>
+ <p>
+ The situations that require real thought
+ are the places where my code needs to convert a Python string
+ into the sort of simple ASCII character array
+ that the underlying C library can absorb.
+ At the moment, my code is leaning heavily
+ on a pitiful <tt>PyUnicode_AsString()</tt> routine
+ that I wrote just to get things working;
+ in the morning I will have to look into doing this more correctly,
+ including catching the error if a fancy Unicode character is present
+ that cannot properly be converted.
+ </p>
+</li>
+</ol>
+<p>
+Overall, I am very impressed with how quickly
+I was able to get my extension module compiling and running
+under Python 3.0.
+The procedure was simple —
+I just tried, over and over again, to build the module with:
+</p>
+<pre>
+$ python3.0 setup.py build
+</pre>
+<p>
+and then tackled the compiler errors that resulted.
+Once every last warning had been addressed,
+the module started up and operated without a single further complaint.
+This calls for celebration!
+I'm going to bed.
+</p>

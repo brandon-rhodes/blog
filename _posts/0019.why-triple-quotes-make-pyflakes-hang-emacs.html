@@ -1,0 +1,150 @@
+---
+categories: Computing, Python
+date: 2008/12/14 17:41:58
+guid: http://rhodesmill.org/brandon/?p=29
+permalink: http://rhodesmill.org/brandon/2008/why-triple-quotes-make-pyflakes-hang-emacs/
+tags: ''
+title: Why triple-quotes make PyFlakes hang Emacs
+---
+<p>
+I need to refine the aspersions
+which I cast against PyFlakes last night
+in my
+<a href="http://plope.com/bounty_solved">response to Chris McDonough</a>,
+answering his
+<a href="http://plope.com/pyflakes_flymake_bounty">bounty against the
+bug that Emacs would hang</a>
+in Flyspell mode when he typed triple-quotes.
+My email, I admit, was not entirely fair to PyFlakes;
+but you must remember
+that I was writing late at night, and in great haste,
+wanting to be the first to respond
+among however many dozens of Emacs LISP programmers
+were racing to converge on the solution to Chris's problem.
+</p>
+<p>
+My mistake was to exaggerate somewhat
+the verbosity with which PyFlakes reports a syntax error.
+My email to Chris, in fact, made the following rather extravagant claim:
+</p>
+<blockquote><p>
+The problem is that … on a syntax error,
+PyFlakes prints out an error message,
+then the <i>entire</i> contents of the module that it cannot import,
+and <i>finally</i> a line that contains a number of spaces
+equal to the offset into the file of the syntax error …
+</p></blockquote>
+<p>
+Just glancing at the PyFlakes source code
+is enough to see that this accusation cannot be true:
+</p>
+<pre>
+    try:
+        ...
+    except (SyntaxError, IndentationError):
+        value = sys.exc_info()[1]
+        (lineno, offset, line) = value[1][1:]
+        ...
+        print >> sys.stderr, 'could not compile %r:%d:' \
+            % (filename, lineno)
+        <b>print >> sys.stderr, line
+        print >> sys.stderr, " " * (offset-2), "^"</b>
+</pre>
+<p>
+Clearly, this simply prints the line
+that the Python exception cites as having caused the problem,
+followed by a primitive attempt to position a <tt>^</tt> character
+at the location of the error.
+For simple syntax errors, this actually produces output
+which is identical to that of normal Python:
+</p>
+<pre>
+$ <b>python error1.py</b>
+  File "error1.py", line 3
+    return x y
+             ^
+SyntaxError: invalid syntax
+$ <b>pyflakes error1.py</b>
+could not compile 'error1.py':3:
+    return x y
+             ^</pre>
+<p>
+But the PyFlakes behavior is quite different
+from that of the standard interpreter
+if the syntax error happens in a Python statement
+that has been continued across several lines of source code.
+Imagine that there are two functions in a file,
+and that we have started typing a docstring for the first one
+but have not yet closed the triple-quote:
+</p>
+<pre>
+def square(x):
+    <b>"""Returns the square of x.</b>
+    return x * x
+
+def cube(x):
+    """Returns the cube of x."""
+    return x * x * x
+</pre>
+<p>
+Here, Python and PyFlakes give quite different reports:
+</p>
+<pre>
+$ <b>python error2.py</b>
+  File "error2.py", line 6
+    """Returns the cube of x."""
+             ^
+SyntaxError: invalid syntax
+$ <b>~/.emacs.d/usr/bin/pyflakes error2.py</b>
+could not compile 'error2.py':6:
+    """Returns the square of x.
+    return x * x
+
+def cube(x):
+    """Returns the cube of x."""
+ ...<i>76 spaces</i>... ^</pre>
+<p>
+Do you see what has happened?
+The unterminated triple-quoted string
+looks as though it ends several lines later,
+at what we ultimately intend to be the beginning
+of the <i>next</i> triple-quoted string.
+(If the file instead contained <i>no</i> further triple-quoted strings,
+then the new string
+would appear to extend all the way to the end of the file.)
+</p>
+<p>
+This is no problem for the Python interpreter itself,
+which modestly displays only the final line
+of the multi-line syntax error.
+But PyFlakes, not checking for this possibility,
+prints out the <i>entire</i> triple-quoted string,
+followed by a <tt>^</tt> character that is indented
+the <i>entire</i> length of the triple-quoted string.
+In the example that I was testing last night,
+this produced a line of nearly four thousand spaces
+that then ended in the lone little caret character.
+</p>
+<p>
+So while PyFlakes is certainly more verbose than standard Python,
+it is not being nearly as profligate as I claimed.
+It does <i>not</i> insist on printing out your whole module,
+but limits its output to lines
+that actually appear involved in the error.
+Either way, it is the following line —
+the one that starts with all of the spaces —
+that is really the problem,
+since too many spaces
+send one of the Emacs Flymake regular expressions
+spiralling into exponential oblivion.
+</p>
+<p>
+Perhaps Flymake should support a command-line option
+that omits code snippets entirely,
+so that Emacs will have only error messages to process.
+Either way,
+Chris and I can be more productive
+now that we can safely integrate
+a patched version of this excellent tool
+into our coding sessions.
+</p>

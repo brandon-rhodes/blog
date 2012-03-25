@@ -68,6 +68,7 @@ article {
   padding: 0.8em 5%;
 
   .date {
+    margin-top: 0.8em;
     text-align: center;
     color: $sidebarbg;
   }
@@ -87,6 +88,7 @@ article {
     color: darken($contentbg, 70%);
   }
   .caption {
+    display: block;
     text-align: center;
     margin: 0.3em 10%;
     padding-top: 1em;

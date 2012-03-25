@@ -1,0 +1,53 @@
+---
+categories: Computing, Python
+date: 2008/12/04 12:13:39
+guid: http://rhodesmill.org/brandon/?p=26
+permalink: http://rhodesmill.org/brandon/2008/comprehension-consistency-at-last-in-python-30/
+tags: ''
+title: Comprehension consistency at last in Python 3.0!
+---
+<p>
+A new era is begun: <a href="http://www.python.org/download/releases/3.0/">Python 3.0 has been released</a>, bringing the bright and burning lights of reason, consistency, and symmetry to bear on my favorite language.  Guido van Rossum, the creator of Python, has carefully guided this final attempt to remove the warts that have accumulated over the language's 17-year lifetime, and the result is magical.
+</p>
+<pre>
+#!python
+Python 3.0 (r30:67503, Dec  4 2008, 10:23:44)
+[GCC 4.3.2] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>>
+>>> [ n*n for n in range(5) ]
+[0, 1, 4, 9, 16]
+>>>
+>>> { n*n for n in range(5) }
+{0, 1, 4, 16, 9}
+>>>
+>>> { n: n*n for n in range(5) }
+{0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
+</pre>
+<p>
+Magnificence!  Do you feel the waves of beauty crashing over you?  No, no, not over the sequence of squares&nbsp;— over the fact that <b>all three basic collection types now support comprehensions!</b>
+</p>
+<p>
+Comprehensions were first introduced in Python&nbsp;2.0, but with the terribly awkward stipulation that they were only possible for lists, not for dictionaries. This meant teaching newcomers to the language that list construction was a special case, and that the collections that had deserved their own constructor syntax (lists and dictionaries, at that time; sets came later) were not equally powerful. It also made necessary the awkward and expensive technique of building, and then immediately discarding, a list of tuples to quickly construct dictionaries:
+</p>
+<pre>
+#!python
+Python 2.5.2 (r252:60911, Nov 14 2008, 19:46:32)
+[GCC 4.3.2] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>>
+>>> dict([ (n, n*n) for n in range(5) ])
+{0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
+</pre>
+<p>
+The arrival of generator expressions in&nbsp;2.4 did, at least, allow us to remove the ugly square brackets and avoid creating the list (though all of the tuples still got created then immediately discarded).  But the problem remained that dictionaries made from inline generators did not <i>look</i> like dictionaries syntactically.
+</p>
+<p>
+But, no more!   They have even updated the scandalously withdrawn <a href="http://www.python.org/dev/peps/pep-0274/">PEP&nbsp;274</a> to announce that the feature has finally arrived.  After the aching and painful years of the Python&nbsp;2 series, the language once again shines bright and clear as a model of clever symmetries and low mental impedance.  Python's famously tight "feature set" can, now more easily than ever, fit comfortably into the programmer's brain.
+</p>
+<p>
+What shall I write first in Python&nbsp;3.0?  I wonder.
+</p>
+<p>
+But you can be sure that my code will find lots of excuses for constructing dictionaries.
+</p>

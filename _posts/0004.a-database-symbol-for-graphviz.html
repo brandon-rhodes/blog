@@ -1,0 +1,66 @@
+---
+categories: Computing, Web Notes
+date: 2007/11/23 10:12:37
+guid: http://rhodesmill.org/brandon/2007/a-database-symbol-for-graphviz/
+permalink: http://rhodesmill.org/brandon/2007/a-database-symbol-for-graphviz/
+tags: ''
+title: A database symbol for GraphViz
+---
+<blockquote>
+<b>Download the source for my GraphViz database symbol featured in this article:</b> <a href="http://rhodesmill.org/brandon/static/2007-11/DatabaseShape.ps">DatabaseShape.ps</a>
+</blockquote>
+
+I have started using the <a href="http://www.graphviz.org/">GraphViz</a> application, which accepts a list of nodes and arrows, and figures out how to attractively arrange them in a diagram. For example, you can very nearly produce this output:
+
+<img src="http://rhodesmill.org/brandon/static/2007-11/graphviz-with-database"
+     />
+
+by supplying this rather modest input file to GraphViz (most of whose length comes from my wanting particular colors)::
+
+<pre class="literal-block">
+#!scss
+ digraph Application {
+    rankdir=LR;
+    node [shape=box,style=filled,fillcolor="#C0D0C0"];
+    subgraph clusterClient {
+       label="Client"; style=filled; bgcolor="#D0C0A0";
+       "Browser";
+    };
+    subgraph clusterServer {
+       label="Server"; style=filled; bgcolor="#D0C0A0";
+       "App";
+       "Database" [shape=DatabaseShape,peripheries=0];
+    };
+    "Browser" -> "App" [label="HTTP"];
+    "App" -> "Database" [label="SQL"];
+ }
+</pre>
+
+I used the words “very nearly” because, in fact, GraphViz only knows how to draw simple shapes like rectangles, and is ignorant of the standard cylinder-shaped database symbol that I have used here by asking for a <tt>DatabaseShape</tt>. Submitting the above code to GraphViz will, normally, produce three nodes that are all rectangles. To teach it about the database shape, I had to write some PostScript.
+
+<!--more-->
+
+The PostScript language is a beautifully compact version of the venerable FORTH language, and operates more or less like a Hewlett-Packard reverse Polish notation calculator hooked up to a sleeker version of the turtle from Logo. A program typically places numbers on the stack, perhaps invokes some mathematical operators on them, and finally invokes a graphics operation which uses those numbers as coordinates. For example, consider this code:
+
+<pre>
+x1 x0 sub 2 div y0 lineto
+</pre>
+
+This means, “place the value of the variable <i>x1</i> on the stack, then the value of <i>x0</i>, and then <i>subtract</i> to remove them from the stack and leave their difference there instead; then place the number <i>2</i> on the stack and <i>divide</i> so that only half of the previous result remains; then place the value of <i>y0</i> on the stack; and, finally, invoke the command <i>lineto</i> which removes the bottom two numbers from the stack and interprets them as the coordinates of a point to which it then draws a line.” In Python the same expression would be:
+
+<pre class="literal-block">
+#!python
+lineto((x1 - x0) / 2, y0)
+</pre>
+
+Even small PostScript programs like my <a href="http://rhodesmill.org/brandon/static/2007-11/DatabaseShape.ps">DatabaseShape.ps</a> tend to wind up using a dozen or more different coordinates, so I always have to work first with pencil and paper to sketch the shape and define the variable names for my coordinates before then turning to my keyboard to write the code. It makes me remember my childhood, drawing things on graph paper before writing a BASIC program to draw the same shape on the screen.
+
+One annoyance with using a user-defined shape like this with GraphViz is that one is restricted to using only its PostScript output mode, which means having to use an additional command to turn the PostScript into PDF or PNG or some other format. For example, if the example GraphViz code that I quoted above is placed in a <tt>sample.dot</tt> file, then to generate a PDF of the graph one must perform two steps:
+
+<pre class="literal-block">
+#!bash
+$ dot -Tps2 -l DatabaseShape.ps sample.dot -o sample.ps
+$ ps2pdf sample.ps sample.pdf
+</pre>
+
+But since all the system diagrams that I need to produce at work will need to have databases in them, I'm just happy that I've worked out how to display the shape at all.

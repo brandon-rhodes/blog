@@ -1,0 +1,531 @@
+---
+categories: Computing, Python
+date: 2008/08/19 17:56:50
+guid: http://rhodesmill.org/brandon/?p=22
+permalink: http://rhodesmill.org/brandon/2008/reading-code-curriculum/
+tags: ''
+title: 'Reading Code: A Computer Science Curriculum'
+---
+<blockquote><p>
+I developed the following ideas
+about how to teach computer programming
+during a recent conversation with
+<a href="http://www.chrio.org/dan/">Daniel Rocco</a>,
+a professor at the University of West Georgia,
+and Georgia Tech grad student Derek Richardson,
+and I wanted to expand on the ideas here on my blog.
+I have been heavily influenced by reading
+<a href="http://www.cs.toronto.edu/~gvwilson/">Greg Wilson</a>,
+and, for all I know, he or someone else
+may have already put these ideas together
+into something like the outline below.
+</p></blockquote>
+
+<h2>The first day of class</h2>
+
+<p>
+To teach computer programming,
+a professor ought to stride into the room on the semester's first day,
+explain that a <i>computer program</i> is a text file
+full of instructions for the computer to follow,
+and then proceed to check out an example from version control.
+His desktop should be displayed on a big screen in front of the class.
+He should read through the example program with them, discuss it —
+it should be a Python program that does something requiring two or three
+dozen lines,
+like opening a window and displaying the message, “Hello, world!” —
+and then run it.
+He should demonstrate how to edit the program
+so that it prints something else instead (perhaps “Hello, professor!”),
+run the altered version for them,
+and, finally, check the modified program into version control.
+</p>
+
+<p>
+The class now has the tools they need
+to complete their first assignment.
+The students are told that a version-control repository
+has been created for each of them;
+that they have each been subscribed to their repository's email
+notification list;
+and that, upon returning home from class,
+their email inbox will already hold a message
+informing them that their first assignment —
+the “Hello, world!” program itself —
+has been checked into their repository by the course software.
+By the next class period
+they are to have checked the assignment out,
+altered it so that it prints “Hello” followed by their own name,
+and submitted the assignment by checking the program back in.
+</p>
+
+<!--more-->
+
+<p>
+Hopefully the university will have provided a lab period for the course,
+in which the TA can show the students
+how to get Python and the version-control software
+installed on their own desktops or laptops.
+If not, then the professor will have to cover those details in class.
+In either case, of course, the same information
+should be available online on the course web site.
+But the important thing is that,
+from their very first assignment,
+the students are using the same tools for software development
+that they will use as professionals out in the wider world.
+</p>
+
+<h2>Test suites, and debugging</h2>
+
+<p>
+That first day of class
+taught the students to view several dozen lines of code —
+that, in our example, initialized and opened a window
+with some text written inside of it —
+and to dive in and modify a single feature that they understand:
+the string constant containing the words “Hello, world!”
+The next several class periods will, as usual in computer science,
+move onward from simple string and numeric constants
+to teach students about expressions, variables,
+and control structures.
+But the manner in which these concepts are taught
+will immediately induct the young programmers
+into habits that they will follow for the rest of their lives.
+</p>
+
+<p>
+The crucial thing is the introduction,
+hopefully in the second class period,
+of the idea of a test suite.
+This will prepare them for their second homework assignment,
+which, as usual, will be automatically committed to their repositories
+right after class is over.
+While they verified the correctness of their first homework assignment
+merely by running it
+(“Look, it printed <i>Hello, &lt;my name&gt;</i> in a window!”),
+every subsequent assignment will be based, instead, on test suites.
+They should be doctests, so that they will look
+just like the professor's sessions with the Python prompt,
+but with some accompanying paragraphs for explanation.
+One test suite, named <i>before</i>,
+will succeed against the example program
+as it is first delivered to their repository.
+The second one, named <i>after</i>,
+will initially fail against the code.
+The student completes the exercise by adjusting the program,
+using their newly learned concept,
+so that it begins to succeed against the second test suite.
+And, of course, they commit the program to their repository
+when they are ready to turn the assignment in.
+</p>
+
+<p>
+For fun —
+well, actually, not just for fun,
+because it will provide important cognitive cues as well —
+the <i>before</i> and <i>after</i> pair of tests
+should tell a small story about changing requirements.
+Imagine an example program that reads in credit card debits,
+and prints out how much money was spent;
+but, the <i>after</i> test explains,
+Sally now wants it to process her credit card payments as well
+(which will be prefixed with a plus sign in the input)
+and then print out the current balance in her account.
+Ambitious instructors might even create exercises
+in which a whole series of tests lead the student
+through several incremental improvements
+to a single program file.
+</p>
+
+<p>
+How should class be conducted?
+I imagine that the actual instruction
+should include three important ingredients.
+</p>
+
+<p>
+First, each concept will first be introduced
+by explaining <i>why</i> we need it.
+I cannot emphasize enough the pedagogical value
+of motivating each language feature
+with an explanation of the need that it fills!
+My understanding of Taylor polynomials in Calculus III
+would have been revolutionized if it had occurred to the professor
+that we might first need
+an explanation of <i>why</i> Taylor polynomials exist
+before we would be interested in the proof that they work!
+The explanation of a concept
+so often needs to start with simple information like
+“variables exist because programs need to remember things,”
+“control structures help us when we do not know in advance
+how many times our program might have to repeat a task,”
+and so forth.
+</p>
+
+<p>
+Second, the professor will illustrate the new language feature
+by alternating between the whiteboard and the Python prompt —
+between leading the students to <i>think about</i> the idea,
+and actually letting them <i>see it work</i>.
+</p>
+
+<p>
+Third, short example programs will be shown
+that do something useful with the new concept.
+These programs will often include code
+that the student does not yet understand,
+but, in the middle, include a pleasantly glaring and obvious example
+of the new concept in use.
+The professor should not only run these programs from the command line,
+which, honestly, leaves the students straining to imagine
+what complex sequence of steps has resulted in the output,
+but he should run them repeatedly
+in <a href="http://docs.python.org/lib/module-pdb.html"><b>pdb</b></a>
+so that the students can actually watch the variables changing their value,
+the control statements repeating a loop,
+and so forth.
+It would be most useful if the professor attaches the debugger
+to an editor that displays the whole program
+while highlighting the line currently being executed.
+</p>
+
+<h2>Invariants, and further progress</h2>
+
+<p>
+I should pause, and emphasize that the conviction
+which stands behind my design of this course
+is that a student
+is <i>simply not competent</i> to write a Python function
+until they have read at least, say, one hundred well-designed
+and fully documented functions written by others.
+I mean this with complete seriousness:
+students should spend <i>weeks</i> reading and modifying good code
+before they are trusted
+to produce functions or classes on their own.
+</p>
+
+<p>
+By the time a student is asked to write a function from the ground up,
+they should be so accustomed to docstrings,
+helpful comments, and informative variable names,
+that they put these into their own functions
+as though they were the most natural things in the world.
+In fact, the instructor should ideally produce students
+who are not even aware that Python functions can <i>execute</i>
+if they do not include a docstring and informative comments!
+</p>
+
+<p>
+The same idea lies behind teaching a professional slate of tools —
+version control, test suites, the Python prompt, and a debugger —
+right from the start.
+We thereby hope to create students that,
+if ever faced with a project or situation
+from which these tools are absent,
+will immediately know that they have been placed at a disadvantage.
+They might not, in that future environment, be able to remedy the situation;
+but they will at least feel where their wasted hours are going,
+and know which tool to introduce if they have the opportunity.
+</p>
+
+<p>
+The reason, incidentally, that doctests are critically important
+to this style of instruction
+is that the student only needs to understand the Python prompt itself
+to read and comprehend the doctest.
+By contrast,
+even the simplest unit tests
+usually require quite complicated features,
+like the <b>import</b> statement and function calls,
+that could delay the introduction of testing
+by several class periods at least.
+Only doctests allow testing to be introduced early enough
+for it to be the backbone of even their earliest assignments.
+</p>
+
+<h2>Refactoring and test writing</h2>
+
+<p>
+I would probably keep the students busy modifying
+(and, therefore, mostly <i>reading</i>) code
+through the entire first half of the introductory curriculum.
+They would ascend through adjusting constants and expressions
+to adding control statements and calculations of their own;
+then, learning how to write or rewrite entire functions;
+learning input and output programming both to files and the screen;
+and, perhaps, if it suited the curriculum and the time available,
+they would be shown object-based programming,
+including using and writing object methods.
+</p>
+
+<p>
+I would probably make <i>refactoring</i>
+the final stage of that first half of the course,
+which might actually be a bit fun for the students
+because the structure of the assignments would shift.
+Through all of the other homeworks,
+students received both a <i>before</i> and <i>after</i> test suite,
+and had to make the program run successfully against the latter.
+But now, to learn refactoring, will be given only one test suite,
+that must work on <i>both</i> the initial version of the program
+and on the improved version
+that they will create through applying basic refactoring techniques.
+Instead of taking a flying leap
+from a <i>before</i> behavior to a program that they hope now exhibits
+the <i>after</i> behavior,
+they can make steps that are as tiny and incremental as they please,
+checking to make sure that they still satisfy the test suite
+after each little change.
+</p>
+
+<p>
+Incidentally,
+as I described those “tiny steps” in the previous paragraph,
+I unconsciously was imagining the pleasant task
+of making little changes to a program
+and <i>checking each change into version control</i>
+after checking that the tests still pass.
+It is the ability to back up one step
+if the procedure suddenly goes haywire
+that can make refactoring leisurely.
+Without version control,
+a series of refactoring steps can become a nightmare wilderness
+in which all of one's work has to be thrown away because,
+at the last step,
+you bungle the change, cannot figure out what you have done,
+and can never quite get the program working again
+without going back to the start.
+</p>
+
+<p>
+All of which raises the question:
+how will the students learn that version control
+is useful for anything other than handing in assignments?
+I recommend
+that the professor smuggle a useful version-control stunt
+into every single class period:
+he should always plan to illustrate some mistake,
+or show some failed approach to a problem,
+then revert the change with version control before proceeding.
+The students must be made to feel,
+from repeated illustrations,
+that frequently checking in code forms a safety net beneath them
+that prevents them from losing their work
+if an inadvertent destructive change
+(not to mention something like a hard drive crash!)
+forces them to retrace their steps
+and start part of an assignment over again.
+</p>
+
+<p>
+Test writing should probably also be practiced
+in the first half of the course —
+and the student, of course, will be expected to produce tests
+like the very many that he has already read:
+each telling a little coherent story
+that explains, as well as demonstrates, how the program behaves.
+I would probably, in each homework set,
+provide one exercise in which they are given a program
+that, in fact, has a bug, despite passing its <i>before</i> test!
+The exercise will tell a little story about a customer
+for whom the program is failing,
+and the student will be required both to write a test case
+that exercises the bug and reproduces the failure,
+and then to fix the program itself.
+</p>
+
+<h2>The second half</h2>
+
+<p>
+This curriculum's second half —
+which I would imagine being the second semester
+of a two-course series,
+but with bright students (or carefully limited goals)
+might fit into the closing weeks of a single semester —
+is when students would begin to be eased into the blasted wasteland
+which is the world of software which they will too soon enter.
+</p>
+
+<p>
+What wasteland?
+Why, the parched and mottled landscape
+of uncommented, untested, uncontrolled code
+with which we have strewn the earth
+because of the utterly inadequate techniques
+by which nearly everyone is “taught to program” under the current system.
+</p>
+
+<p>
+But, again, we must ease the students into how terrible the world is.
+First would come an assignment in which,
+inexplicably, the program they were modifying entirely lacked comments;
+the students, if they are properly prepared,
+will actually gasp when the professor shows them the code.
+Perhaps the homework will simply be to check out the program
+and provide it with comments!
+</p>
+
+<p>
+Again, an assignment will appear that entirely lacks a test
+for some critical feature; they will have to provide the missing test.
+Then a small library will be thrown at them that,
+unimaginably, lacks tests entirely;
+their assignment will be to write them.
+You can see that, with each of these rescue-mission assignments,
+the students are learning a skill
+which will come in handy as soon as they enter the real world
+and have to perform exactly such a rescue operation
+on a code base for which they are made responsible.
+</p>
+
+<p>
+Then would come a bit of a relief — a more normal situation;
+actually, a wonderful situation to encounter out in the real world!
+They will receive, simply, a complete test suite
+for which no program exists.
+For the first time,
+they will be expected to write an entire code base
+from the ground up that satisfies the set of tests.
+It is really at this point that the instructor
+will be able to email me and tell me whether this curriculum
+has done any kind of good at all:
+do the students write, in response to this assignment,
+the kind of sham, idiosyncratic, and entirely undocumented code
+that is typical of first-year programmers?
+Or — hope beyond hopes! —
+are some of them actually producing docstrings, and writing comments,
+and using normal Python idioms,
+as a result of seeing more than ten thousand lines of code
+before being entrusted with this most sacred of duties:
+inflicting entirely new code of their own upon the world?
+</p>
+
+<p>
+The instructor will have at least three questions
+as he watches the students committing to their repositories.
+First, how many students are committing code frequently,
+instead of committing days of work at once?
+Second, are comments and documentation
+being checked in with code the first time,
+or just being added before the code is graded?
+Finally, are test suites being written up front,
+or thrown together at the last minute once they think
+that their code is working?
+</p>
+
+<h2>A final assignment</h2>
+
+<p>
+How should we conclude this curriculum?
+</p>
+
+<p>
+Obviously, by making each student write, all by themselves,
+<i>both</i> a suitably complex program or library
+<i>and</i> its entire test suite.
+This could even be given a social dimension:
+the last assignments could be partitioned
+so as to require cooperative work among the students,
+or even interaction among the whole class,
+with some students writing test suites for libraries their code requires,
+and other students creating the code to satisfy those needs.
+Each student will thus learn
+something about the social dimension of programming:
+both what it is like to deliver and elaborate a test suite
+to someone tasked with figuring out what you need,
+and what it is like to receive a test suite,
+have to demand clarifications,
+and then write to it as your specification.
+</p>
+
+<h2>Lessons from teaching language</h2>
+
+<p>
+After reading back over the ideas outlined above,
+I realize that this computer programming curriculum
+is startlingly similar to the way that human languages
+like French or Chinese are taught in modern universities.
+And on reflection, I very much like the analogy!
+I will, in fact, make the strong assertion
+that the extent to which programming courses
+differ from all normal language instruction
+is, in fact, the extent to which they are misguided.
+</p>
+
+<p>
+There is nothing so evident in teaching French
+than that the student needs to start by reading much more French
+than they are asked to write.
+Can you imagine the disaster
+if a French teacher taught only the rules of French,
+tested the students
+to see if they could write convincing French sentences yet,
+and responded to their abject failure
+by drilling them on yet more rules?
+</p>
+
+<p>
+Yet this is exactly how we teach programming!
+In the early 1990s, I was a TA for one of Georgia Tech's
+introductory programming class,
+and the code that students produced was uniformly <i>terrible!</i>
+But so long as it somehow worked,
+they were given a passing grade —
+in fact, an A! —
+and hustled on to the next assignment,
+with absolutely no opportunity to learn
+that the code they were writing was utter <i>trash</i> —
+completely disjoint and incomprehensible.
+They were, in other words, being taught
+all of the <i>grammar</i> of computer programming,
+but without seeing any <i>literature</i> —
+well-written, clear, fully documented code —
+that they could imitate.
+</p>
+
+<p>
+Perhaps that is the central insight
+that I want to communicate in this blog post:
+that writing code is <i>imitation</i>
+far more than it is the application of rules.
+After more than a decade of writing Python code by myself,
+it was a shock to start working on the Grok project and,
+in the Zope code repository,
+begin to see how <i>real</i> professionals
+wrote their Python code.
+I learned more techniques and common idioms in one year
+than in my entire previous decade!
+</p>
+
+<p>
+I should also note that my idea
+of routinely exposing students
+to language features that they have not learned yet —
+like that first assignment where
+they hunt for the “Hello, world!” string
+amidst code that opens a window with a text widget —
+corresponds directly to the
+modern educational concept of <i>untidy input,</i>
+where you show students small amounts of “real French”
+even from the first day of class.
+By showing them the full complexity of the target language,
+even at the early stage where all they can do is
+“find and circle the subject of each sentence”,
+you are beginning to teach them what their writing will look like
+on that distant day when what they produce is full-fledged speech.
+And, critically, you are not allowing them to mistake
+the crude and lopsided sentences they create in their homework
+for the real, fluid, and graceful language that is French.
+</p>
+
+<h2>The end of the matter</h2>
+
+<p>
+I should finish with this simple plea:
+we must <i>stop</i> virtually forcing students
+to produce ugly, untested, uncommented, and undocumented routines
+as part of their introductory curriculum.
+And we must, at all costs, stop encouraging the delusion
+that, if they do so, they have written
+anything that deserves to be called a computer program.
+</p>

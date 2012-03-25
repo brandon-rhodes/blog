@@ -1,0 +1,126 @@
+---
+categories: Computing
+date: 2008/02/27 00:50:33
+guid: http://rhodesmill.org/brandon/2008/how-to-produce-a-linux-screencast/
+permalink: http://rhodesmill.org/brandon/2008/how-to-produce-a-linux-screencast/
+tags: ''
+title: How To Produce A Linux Screencast
+---
+Learning how to create Linux screencasts has been the most frustrating technical challenge that I have tackled for a very long time. I should have been worried when a search for “Linux video editing” returned, as its top hit, a <a href="http://www.robfisher.net/video/">bare and completely unstyled web page from 2002</a> which concludes that “video editing on Linux hasn't really arrived yet.”
+
+My efforts were, in the end, successful, and you can see the result — my first two screencasts — <a href="http://rhodesmill.org/brandon/2008/presentations-on-buildout-and-kss/">in my previous blog entry</a>, which I posted earlier this week.
+
+In the hope that my toil can benefit others, let me outline the details of the process that I have worked out for creating, editing, and posting Linux screencasts. For the impatient, here are the three most important things I learned:
+
+<ul>
+
+<li>Linux tools have great difficulty keeping audio and video from gradually going out of sync over several minutes. To avoid problems, always run <a href="http://recordmydesktop.iovar.org/">recordmydesktop</a> with its “on-the-fly encoding” option, and never let “ffmpeg” anywhere near your audio! This not only means that you have to use “mencoder” instead when converting between video formats, but even within mencoder you must avoid the “lavc” audio module, since its code seems to have the same problems.
+
+<li>Do not attempt to directly edit the resulting Ogg/Theora video! Instead, convert first to the Digial Video (DV) format, and perform your editing there. Be prepared for the fact that DV files are enormous, and that DV pixels are not square.
+
+<li>Finally, convert to something like AVI for submission to <a href="http://video.google.com/">Google Video</a>. Avoid submitting a raw Ogg/Theora file, since even though Google can decode it, their decoders will waste valuable screen space by placing an empty border around the result.
+
+</ul>
+
+For those interested in more details, I have more to share. Keep reading!
+
+<!--more-->
+
+<h3>Recording the screencast</h3>
+
+In order to record a screencast using Linux, use <a href="http://recordmydesktop.iovar.org/">recordmydesktop</a>. I can't tell you how to get your sound card working with it, because — much to my surprise — when I plugged my old 1990s-vintage sound card microphone into my sound card, it <i>simply worked</i> and my voice was right there in the recording. So I was at least spared an epic battle with my audio configuration.
+
+The recordmydesktop tool produces video in the open Ogg/Theora format, and the results look very sharp. It names its first output file <tt>out.ogv</tt> and, if you run it again, next uses the names <tt>out.ogv.1</tt>, <tt>out.ogv.2</tt>, and so forth. This makes it easy to sort through the clips that you have produced after making several attempts at a particular scene. There are four options that I found helpful when using recordmydesktop:
+
+<ul>
+
+<li>Ask for the video to be encoded during recording, rather than at the end:
+<pre>recordmydesktop --on-the-fly-encoding</pre>
+This uses more CPU during the presentation, but was necessary — at least on my machine — to produce audio and video that stayed in sync. Without it, the audio and video started to diverge visibly within a minute or so, and by minute three or four you would hear me talking about a completely different slide than the one showing on the screen.
+
+<li>Ask for a full screen-shot to be made every frame:
+<pre> --full-shots</pre>
+I needed this because the presentation software that I use, <a href="http://impressive.sourceforge.net/">Impressive</a>, uses OpenGL to produce extremely smooth transitions between my PDF slides, and only full screen-shots capture the contents of OpenGL accelerated windows. (If you're curious: I created my presentation slides with OpenOffice Impress, and then exported to PDF.)
+
+<li>Choose a recording area and frame rate appropriate for the Digital Video format we will use for editing:
+<pre> -fps 29.97 -width 720 -height 528</pre>
+You might have thought that, since DV frames are 720×480 pixels in size, you should use those dimensions when running recordmydesktop. But it turns out that, while pixels on a typical computer display are square, DV pixels are noticeably taller — so our 528 vertical pixels of captured video will just barely fill the 480 vertical lines of each DV frame. I should thank <a href="http://lipas.uwasa.fi/~f76998/video/conversion/">Jukka Aho's guide to video resolution</a>, without which this aspect ratio problem might have left me very confused.
+
+<li>Finally, I ask for the recording area to be offset a bit from the upper-left corner of the screen:
+<pre> -x 20 -y 40</pre>
+This offset allows me to hide the borders around my KeyJnote window, or any other window — such as an xterm — that I place in the area of my screen that is being recorded. Before doing my first real screen captures, I start up recordmydesktop, and use the box that it draws around its recording area to position my other windows so that only their content shows.
+
+</ul>
+
+I noticed that recordmydesktop often does not record exactly the area that I specify. Instead, it seems to have a fondness for rounding the height and width to multiples of 16. But all that matters is that the recording area is close to the right size, since, again, I use the handy border that it draws around the area — and not the exact numbers I have specified — to position the windows I'm recording.
+
+To make positioning windows in the recorded area easier, I tend to make their content slightly oversized. When running KeyJnote, for example, I use:
+
+<pre>keyjnote -f -g 724x532 python-before-eggs.pdf</pre>
+
+This gives me a few pixels of leeway within which to position the window without its inner edges showing in the recording. Similarly, I create my xterms with quite wide margins using the <tt>-b</tt> option, then drag the corners around until I like how much text is showing in the presentation area.
+
+<pre>xterm -fa inconsolata -fs 16 -b 32</pre>
+
+The fact that I only record an area 720 pixels wide leaves some space available toward the right side of my monitor, where I can place things like a narrow text editor with notes about what I want to say, which tends to make my screencast smoother than if I am making up words as I go along.
+
+<h3>Editing the presentation</h3>
+
+After recording my first presentation, I tried every single movie editor that I could find for Linux, and finally concluded that none of them could edit Ogg/Theora videos. They either failed to recognize the file format, or would crash during editing, or produce garbled output. The format does seem to be rather obscure outside the Free Software world, so I tried converting my video to more popular formats before editing it — and found that many of the same problems still arose!
+
+I have concluded that the movie editors available under Linux are simply not prepared for the challenges of editing highly compressed video formats. When dealing with compressed video, merely displaying a given frame when the user clicks on it can be a lot of work — one must first rewind to the most recent keyframe, then apply the series of changes encoded in the subsequent frames. Obviously, even the simplest editing can make complete hash of the existing sequence of keyframes and updates. After doing even simple edits, I found that I could no longer even click somewhere on my recording and have a coherent image come up in the movie editor.
+
+After hours of experimentation and research, I have adopted the Digital Video (DV) format for all of my editing. The DV format was designed with editing in mind: each frame is independently compressed. This makes it a very easy format for a program to handle as you select frames, cut out segments of video, and paste them back in somewhere else.
+
+Although the DV format can only support a few fixed screen sizes, whose dimensions and aspect ratios were determined by the ancient properties of broadcast television, its NTSC size of 720×480 is plenty large enough to capture the detail in a typical screencast — particularly if you are going to be mixing it down to the size supported by a video-sharing site like YouTube or Google Video.
+
+As I mentioned at the beginning of this article, always use mencoder from the <a href="http://www.mplayerhq.hu/">MPlayer</a> project for converting video. To create an editable DV file from the <tt>out.ogv</tt> produced by recordmydesktop, I use the command:
+
+<pre>mencoder out.ogv -ovc libdv -oac pcm \
+ -vf scale=720:480 -o editme.dv</pre>
+
+This command also goes ahead and converts the square pixels off of your screen into pixels with the proper shape for the DV format.
+
+Do be prepared for the fact that the DV format results in recordings that are absolutely enormous. Plan on the file consuming about a gigabyte for every four minutes of video, and simply consider this the cost of having every single frame randomly accessible during the editing process.
+
+Which video editor should you use? I lack the time to produce a full review of each option. Instead, I will heartily recommend that you use <a href="http://heroinewarrior.com/cinelerra.php3">Cinelerra</a>, for three reasons:
+
+<ul>
+
+<li>Cinelerra is a “non-linear” video editor, which means that it shows you a time-line picture of your presentation, including your audio track. It's the audio track that's especially important! Each of your words shows up as a visible bump in the volume, which makes it really easy to put sentences back together again if, while recording, you made a mistake, paused, and then repeated the last few words again to get them correct.
+
+<li>Cinelerra does not actually alter your source video file. Each time you save your project, it just saves a tiny <tt>project.xml</tt> file listing the pieces of video and audio that you've clipped together on its timeline. This means that it's not wasting effort trying to modify your multi-gigabyte DV file; instead, it's just remembering which frames of the DV file should be rendered after all of your cutting and pasting are complete.
+
+<li>Because Cinelerra doesn't save any information inside of your video file, you can actually just delete the DV file when you're done using Cinelerra! If you want the ability to do more editing in the future, just keep around your original Ogg/Theora file and the <tt>project.xml</tt> generated from Cinelerra, and you can always re-generate the DV file (with the command given above) and then re-run Cinelerra.
+
+</ul>
+
+One hint: when Cinelerra starts, not only will its timeline window appear, but also a window for recording video off of a live camera. Close the recording window, which won't help you during editing, and use the “Windows” pull-down menu to open a “Compositor” window instead. It is the Compositor window that will let you see your presentation's video as you edit.
+
+When you are done editing and are ready to have Cinelerra “render” the result to a new movie file, you are given a choice of output formats. I found that saving to yet another Ogg/Theora file gave the best results.
+
+<h3>Mixing back down</h3>
+
+Finally, before you submit your screencast to Google Video, or YouTube, or wherever, there are three final goals to be accomplished:
+
+<ul>
+
+<li>Convert it into a popular format that the hosting service will appreciate. Though Google Video can now process Ogg/Theora files, it seems to put ugly margins around them. I found that submitting the same data as an AVI file produced much more attractive results. (Not that Google Video has terribly good image quality either way!)
+
+<li>Adjust the resolution. Typically, you will want to reduce it from 720 pixels across to something more modest.
+
+<li>Finally, in my case the volume always needs to be adjusted; my microphone is very quiet. So, I ask for the volume to be increased so that my voice hovers around half of full volume. Listen to your result, and change this number to suit your own taste.
+
+</ul>
+
+All three of these final goals are accomplished with a single command line:
+
+<pre>
+mencoder cinelerra.ogg -vf scale=640:480 \
+ -af volnorm=1:0.5 -ovc lavc -oac twolame \
+ -o final.avi
+</pre>
+
+The <tt>final.avi</tt> file is now ready to be posted on the Web!
+
+I hope this helps someone through the frustrations of preparing a screencast themselves. I myself will be looking for more screencast topics in the near future, so that I can use all of this advice again myself. Good luck!

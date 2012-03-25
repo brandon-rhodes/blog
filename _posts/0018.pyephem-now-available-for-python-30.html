@@ -1,0 +1,152 @@
+---
+categories: Computing, PyEphem, Python
+date: 2008/12/13 02:05:07
+guid: http://rhodesmill.org/brandon/?p=27
+permalink: http://rhodesmill.org/brandon/2008/pyephem-now-available-for-python-30/
+tags: ''
+title: PyEphem now available for Python 3.0!
+---
+<p>
+Eager not to be left behind by the advance of history,
+I have released <a href="http://rhodesmill.org/pyephem/">PyEphem</a>
+tonight for Python 3.0!
+After updating its C-language routines earlier this week,
+as <a
+href="http://rhodesmill.org/brandon/2008/porting-a-c-extension-module-to-python-30/">described
+in my previous post</a>,
+and adjusting its Python syntax,
+I thought that my work was done —
+until I received a bug report from Reto Schüttel,
+an enterprising Swiss programmer.
+He had read my previous post,
+asked me for the location of PyEphem's <a
+href="https://code.launchpad.net/~brandon-rhodes/pyephem/python-3">Python 3.0
+branch</a>,
+downloaded it with <a href="http://bazaar-vcs.org/">bzr</a>,
+and already tried it out, not only on his Linux machine,
+but <i>also</i> on his OS X machine!
+</p>
+<p>
+While the <a
+href="http://bazaar.launchpad.net/~brandon-rhodes/pyephem/python-3/changes/419?start_revid=419">first
+twenty revisions</a> of my branch deal with simple Python 3.0 mechanics,
+I must congratulate Mr. Schüttel
+for most of the improvements in the <a
+href="http://bazaar.launchpad.net/~brandon-rhodes/pyephem/python-3/changes/431?start_revid=431">subsequent
+dozen revisions</a>.
+We not only exchanged emails all day
+as I produced one revision after another
+that I needed him to test,
+but he then joined me on IRC tonight until 3:30am in his time zone
+as we worked out the last problems.
+</p>
+<p>
+The issues were all related to localization under OS X.
+The astronomy library underlying PyEphem used the C-language functions
+<tt>sscanf()</tt> and <tt>atof()</tt>
+to turn strings into numbers,
+and it turns out that these functions are very sensitive to locale
+under the specific combination of OS X and Python 3.0!
+Because of his locale,
+the functions wanted a comma instead of a period
+to separate whole numbers from their decimal fraction
+(so that <i>π</i> would have to be input like <tt>3,141</tt>
+rather than like <tt>3.141</tt>).
+They also wanted month name abbreviations
+to be in German rather than English,
+ruining my test cases
+that check planet positions against
+<a href="http://www.usno.navy.mil/">Naval Observatory</a> tables
+which use English month abbreviations
+like <i>Jan</i>, <i>Feb</i>, and <i>Mar</i>
+with very little regard for how the months would be spelled in German.
+We are still mystified by the combination of Python version
+and operation system that were necessary to cause this problem:
+</p>
+<pre>
+Python 2.6 under Linux: tests passed
+Python 3.0 under Linux: tests passed
+Python 2.6 under OS X: tests passed
+Python 3.0 under OS X: <b>broken: sscanf()/atof() change with locale</b>
+</pre>
+<p>
+But the tests worked fine if he put <tt>LANG=C</tt> on the command line.
+</p>
+<p>
+To work around this problem,
+I discovered a wonderful <tt>PyOS_ascii_strtod()</tt> function
+in Python's C library that avoided all of the problems
+that I was having with localization,
+and so I gradually rewrote the astronomy routines
+to use that function instead.
+Fixing the problems with month names was easier;
+instead of trying to make Python convert month abbreviations
+by passing the <tt>'%b'</tt> conversion character
+to <tt>time.strptime()</tt>,
+I simply converted months to integers myself
+and then passed the integers in
+with the simpler <tt>'%m'</tt> format character.
+It was only late at night
+that we finally tracked down every routine that was misbehaving.
+</p>
+<p>
+The final puzzle was how to release my new software.
+The <a href="http://pypi.python.org/pypi">Python Package Index</a>
+does not yet allow a project to offer separate source code archives
+for both the Python 2.x and the 3.0 version of a project.
+There might be some clever way
+of storing both versions of the source code
+in the same <tt>.tar.gz</tt> file,
+but the packages I see on PyPI that already support both 2.x and 3.0
+contain enough <tt>#ifdef</tt> statements
+to convince me that I want to keep my branches separate!
+</p>
+<p>
+I was saved by a peculiarity of my project.
+Though it provides the Python <i>package</i> named <tt>ephem</tt>,
+the actual <i>project</i> on PyPI
+has always been named “PyEphem” instead.
+The product has to have the “Py” in front, you see,
+to distinguish it
+both from the original text-screen <tt>ephem</tt> command
+and the modern
+<a href="http://www.clearskyinstitute.com/xephem/">XEphem</a>
+graphical application,
+and my first instinct had been to name the project after the product.
+But as I gained experience with PyPI,
+it seemed more and more awkward
+that programmers who wanted their programs to be able to:
+</p>
+<pre>import ephem</pre>
+<p>
+had to remember to type something different when installing:
+</p>
+<pre>easy_install pyephem</pre>
+<p>
+Since I had been wanting to switch PyPI names anyway,
+I suddenly saw my chance!
+I have now released the new Python 3.0 version of PyEphem
+<a href="http://pypi.python.org/pypi/ephem/">under
+the actual package name <i>ephem</i></a>
+and will continue to maintain the 2.x version of the package
+separately under
+<a href="http://pypi.python.org/pypi/pyephem/">the old <i>pyephem</i>
+name</a>.
+Obviously,
+this solution only works because of my project's unique circumstances;
+I have no idea what other projects should do
+who also want to come out with their new Python 3.0 versions
+this weekend.
+</p>
+<p>
+Fans of PyEphem should rest assured
+that when I develop new features,
+I will be adding them to <i>both</i> versions
+of PyEphem for probably at least the next decade.
+I have absolutely no intention of abandoning or slowing development
+of the Python 2.x version of the library;
+I simply wanted the library available to users of the new platform.
+As always,
+feel free to email me with bugs, suggestions, and new features —
+and, enjoy using PyEphem and Python!
+</p>

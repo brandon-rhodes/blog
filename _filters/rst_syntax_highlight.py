@@ -7,8 +7,8 @@ import blogofile_bf as bf
 css_files_written = set()
 
 code_block_re = re.compile(
-    r"<pre class=\"literal-block\">\n"
-    r"(?:#\!(?P<lang>\w+)\n)?"
+    r"<pre(?: class=\"literal-block\")?>\n"
+    r"#\!(?P<lang>\w+)\n"
     r"(?P<code>.*?)"
     r"</pre>", re.DOTALL
 )
