@@ -23,7 +23,7 @@ def highlight_code(code, language, formatter):
                   "\n\n"
     return highlighted
 
-def write_pygments_css(style, formatter, location="/css"):
+def write_pygments_css(style, formatter, location="/brandon"):
     path = bf.util.path_join("_site",bf.util.fs_site_path_helper(location))
     bf.util.mkdir(path)
     css_path = os.path.join(path,"pygments_"+style+".css")
