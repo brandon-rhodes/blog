@@ -2,15 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>${self.title()}</title>
-  <link href="http://fonts.googleapis.com/css?family=Gentium+Book+Basic:700"
-        rel="stylesheet" type="text/css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="http://fonts.googleapis.com/css?family=Crimson+Text"
+        rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=Inconsolata"
         rel="stylesheet" type="text/css">
   <link rel="stylesheet" type="text/css" href="/brandon/screen.css" />
   <!--[if IE]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
+  <title>${self.title()}</title>
 </head>
 
 <body>${next.body()}

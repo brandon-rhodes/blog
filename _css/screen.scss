@@ -1,6 +1,7 @@
 @import "_normalize";
 @import "compass/css3/box-shadow";
 @import "compass/css3/text-shadow";
+@import "compass/typography/vertical_rhythm";
 
 * { box-sizing: border-box }  /* Paul Irish */
 
@@ -13,7 +14,7 @@ $titletxt: #700;
 body {
   background: $pagebg url('/brandon/sidebar.jpg') repeat-y center top;
   font-family: 'Crimson Text', serif;
-  @media screen and (min-width: 400px) {font-size: 1.125em;}
+  @media screen and (min-width: 400px) {@include adjust-font-size-to(18px);}
   @media screen and (min-width: 480px) {background-position: right top;}
   @media screen and (min-width: 660px) {background-position: 90% top;}
   @media screen and (min-width: 780px) {background-position: 80% top;}
@@ -98,4 +99,33 @@ article {
   iframe {
     max-width: 100%;
   }
+  tt {
+    color: $titletxt;
+    @include adjust-font-size-to(16px, 1, 18px);
+  }
+  .image-reference {
+    display: block;
+    text-align: center;
+    @media screen and (min-width: 560px) {
+      float: right;
+      margin-left: 1em;
+      margin-bottom: 1em;
+    }
+    img {
+      @include box-shadow(2px 2px 7px darken($contentbg, 70%));
+      border-width: 1px 2px 2px 1px;
+      border-style: solid;
+      border-color: darken($contentbg, 50%) darken($contentbg, 70%) darken($contentbg, 70%) darken($contentbg, 50%);
+    }
+  }
+}
+
+pre {
+  @include box-shadow(0px 0px 7px #640);
+  background-color: white;
+  padding: 0.3em 0.5em;
+  width: 40em;  /* nearly 80 characters with Inconsolata */
+  white-space: pre;
+  @include adjust-font-size-to(14px, 1, 18px);
+  font-family: "Inconsolata", "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, Courier, monospace, sans-serif;
 }
