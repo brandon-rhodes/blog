@@ -41,7 +41,7 @@ Whenever you run the <tt>easy_install</tt> and <tt>python</tt> commands that <tt
 But how, you ask, does the <tt>virtualenv</tt> command itself get installed? Doesn't <i>that</i>, at least, require root access to <tt>easy_install</tt>? Not at all! The command is entirely self-contained; just grab the <tt>virtualenv.py</tt> file from inside of the <tt>virutalenv</tt> tar archive on <a href="http://pypi.python.org/pypi/virtualenv">its page at the Python Package Index</a>. I always simply include a copy of <tt>virtualenv</tt> in the files that I push to a new home directory whenever I get a new account somewhere.
 
 Here is the real-life <tt>build.sh</tt> shell script (yes, I am old-fashioned) that I keep in version control along with the <tt>.tar.gz</tt> archives of the Python packages that I want Emacs to use:
-<pre class="literal-block">
+<pre>
 #!bash
 # Brandon's ~/.emacs.d/src/build.sh
 # Change to the directory containing this script.
@@ -80,7 +80,7 @@ ln -s src/Pymacs-0.23/pymacs.el ../pymacs.el
 Without having to assume an elevated privilege even once, this script removes any old <tt>virtualenv</tt> sitting in the way, builds a new one, and installs the four Python packages into it. As a final step, it creates an easy-to-find symlink to the <tt>pymacs.el</tt> so that my main Emacs file does not have to remember the name of its source directory, which changes with each new version.
 
 My <tt>~/.emacs.d/init.el</tt> file simply has to point Emacs at the Python executable inside the virtual environment, and everything works:
-<pre class="literal-block">
+<pre>
 #!scheme
 ;; From Brandon's ~/.emacs.d/init.el
 (add-to-list 'load-path "~/.emacs.d")

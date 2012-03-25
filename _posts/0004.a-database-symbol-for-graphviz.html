@@ -17,7 +17,7 @@ I have started using the <a href="http://www.graphviz.org/">GraphViz</a> applica
 
 by supplying this rather modest input file to GraphViz (most of whose length comes from my wanting particular colors)::
 
-<pre class="literal-block">
+<pre>
 #!scss
  digraph Application {
     rankdir=LR;
@@ -48,7 +48,7 @@ x1 x0 sub 2 div y0 lineto
 
 This means, “place the value of the variable <i>x1</i> on the stack, then the value of <i>x0</i>, and then <i>subtract</i> to remove them from the stack and leave their difference there instead; then place the number <i>2</i> on the stack and <i>divide</i> so that only half of the previous result remains; then place the value of <i>y0</i> on the stack; and, finally, invoke the command <i>lineto</i> which removes the bottom two numbers from the stack and interprets them as the coordinates of a point to which it then draws a line.” In Python the same expression would be:
 
-<pre class="literal-block">
+<pre>
 #!python
 lineto((x1 - x0) / 2, y0)
 </pre>
@@ -57,7 +57,7 @@ Even small PostScript programs like my <a href="http://rhodesmill.org/brandon/st
 
 One annoyance with using a user-defined shape like this with GraphViz is that one is restricted to using only its PostScript output mode, which means having to use an additional command to turn the PostScript into PDF or PNG or some other format. For example, if the example GraphViz code that I quoted above is placed in a <tt>sample.dot</tt> file, then to generate a PDF of the graph one must perform two steps:
 
-<pre class="literal-block">
+<pre>
 #!bash
 $ dot -Tps2 -l DatabaseShape.ps sample.dot -o sample.ps
 $ ps2pdf sample.ps sample.pdf

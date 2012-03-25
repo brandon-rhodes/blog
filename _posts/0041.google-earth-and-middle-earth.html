@@ -114,7 +114,7 @@ title: Google Earth and Middle-earth
   that determines the stretch required of each row of the image,
   given its <i>y</i>-coordinate:
 </p>
-<pre class="literal-block">
+<pre>
 #!python
 def mag(y):
     return 1. / cos(latitude(y))
@@ -183,7 +183,7 @@ def mag(y):
   by “growing” the line outward in both directions from there,
   as you can see in the core of my script's loop:
 </p>
-<pre class="literal-block">
+<pre>
 #!python
 for y in range(0, ysize):
     m = mag(y)

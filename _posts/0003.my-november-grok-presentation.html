@@ -20,7 +20,7 @@ Hence, this post. Here I take the reader through the aspects of my talk that fai
 
 After some initial slides introducing the idea of “convention over configuration,” my presentation introduces Grok itself — making good use, I think, of the symbolic value of his club — and then announces, “Let's create a Grok instance!” This is the point at which I bring up a command prompt and show the audience how easy <tt>grokproject</tt> makes it to start a new project:
 
-<pre class="literal-block">
+<pre>
 #!bash
 $ grokproject MyApp
 $ ./MyApp/bin/zopectl fg
@@ -59,7 +59,7 @@ In the presentation I distinguish between “muscular views” and “muscular t
 
 When I reach the slide that reminds me to, “show them your anemic View classes,” I return to my editor and point out that, in the example application, each view has almost no purpose but to associate a particular object class with a particular page template. There is very little information in a declaration like:
 
-<pre class="literal-block">
+<pre>
 #!python
 class CharacterIndex(grok.View):
     grok.context(Character)
@@ -68,7 +68,7 @@ class CharacterIndex(grok.View):
 
 Whereas there is plenty going on in a template like <tt>characterindex.pt</tt>; every TAL reference it makes is either to the raw <tt>context</tt> object itself, or an object it reaches through the context! Take a look:
 
-<pre class="literal-block">
+<pre>
 #!html
 &lt;h1&gt;The Character:
 &lt;span tal:content=&quot;context/name&quot;&gt;Name&lt;/span&gt;&lt;/h1&gt;
@@ -83,7 +83,7 @@ This character fought in several battles.
 
 The slides then continue, pointing out that this makes for very quick coding at the cost of several disadvantages. When the fourth and final intermission arrives (“go make your CharacterIndex View more muscular”), I return to the window where my editor has <tt>app.py</tt> open and rewrite the <tt>CharacterIndex</tt> to look more like this:
 
-<pre class="literal-block">
+<pre>
 #!python
 class CharacterIndex(grok.View):
     grok.context(Character)
@@ -101,7 +101,7 @@ class CharacterIndex(grok.View):
 
 Note what this does: it takes all of the work that the page template was doing in order to fetch the character's name, and the names and URLs of the battles in which the character fought, and performs that access in pure Python and in exactly once place. The values in the dictionary that is being passed — <tt>character_name</tt> and <tt>battle_info</tt> — are, if you will examine them carefully, composed of nothing but primitive Python types! They consist solely of lists and dictionaries containing strings. They contain no objects for the template to browse at its leisure; instead, every bit of pertinent data in our objects is reduced to harmless data structures which cannot be used to affect the original objects in any way. This means that the <tt>characterindex.pt</tt> template can be rewritten both more safely, and also more simply:
 
-<pre class="literal-block">
+<pre>
 #!html
 &lt;html&gt;&lt;body&gt;
   &lt;h1&gt;The Character:
