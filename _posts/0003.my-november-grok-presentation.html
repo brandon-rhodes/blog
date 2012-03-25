@@ -6,39 +6,52 @@ permalink: http://rhodesmill.org/brandon/2007/my-november-grok-presentation/
 tags: ''
 title: My November Grok Presentation
 ---
+<p>
 In this post, I provide the slides and examples from a recent talk that I gave to some fellow software developers at Georgia Tech. Many of them were not familiar with web frameworks, and I wanted to introduce them to two common concepts: the idea of “convention over configuration,” and the practice of passing inert data structures to a page template rather than letting it access live objects directly.
-
+</p>
+<p>
 But because I am also really enjoying my work with the new Python web framework <a href="http://grok.zope.org/">Grok</a>, I decided to make it the centerpiece of my presentation<!--more--> and illustrate the more general principles of web development by showing how Grok works. I also gave the talk a week later at an Atlanta Plone gathering, where I knew the interest would be more on what makes Grok unique.
-
+</p>
+<p>
 When I was asked for a copy of my slides, I realized that my presentation style — which involves showing several slides, moving to my editor and web browser for some actual programming, then diving back into my slides — leaves the PDF of the presentation perhaps not making as much sense by itself as it might otherwise:
+</p>
 
 <blockquote><a href="http://rhodesmill.org/brandon/static/2007-11/grok-slides.pdf">Click here to download the PDF of my presentation</a></blockquote>
 
+<p>
 Hence, this post. Here I take the reader through the aspects of my talk that failed to make it on to the slides, showing both the command-line operations and the coding that illustrated and made sense of the presentation itself.
+</p>
 
 <h2><a id="creating-a-grok-instance" name="creating-a-grok-instance">Creating a Grok Instance</a></h2>
 
+<p>
 After some initial slides introducing the idea of “convention over configuration,” my presentation introduces Grok itself — making good use, I think, of the symbolic value of his club — and then announces, “Let's create a Grok instance!” This is the point at which I bring up a command prompt and show the audience how easy <tt>grokproject</tt> makes it to start a new project:
-
+</p>
 <pre>
 #!bash
 $ grokproject MyApp
 $ ./MyApp/bin/zopectl fg
 </pre>
-
+<p>
 After <tt>zopectl</tt> has finished starting up, I point my web browser at <tt>http://localhost:8080/</tt>, and then suffer a silent moment of frustration about the fact the web page that appears is <em>not</em> simply the welcome message from the new Grok app. Instead, the “admin interface” comes up, and insists on being fed an application instance name before allowing me to proceed. I choose <tt>lotr</tt> as the name, then show the audience that <tt>http://localhost:8080/lotr</tt> is where the new application lives.
-
+</p>
+<p>
 Before continuing with my slides, I visit the directory <tt>MyApp/src/MyApp</tt> and give the audience brief glimpses of both <tt>app.py</tt> and the <tt>app_templates</tt> directory. This introduces three items which will be critical as the slides resume: the <tt>MyApp</tt> object, the <tt>Index</tt> view, and the <tt>index.pt</tt> page template. With these three items pointed out, I am ready to proceed with my slides and discuss how the object, view, and page template together form Grok's “Threefold Way” of making objects available on the web.
+</p>
 
 <h2><a id="the-actual-example" name="the-actual-example">The Actual Example</a></h2>
 
+<p>
 Only a few slides later, the time arrives for a more sophisticated example. The presentation exaggerates when it instructs me to “go add some models and further views to your application.” I do not, in fact, make the audience watch me write code, but present them with a finished and working example that I prepare before the presentation. You can create it for yourself by putting this file in place of the one <tt>grokproject</tt> created:
+</p>
 
 <ul>
 <li><a href="http://rhodesmill.org/brandon/static/2007-11/app.py">app.py</a></li>
 </ul>
 
+<p>
 and then putting these four files in <tt>app_templates</tt>:
+</p>
 
 <ul>
 <li><a href="http://rhodesmill.org/brandon/static/2007-11/index.pt">index.pt</a></li>
@@ -47,17 +60,24 @@ and then putting these four files in <tt>app_templates</tt>:
 <li><a href="http://rhodesmill.org/brandon/static/2007-11/characterindex.pt">characterindex.pt</a></li>
 </ul>
 
+<p>
 The resulting application, though tiny, was probably too complex for my target audience — many eyes, I noticed, glazed over when seeing Zope Page Templates for the first time — but four views is really barely enough to illustrate both that you can have multiple views on the same object (<tt>MyApp</tt> has both an <tt>/index</tt> and a <tt>/contents</tt>), and that several objects can have views with the same name (<tt>Battle</tt> and <tt>Character</tt> have different <tt>/index</tt> views). The example also shows clearly that if you declare four views, you need to write four page templates to go with them.
-
+</p>
+<p>
 I emphasize for the audience that most of the 56 lines of <tt>app.py</tt> are concerned with creating the violence-themed object model; only the fifteen lines at the bottom are interesting Grok code, creating four very slender views. This is where I point out “convention over configuration” at work: all of the page templates get discovered without having to be named, and <tt>grok.name()</tt> only has to be employed when we want the view's URL name to differ from the name of the class.
-
+</p>
+<p>
 After demonstrating that the application does, in fact, work, we return to the slides and start examining the relationship between page templates and their views.
+</p>
 
 <h2><a id="moving-to-a-push-model" name="moving-to-a-push-model">Moving to a “push” model</a></h2>
 
+<p>
 In the presentation I distinguish between “muscular views” and “muscular templates”; perhaps I should have used instead the more conventional idea of templates that “pull” data versus those to which data are “pushed.”
-
+</p>
+<p>
 When I reach the slide that reminds me to, “show them your anemic View classes,” I return to my editor and point out that, in the example application, each view has almost no purpose but to associate a particular object class with a particular page template. There is very little information in a declaration like:
+</p>
 
 <pre>
 #!python
@@ -66,7 +86,9 @@ class CharacterIndex(grok.View):
     grok.name('index')
 </pre>
 
+<p>
 Whereas there is plenty going on in a template like <tt>characterindex.pt</tt>; every TAL reference it makes is either to the raw <tt>context</tt> object itself, or an object it reaches through the context! Take a look:
+</p>
 
 <pre>
 #!html
@@ -81,7 +103,9 @@ This character fought in several battles.
 &lt;/ul&gt;
 </pre>
 
+<p>
 The slides then continue, pointing out that this makes for very quick coding at the cost of several disadvantages. When the fourth and final intermission arrives (“go make your CharacterIndex View more muscular”), I return to the window where my editor has <tt>app.py</tt> open and rewrite the <tt>CharacterIndex</tt> to look more like this:
+</p>
 
 <pre>
 #!python
@@ -99,7 +123,9 @@ class CharacterIndex(grok.View):
             }
 </pre>
 
+<p>
 Note what this does: it takes all of the work that the page template was doing in order to fetch the character's name, and the names and URLs of the battles in which the character fought, and performs that access in pure Python and in exactly once place. The values in the dictionary that is being passed — <tt>character_name</tt> and <tt>battle_info</tt> — are, if you will examine them carefully, composed of nothing but primitive Python types! They consist solely of lists and dictionaries containing strings. They contain no objects for the template to browse at its leisure; instead, every bit of pertinent data in our objects is reduced to harmless data structures which cannot be used to affect the original objects in any way. This means that the <tt>characterindex.pt</tt> template can be rewritten both more safely, and also more simply:
+</p>
 
 <pre>
 #!html
@@ -117,6 +143,9 @@ Note what this does: it takes all of the work that the page template was doing i
 &lt;/body&gt;&lt;/html&gt;
 </pre>
 
+<p>
 And after showing the audience that the rewritten view and the rewritten page template work together, I return to my slides and — finally! — conclude my presentation.
-
+</p>
+<p>
 The presentation seemed to weigh in at around forty minutes. Next time, I think I will tackle fewer concepts at once. But I do like making lots of use of the picture of the cave man, and his club.
+</p>

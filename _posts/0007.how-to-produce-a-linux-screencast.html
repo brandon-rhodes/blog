@@ -6,11 +6,17 @@ permalink: http://rhodesmill.org/brandon/2008/how-to-produce-a-linux-screencast/
 tags: ''
 title: How To Produce A Linux Screencast
 ---
+<p>
 Learning how to create Linux screencasts has been the most frustrating technical challenge that I have tackled for a very long time. I should have been worried when a search for “Linux video editing” returned, as its top hit, a <a href="http://www.robfisher.net/video/">bare and completely unstyled web page from 2002</a> which concludes that “video editing on Linux hasn't really arrived yet.”
+</p>
 
+<p>
 My efforts were, in the end, successful, and you can see the result — my first two screencasts — <a href="http://rhodesmill.org/brandon/2008/presentations-on-buildout-and-kss/">in my previous blog entry</a>, which I posted earlier this week.
+</p>
 
+<p>
 In the hope that my toil can benefit others, let me outline the details of the process that I have worked out for creating, editing, and posting Linux screencasts. For the impatient, here are the three most important things I learned:
+</p>
 
 <ul>
 
@@ -22,15 +28,21 @@ In the hope that my toil can benefit others, let me outline the details of the p
 
 </ul>
 
+<p>
 For those interested in more details, I have more to share. Keep reading!
+</p>
 
 <!--more-->
 
 <h3>Recording the screencast</h3>
 
+<p>
 In order to record a screencast using Linux, use <a href="http://recordmydesktop.iovar.org/">recordmydesktop</a>. I can't tell you how to get your sound card working with it, because — much to my surprise — when I plugged my old 1990s-vintage sound card microphone into my sound card, it <i>simply worked</i> and my voice was right there in the recording. So I was at least spared an epic battle with my audio configuration.
+</p>
 
+<p>
 The recordmydesktop tool produces video in the open Ogg/Theora format, and the results look very sharp. It names its first output file <tt>out.ogv</tt> and, if you run it again, next uses the names <tt>out.ogv.1</tt>, <tt>out.ogv.2</tt>, and so forth. This makes it easy to sort through the clips that you have produced after making several attempts at a particular scene. There are four options that I found helpful when using recordmydesktop:
+</p>
 
 <ul>
 
@@ -52,38 +64,62 @@ This offset allows me to hide the borders around my KeyJnote window, or any othe
 
 </ul>
 
+<p>
 I noticed that recordmydesktop often does not record exactly the area that I specify. Instead, it seems to have a fondness for rounding the height and width to multiples of 16. But all that matters is that the recording area is close to the right size, since, again, I use the handy border that it draws around the area — and not the exact numbers I have specified — to position the windows I'm recording.
+</p>
 
+<p>
 To make positioning windows in the recorded area easier, I tend to make their content slightly oversized. When running KeyJnote, for example, I use:
+</p>
 
 <pre>keyjnote -f -g 724x532 python-before-eggs.pdf</pre>
 
+<p>
 This gives me a few pixels of leeway within which to position the window without its inner edges showing in the recording. Similarly, I create my xterms with quite wide margins using the <tt>-b</tt> option, then drag the corners around until I like how much text is showing in the presentation area.
+</p>
 
 <pre>xterm -fa inconsolata -fs 16 -b 32</pre>
 
+<p>
 The fact that I only record an area 720 pixels wide leaves some space available toward the right side of my monitor, where I can place things like a narrow text editor with notes about what I want to say, which tends to make my screencast smoother than if I am making up words as I go along.
+</p>
 
 <h3>Editing the presentation</h3>
 
+<p>
 After recording my first presentation, I tried every single movie editor that I could find for Linux, and finally concluded that none of them could edit Ogg/Theora videos. They either failed to recognize the file format, or would crash during editing, or produce garbled output. The format does seem to be rather obscure outside the Free Software world, so I tried converting my video to more popular formats before editing it — and found that many of the same problems still arose!
+</p>
 
+<p>
 I have concluded that the movie editors available under Linux are simply not prepared for the challenges of editing highly compressed video formats. When dealing with compressed video, merely displaying a given frame when the user clicks on it can be a lot of work — one must first rewind to the most recent keyframe, then apply the series of changes encoded in the subsequent frames. Obviously, even the simplest editing can make complete hash of the existing sequence of keyframes and updates. After doing even simple edits, I found that I could no longer even click somewhere on my recording and have a coherent image come up in the movie editor.
+</p>
 
+<p>
 After hours of experimentation and research, I have adopted the Digital Video (DV) format for all of my editing. The DV format was designed with editing in mind: each frame is independently compressed. This makes it a very easy format for a program to handle as you select frames, cut out segments of video, and paste them back in somewhere else.
+</p>
 
+<p>
 Although the DV format can only support a few fixed screen sizes, whose dimensions and aspect ratios were determined by the ancient properties of broadcast television, its NTSC size of 720×480 is plenty large enough to capture the detail in a typical screencast — particularly if you are going to be mixing it down to the size supported by a video-sharing site like YouTube or Google Video.
+</p>
 
+<p>
 As I mentioned at the beginning of this article, always use mencoder from the <a href="http://www.mplayerhq.hu/">MPlayer</a> project for converting video. To create an editable DV file from the <tt>out.ogv</tt> produced by recordmydesktop, I use the command:
+</p>
 
 <pre>mencoder out.ogv -ovc libdv -oac pcm \
  -vf scale=720:480 -o editme.dv</pre>
 
+<p>
 This command also goes ahead and converts the square pixels off of your screen into pixels with the proper shape for the DV format.
+</p>
 
+<p>
 Do be prepared for the fact that the DV format results in recordings that are absolutely enormous. Plan on the file consuming about a gigabyte for every four minutes of video, and simply consider this the cost of having every single frame randomly accessible during the editing process.
+</p>
 
+<p>
 Which video editor should you use? I lack the time to produce a full review of each option. Instead, I will heartily recommend that you use <a href="http://heroinewarrior.com/cinelerra.php3">Cinelerra</a>, for three reasons:
+</p>
 
 <ul>
 
@@ -95,13 +131,19 @@ Which video editor should you use? I lack the time to produce a full review of e
 
 </ul>
 
+<p>
 One hint: when Cinelerra starts, not only will its timeline window appear, but also a window for recording video off of a live camera. Close the recording window, which won't help you during editing, and use the “Windows” pull-down menu to open a “Compositor” window instead. It is the Compositor window that will let you see your presentation's video as you edit.
+</p>
 
+<p>
 When you are done editing and are ready to have Cinelerra “render” the result to a new movie file, you are given a choice of output formats. I found that saving to yet another Ogg/Theora file gave the best results.
+</p>
 
 <h3>Mixing back down</h3>
 
+<p>
 Finally, before you submit your screencast to Google Video, or YouTube, or wherever, there are three final goals to be accomplished:
+</p>
 
 <ul>
 
@@ -113,7 +155,9 @@ Finally, before you submit your screencast to Google Video, or YouTube, or where
 
 </ul>
 
+<p>
 All three of these final goals are accomplished with a single command line:
+</p>
 
 <pre>
 mencoder cinelerra.ogg -vf scale=640:480 \
@@ -121,6 +165,10 @@ mencoder cinelerra.ogg -vf scale=640:480 \
  -o final.avi
 </pre>
 
+<p>
 The <tt>final.avi</tt> file is now ready to be posted on the Web!
+</p>
 
+<p>
 I hope this helps someone through the frustrations of preparing a screencast themselves. I myself will be looking for more screencast topics in the near future, so that I can use all of this advice again myself. Good luck!
+</p>

@@ -11,15 +11,23 @@ title: Name your home machines using Tomato
 
 <iframe src="http://rcm.amazon.com/e/cm?t=letsdisthemat-20&o=1&p=8&l=as1&asins=B000BTL0OA&fc1=000000&IS2=1&lt1=_blank&lc1=0000FF&bc1=000000&bg1=FFFFFF&f=ifr" style="width:120px;height:240px;float:right;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
 
+<p>
 I am enjoying my first weeks of using the <a href="http://www.polarcloud.com/tomato">Tomato Firmware</a>. I purchased a <a href="http://www.amazon.com/gp/product/B000BTL0OA?ie=UTF8&tag=letsdisthemat-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=B000BTL0OA">Linksys WRT54GL wireless router</a> because of its admirable support for third-party firmware like Tomato, which replaces the traditional Linksys setup screens with an alterative system with many more configuration options. I can also connect directly to Tomato over SSH and use it as a very small Linux system! This opens endless possibilities for writing fancy firewall rules and running small embedded applications right at the border of my home network.
+</p>
 
+<p>
 The Tomato firmware uses a small DNS server named <b><a href="http://www.thekelleys.org.uk/dnsmasq/doc.html">dnsmasq</a></b> to answer the steady stream of domain name requests from my home computers. It converts domain names that I type, like <tt>rhodesmill.org</tt> or <tt>google.com</tt>, into the low-level IP addresses with which computers identify each other.
+</p>
 
+<p>
 But I also like using hostnames for the machines sitting right in my home, even though they do not have “real names” out on the Internet. I recommend placing local hostnames inside of a top-level domain that is local to your own network. Choose a suffix that differs from all of the top-level domains that exist out on the Internet — avoid <tt>.com</tt>, <tt>.net</tt>, or <tt>.uk</tt>, for example, in favor of something like <tt>.home</tt> or <tt>.myhouse</tt> instead. How, I wondered, could I add extra host names to <b>dnsmasq</b>?
+</p>
 
 <!--more-->
 
+<p>
 After my first glance through the <b>dnsmasq</b> documentation, I thought that a series of <tt>address</tt> options might be the best way to provide my local hosts with names. So I visited its Tomato setup screen, which is under the <i>DHCP / DNS</i> section of the <i>Advanced</i> configuration options, and entered something like this into the “Custom Configuration” file:
+</p>
 
 <pre>
 local-ttl=1
@@ -28,11 +36,18 @@ address=/gamebox.home/192.168.1.3
 address=/printer.home/192.168.1.5
 </pre>
 
+<p>
 The <tt>local-ttl</tt> option is necessary because the default value, zero, encourages the <i>host(1)</i> command on my Linux machine to issue a warning message for every host I look up.
+</p>
 
+<p>
 This setup seemed to work fine, and made it possible to use hostnames like <tt>gamebox.home</tt> when connecting from one machine to another on my home network. But I noticed delays when creating SSH connections between home machines, as well as errors in my system logs, and, as a result, discovered that this configuration was only working in the forward direction: <b>dnsmasq</b> knew that <tt>gamebox.home</tt> was a name for the IP address 192.168.1.3, but it could <i>not</i> answer the reverse question, “What name belongs to the IP address 192.168.1.3?”
+</p>
 
+<p>
+<p>
 I returned to the <b>dnsmasq</b> documentation, read more thoroughly, and learned that it publishes <i>both</i> forward and reverse names for hosts that it finds in the <tt>/etc/hosts</tt> file. While the Tomato firmware does not seem to support an editable <tt>/etc/hosts</tt> file whose contents will reappear when the Linksys router reboots, it does provide an auxiliary flash-based filesystem. So I was able to solve my problem in three steps:
+</p>
 
 <ul>
 <li>I visited the <i>JFFS2</i> screen in <b>dnsmasq</b>, under the <i>Administration</i> section, and enabled it. This creates a writable flash-based filesystem that gets mounted at <tt>/jffs</tt> every time the router boots up. After pressing "Save" and waiting for Tomato to apply the change, reboot the router to make sure that the new filesystem gets properly mounted.
@@ -49,4 +64,6 @@ addn-hosts=/jffs/hosts
 </pre>
 </ul>
 
+<p>
 With this improvement, both forward and reverse name lookups now work perfectly! To add or remove a host name in the future, I can simply re-edit the file. Though I once dreaded the inflexibility of small embedded appliances, Tomato has finally convinced me to replace the large, noisy Linux box at the edge of my network with something far more tidy and sleek.
+</p>
