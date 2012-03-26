@@ -19,9 +19,8 @@ used wonderful words like “chaparral,”
 and a glimpse at the games that employees get to play
 in the back yards of Silicon Valley companies.
 
-.. raw:: html
-
-   <a href="http://www.flickr.com/photos/brandonrhodes/6980374449/"><img src="/brandon/2012/guadalupe-river.jpg"></a>
+.. image:: http://rhodesmill.org/brandon/2012/guadalupe-river.jpg
+   :target: http://www.flickr.com/photos/brandonrhodes/6980374449/
 
 What could happen next year,
 if more people were interested in walking —
