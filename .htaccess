@@ -1,0 +1,13 @@
+DirectoryIndex index.html index.xml
+Options +MultiViews -ExecCGI
+
+<FilesMatch \.(cgi|py)$>
+  SetHandler default-handler
+</FilesMatch>
+
+RedirectMatch permanent ^/brandon/projects/pyephem.html$ http://rhodesmill.org/pyephem/
+RedirectMatch permanent ^/brandon/small/rhodestw.ps$ http://rhodesmill.org/brandon/projects/tabspace-guide.pdf
+RedirectMatch permanent ^/brandon/small/rhodestw.ini$ http://rhodesmill.org/brandon/projects/tabspace.ini
+
+RedirectMatch permanent ^/brandon/about-2/$ http://rhodesmill.org/brandon/
+RedirectMatch permanent ^/brandon/comments/feed/$ http://feeds.feedburner.com/LetsDiscussTheMatterFurther-comments
