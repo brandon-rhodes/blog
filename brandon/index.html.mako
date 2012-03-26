@@ -55,7 +55,7 @@
   </p>
 </article>
 
-<article>
+<article class="blog-summary">
   <div class="date">My Blog</div>
   <h1>Recent Posts</h1>
   <p>

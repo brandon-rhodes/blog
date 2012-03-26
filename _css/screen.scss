@@ -204,6 +204,14 @@ article {
   }
 }
 
+.blog-summary {
+  a {
+    color: darken($titletxt, 5%);
+    text-decoration: none;
+    &:hover {text-decoration: underline;}
+  }
+}
+
 pre {
   @include box-shadow(0px 0px 7px #640);
   background-color: white;
