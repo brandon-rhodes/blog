@@ -40,6 +40,7 @@ header {
   }
   span.title {
     @include text-shadow(0px 1px 0px lighten($sidebarbg, 30%), 0px -1px 0px #000);
+    /* TODO: body.index & {font-size: 1.5em;} */
   }
   span {
     display: block;
@@ -60,7 +61,40 @@ footer {
   @media screen and (min-width: 560px) {margin-left: 20%;}
 }
 
-.chronological {
+@mixin main-content {
+  margin: 2.5em auto;
+  &:first-child {margin-top: 4em;}
+  max-width: 32em;
+  padding: 0.8em 5%;
+}
+
+.scraps {
+  @include main-content;
+  > div {
+    /* float: left; */
+  }
+  &:after {
+    clear: both;
+    content: " ";
+  }
+}
+
+body.index {
+  .social-media {
+    .media {    
+      text-align: center;
+      > div {
+        display: inline-block;
+        vertical-align: top;
+      }
+    }
+  }
+}
+
+body.chronological article {
+  /* Narrow screens: date, title, and summary are simply stacked
+     vertically. To help the dates stand out we provide a little more
+     space above them, and make them italic. */
   h2, p {
     margin: 0.5em 0em;
     font-size: 1em;
@@ -71,6 +105,9 @@ footer {
     word-spacing: 0.18em;
   }
   @media screen and (min-width: 490px) {
+    /* Wide screens: float the date left, into a separate column. With the
+       date providing a visual cue, the vertical separation between items
+       can be reduced to 1em, and the date no longer has to be italic. */
     h2, p {
       margin: 1em 0em 1em 6em;
     }
@@ -83,11 +120,9 @@ footer {
 }
 
 article {
-  margin: 4em auto 1em;
-  max-width: 32em;
+  @include main-content;
   @include box-shadow(2px 2px 7px #000);
   background-color: $contentbg;
-  padding: 0.8em 5%;
 
   .date {
     margin-top: 0.8em;
@@ -159,6 +194,13 @@ article {
       border-style: solid;
       border-color: darken($contentbg, 50%) darken($contentbg, 70%) darken($contentbg, 70%) darken($contentbg, 50%);
     }
+  }
+  &:after {
+    display: block;
+    clear: both;
+    height: 0px;
+    width: 0px;
+    content: " ";
   }
 }
 

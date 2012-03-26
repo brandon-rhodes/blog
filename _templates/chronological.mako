@@ -1,5 +1,6 @@
 <%inherit file="site.mako" />
-<article class="chronological">
+<%def name="body_attributes()">class="chronological"</%def>
+<article>
   % if 'category' not in context.keys():
   <div class="date">Chronological Summary</div>
   <h1>All Posts Ever</h1>

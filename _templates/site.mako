@@ -12,10 +12,11 @@
   <!--[if IE]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
+  ${self.css_links()}
   <title>${self.title()}</title>
 </head>
 
-<body>${next.body()}
+<body ${next.body_attributes().strip()}>${next.body()}
 
 <header class="header">
   <a class="site-title" href="/brandon/">
@@ -37,6 +38,7 @@
   <small>©2012 Brandon Rhodes<br>Code samples BSD-licensed</small>
 </footer>
 </body>
-
-<%def name="title()">${bf.config.blog.name}</%def>
 </html>
+<%def name="css_links()"></%def>
+<%def name="body_attributes()"></%def>
+<%def name="title()">${bf.config.blog.name}</%def>

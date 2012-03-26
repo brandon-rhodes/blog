@@ -1,0 +1,31 @@
+<script src="http://widgets.twimg.com/j/2/widget.js"></script>
+<script>
+new TWTR.Widget({
+  version: 2,
+  type: 'profile',
+  rpp: 4,
+  interval: 6000,
+  width: 200,
+  height: 300,
+  theme: {
+    shell: {
+      background: '#008eb9',
+      color: '#ffffff'
+    },
+    tweets: {
+      background: '#ddeef6',
+      color: '#000000',
+      links: '#006787'
+    }
+  },
+  features: {
+    scrollbar: false,
+    loop: false,
+    live: false,
+    hashtags: true,
+    timestamp: true,
+    avatars: false,
+    behavior: 'all'
+  }
+}).render().setUser('brandon_rhodes').start();
+</script>
