@@ -60,7 +60,7 @@
   <h1>Recent Posts</h1>
   <p>
     % for post in bf.config.blog.posts[:5]:
-    <span>${post.date.strftime('%Y %b %d').replace(' 0', '0')} —</span>
+    <span>${post.date.strftime('%Y %b %d').replace(' 0', ' ')} —</span>
     <a href="${post.path}">${post.title}</a><br>
     % endfor
   </p>
