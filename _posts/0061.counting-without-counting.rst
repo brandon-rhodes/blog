@@ -16,12 +16,12 @@ even if the body of the loop does not need them.
     #!python
     # Creates one million integers
 
-    for i in range(100000):
+    for i in range(1000000):
         print
 
     # Creates them one at a time
 
-    for i in xrange(100000):
+    for i in xrange(1000000):
         print
 
 Yes, I know, you will rightly complain that I am too easily irked.
