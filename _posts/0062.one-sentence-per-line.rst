@@ -147,6 +147,11 @@ Kernighan shares his wisdom:
 
  *— Brian W. Kernighan, 1974*
 
+Note how Pythonic his advice sounds —
+he replaces the fiction of “write-once” documents
+with a realistic focus on making text
+that is easy to edit later!
+
 I must have read this when I was first learning UNIX
 and somehow carried it with me all of these years.
 It says something very powerful
@@ -163,8 +168,8 @@ If you are interested in more early UNIX documentation —
 including the Second Edition of Kernighan's “Beginners” guide —
 check out the `7th Edition manuals <http://cm.bell-labs.com/7thEdMan/>`_
 which Bell Labs has kindly made available online,
-both `as PDFs <http://cm.bell-labs.com/7thEdMan/bswv7.html>`_
+both as `PDF files <http://cm.bell-labs.com/7thEdMan/bswv7.html>`_
 and also as plain-text files marked up for the ``troff`` typesetter.
 Note that you can still compile the ``troff`` files
 successfully on a modern system —
-try *that* with any other richly-formatted text format from the 1970s!
+try *that* with any other richly-formatted text from the 1970s!
