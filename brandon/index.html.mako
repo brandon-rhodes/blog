@@ -1,4 +1,5 @@
 <%inherit file="site.mako" />
+<%def name="title()">by Brandon Rhodes</%def>
 <%def name="body_attributes()">class="index"</%def>
 <%def name="css_links()"><link rel="stylesheet" type="text/css" href="/brandon/flickr.css" /></%def>
 
