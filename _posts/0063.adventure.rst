@@ -49,10 +49,75 @@ from the Summer 2007 issue of the Digital Humanities Quarterly.
 Playing at the prompt
 ---------------------
 
+first lesson python can respond to single-word commands
+
+easy to respond to two-word commands
+
+just had to inject symbols into calling context
+
+so they can say .play() and the game can begin
+
+but one-word commands do no call
+simply naming a function does not invoke it
+unlike Ruby where you have to do a dance to get a ref to a function
+
+so I overrode __repr__
 
 De Morgan and old FORTRAN
 -------------------------
 
-Game experience at 1200 baud
-----------------------------
+The original FORTRAN language
+in which “Adventure” was written
+did not support “structured programming” —
+you could not combine several statements into a single block of code
+under the control of an ``IF`` statement or a loop.
+Instead,
+the ``IF`` statement could only control
+the single statement that followed it,
+so if several statements needed protection
+then you had to ``GOTO`` a line number
+placed down at the end of your “block.”
+Here is an except from ``advent.for``
+in which an ``IF`` clause controls two statements,
+with normal execution continuing at line ``2630``::
+
+ 2610    IF(WD1.NE.'WEST')GOTO 2630
+         IWEST=IWEST+1
+         IF(IWEST.EQ.10)CALL RSPEAK(17)
+ 2630    ...
+
+In Python the line number and ``GOTO`` can be dispensed with
+in favor of simply indenting the lines that run conditionally::
+
+            if word1 == 'west':
+                full_wests += 1
+                if full_wests == 10:
+                    write_message(17)
+
+You will note that my outer Python ``if`` statement
+tests a condition that is, in fact, the complete *opposite*
+of its equivalent in FORTRAN:
+the original code wants the word to not-equal ``'WEST'``
+whereas, in my rewrite, I want them to be equal.
+The reason is plain enough:
+while my modern Python code gets to test
+whether we want to execute the following block of code,
+the original FORTRAN has to think backwards
+and test whether to invoke the ``GOTO``
+and thus *skip* the statements that follow.
+
+(Note that the second ``IF`` statement
+controls only a single line of code,
+and gets to be written “forwards” instead of “backwards” even in FORTRAN.
+It therefore survives its translation into Python unchanged.)
+
+Flipping a simple ``.NE.`` so that it becomes ``==`` is simple enough.
+But what happens when I need to
+`reverse the polarity <http://en.wikipedia.org/wiki/Third_Doctor#.22Reverse_the_polarity.22>`_
+of a more complex expression
+
+
+Great experiences at 1200 baud
+------------------------------
+
 
