@@ -14,7 +14,7 @@ of the original Colossal Cave Adventure game
 that I announced last year during the final round of
 `PyCon 2011 lightning talks <http://pyvideo.org/video/357/pycon-2011--sunday-afternoon-lightning-talks>`_.
 
-.. image:: http://rhodesmill.org/brandon/2012/adventure-heathkit-H19.jpg
+.. image:: http://rhodesmill.org/brandon/2012/adventure-heathkit-h19.jpg
    :target: http://www.flickr.com/photos/brandonrhodes/6115627693/
 
 “Adventure” was the first game
