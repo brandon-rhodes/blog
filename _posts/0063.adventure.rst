@@ -1,0 +1,58 @@
+---
+categories: Python, Computing
+date: 2012/04/05 18:09:25
+permalink: http://rhodesmill.org/brandon/2012/adventure/
+tags: ''
+title: Adventure in Python 3
+---
+
+I have just released
+`adventure 1.2 <http://pypi.python.org/pypi/adventure/>`_
+on the Python Package Index,
+an update of my Python 3 port
+of the original Colossal Cave Adventure game
+that I announced last year during the final round of
+`PyCon 2011 lightning talks <http://pyvideo.org/video/357/pycon-2011--sunday-afternoon-lightning-talks>`_.
+
+.. image:: http://rhodesmill.org/brandon/2012/adventure-heathkit-H19.jpg
+   :target: http://www.flickr.com/photos/brandonrhodes/6115627693/
+
+“Adventure” was the first game
+to offer players a world to explore at their own pace,
+driven by their own curiosity.
+With simple one- and two-word commands
+like ``ENTER`` ``BUILDING`` and ``GET`` ``LAMP``,
+as well as cardinal directions
+that could, mercifully, be typed as abbreviations
+(``N``, ``NE``, ``E``, ``SE``, and so forth,
+with ``U`` and ``D`` for up and down),
+you entered a series of caves —
+based realistically on a section
+of the Flint-Mammoth cave system in Kentucky
+that the author himself had helped explore —
+and could start collecting treasures in a quest
+that involved danger, magic, and even encounters
+with a few other characters,
+who rustled in the shadows beyond the range of your lamp
+before finally pouncing.
+
+Keep reading if you want to learn
+about several discoveries that I made
+while porting “Adventure” to Python!
+If you want to know more about the history of the original game itself,
+I recommend Dennis G. Jerz's admirably thorough paper
+“`Somewhere Nearby is Colossal Cave: Examining Will Crowther's Original "Adventure" in Code and in Kentucky <http://www.digitalhumanities.org/dhq/vol/001/2/000009/000009.html>`_”
+from the Summer 2007 issue of the Digital Humanities Quarterly.
+
+.. more
+
+Playing at the prompt
+---------------------
+
+
+De Morgan and old FORTRAN
+-------------------------
+
+Game experience at 1200 baud
+----------------------------
+
