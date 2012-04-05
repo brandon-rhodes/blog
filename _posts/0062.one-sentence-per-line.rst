@@ -122,7 +122,7 @@ that my inspiration is none other than
 In his original Bell Labs Technical Memorandum 74-1273-18
 from 29 October 1974,
 entitled
-“`UNIX for Beginners <miffy.tom-yam.or.jp/2238/ref/beg.pdf>`_”
+“`UNIX for Beginners <http://miffy.tom-yam.or.jp/2238/ref/beg.pdf>`_”
 — the only clean copy I can find online is this PDF from Japan! —
 Kernighan shares his wisdom:
 
