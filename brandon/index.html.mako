@@ -60,7 +60,7 @@
   <div class="date">My Blog</div>
   <h1>Recent Posts</h1>
   <p>
-    % for post in bf.config.blog.posts[:5]:
+    % for post in [ p for p in bf.config.blog.posts if not p.draft ][:5]:
     <span>${post.date.strftime('%Y %b %d').replace(' 0', ' ')} —</span>
     <a href="${post.path}">${post.title}</a><br>
     % endfor
