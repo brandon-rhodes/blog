@@ -1,7 +1,7 @@
 <%inherit file="site.mako" />
 <article>
   <div class="date">
-    ${post.date.strftime('%Y %B %d').replace(' ', ' ')} —
+    ${post.date.strftime('%Y %B %d').replace(' 0', ' ').replace(' ', ' ')} —
     % for category in post.categories:
     <a href='${category.path}'>${category.name.title().replace(' ', ' ')}</a>
     % endfor
