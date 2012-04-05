@@ -31,6 +31,8 @@
 <%
    content = post.content
    more_index = content.find('<!--more-->')
+   if more_index == -1:
+       more_index = content.find('<!-- more -->')
    if more_index != -1:
        content = (content[:more_index] +
                   '<p><a href="%s">Read more</a></p>' % post.permalink)
