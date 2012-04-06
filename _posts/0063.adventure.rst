@@ -75,7 +75,7 @@ Instead, ``IF`` can only govern
 the single statement that follows it.
 Several statements can be controlled by ``IF``
 only by pointing a ``GOTO`` at the first statement that follows them.
-Here, for example, is an except from ``advent.for``
+Here, for example, is an excerpt from ``advent.for``
 in which an ``IF`` clause controls two statements,
 with normal execution continuing at line ``2630``::
 
@@ -107,7 +107,7 @@ and test whether to *skip* the statements that follow.
 
 (Note that the second ``IF`` statement
 controls only a single line of code,
-and therefore is written “forwards” even in the FORTRAN code.)
+and therefore is written “forwards” even in FORTRAN.)
 
 Flipping a simple ``.NE.`` so that it becomes ``==`` is simple enough.
 But what happens when I need to
@@ -124,11 +124,14 @@ I was delighted!
 Here — *finally* — was a use for De Morgan's laws,
 a mere seventeen years after I learned them in computer science class!
 
-De Morgan's laws state, basically,
+`De Morgan's laws <http://en.wikipedia.org/wiki/De_Morgan's_laws>`_
+state, basically,
 that instead of simply slapping ``not`` in front of a large expression —
 and thereby making your code even less easy to reason about —
-you can swap the expression's ``and`` and ``or`` operators
-and the result will be an expression that means precisely the opposite.
+you can dive into the big expression changing ``and`` to ``or``,
+``or`` to ``and``,
+and reversing the meaning of each equality.
+The expression that results will mean precisely the opposite.
 You do have to be careful with parentheses
 since ``and`` and ``or`` have different precedence
 in most programming languages,
@@ -143,8 +146,8 @@ into roughly this Python translation::
 
 In general, much of the work
 of translating “Adventure” to Python
-was taking FORTRAN code that said one thing
-and making it say more or less the opposite,
+involved taking FORTRAN code that said one thing
+and making it say more or less exactly the opposite,
 so that I could replace ``GOTO`` statements
 with more modern — and more readable — control flow.
 
