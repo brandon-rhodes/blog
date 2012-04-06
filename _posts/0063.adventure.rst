@@ -312,4 +312,93 @@ Great experiences at 1200 baud
 ------------------------------
 
 My final discovery was made quite by accident.
-Now that 
+Now that “Adventure” could be played at the Python prompt,
+I also added a real console prompt that requires no syntactic magic.
+Simply invoke the ``adventure`` package and start typing::
+
+    $ python -m adventure
+    WELCOME TO ADVENTURE!!  WOULD YOU LIKE INSTRUCTIONS?
+
+    > no
+    YOU ARE STANDING AT THE END OF A ROAD BEFORE A SMALL BRICK BUILDING.
+    AROUND YOU IS A FOREST.  A SMALL STREAM FLOWS OUT OF THE BUILDING AND
+    DOWN A GULLY.
+
+    > enter building
+
+Just for fun, instead of using the ``print`` statement
+I used a delayed loop
+that prints characters at the speed of a 1200 baud modem
+like the one with which I myself first played the “Adventure” game.
+And after a few minutes of playing
+I was suddenly brought up short
+by the fact that the game seemed, somehow, more fun
+when the text was presented slowly.
+
+What was going on?
+
+I paid close attention to the game experience,
+and remembered that the human eye scans — and does not merely read —
+a block of text that appears on the screen all at once.
+Even if you intend to read a paragraph as narrative,
+your eyes will jealously dart forwards
+to get a glimpse of what happens.
+Recall how hard it is to pay attention in a novel,
+if farther down the page you see emphatic lettering
+that signals something terrible is about to happen!
+
+Now consider the following event —
+this is the first really interesting thing
+that happens in the “Adventure” game::
+
+ > s
+ YOU ARE IN THE HALL OF THE MOUNTAIN KING, WITH PASSAGES OFF IN ALL
+ DIRECTIONS.
+
+ A HUGE GREEN FIERCE SNAKE BARS THE WAY!
+
+ >
+
+When this text is presented all at once,
+my eye jumps immediately to the exclamation point,
+finds out about the snake,
+and only then — almost as an afterthought — gets around to reading
+about your location.
+
+It would normally be exciting to reach a location
+with as storied a name as “the Hall of the Mountain King.”
+Both Ibsen and Tolkien might leap to mind.
+And after the safety of exploring narrow corridors,
+a shiver goes down my spine to realize that my lamp
+no longer finds solid walls close at hand,
+but that passages recede into darkness in “all directions.”
+But once I know about the snake,
+I hardly pause to read the room description
+and am immediately thinking about my safety instead!
+
+At 1200 baud my experience of the text is completely different.
+It scrolls by at a speed comfortably faster than I can read —
+I do not feel as though I am bored waiting for more text to appear,
+as certainly happens at 300 baud —
+But I am forced, as all early “Adventures” players were,
+to learn something about my location first,
+and only then to be surprised
+by the presence of danger in this hall without a wall
+that I could turn my back against.
+
+I am happy to have solved the technical puzzle
+of how “Adventure” might be played at the Python prompt.
+Indeed, I must admit that without that technical challenge
+it would not have occurred to me
+to sit down over Christmas 2010
+and start this project in the first place.
+But having played the game both ways —
+with descriptions appearing instantly at the Python prompt,
+versus being printed slowly by a dedicated game prompt —
+I must say that I much prefer the latter.
+
+And so I suggest,
+that if you are playing “Adventure” for the first time,
+invoke it with ``-m``
+and simply ignore the fun I had conquering the Python prompt.
+You and the game deserve it!
