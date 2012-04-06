@@ -17,23 +17,23 @@ that I announced last year during the final round of
 .. image:: http://rhodesmill.org/brandon/2012/adventure-heathkit-h19.jpg
    :target: http://www.flickr.com/photos/brandonrhodes/6115627693/
 
+Released in the late 1970s,
 “Adventure” was the first game
-to offer players a world to explore at their own pace,
+to offer players a virtual world to explore at their own pace,
 driven by their own curiosity.
-With simple one- and two-word commands
+The player directs the game with simple one- and two-word commands
 like ``ENTER`` ``BUILDING`` and ``GET`` ``LAMP``,
-as well as cardinal directions
-that could, mercifully, be typed as abbreviations
+together with the cardinal directions —
+which could, mercifully, be typed as abbreviations
 (``N``, ``NE``, ``E``, ``SE``, and so forth,
-with ``U`` and ``D`` for up and down),
-you entered a series of caves —
-based realistically on a section
+with ``U`` and ``D`` for up and down).
+Based on a real-life section
 of the Flint-Mammoth cave system in Kentucky
-that the author himself had helped explore —
-and could start collecting treasures in a quest
-that involved danger, magic, and even encounters
-with a few other characters,
-who rustled in the shadows beyond the range of your lamp
+that the author helped map,
+“Adventure” invites you to start collecting treasures from the cave
+in a quest that eventually involves danger, magic,
+and even encounters with a few computer-controlled characters,
+who rustle in the darkness beyond the range of your lamp
 before finally pouncing.
 
 Keep reading if you want to learn
@@ -41,7 +41,7 @@ about several discoveries that I made
 while porting “Adventure” to Python!
 If you want to know more about the history of the original game itself,
 I recommend Dennis G. Jerz's admirably thorough paper
-“`Somewhere Nearby is Colossal Cave: Examining Will Crowther's Original "Adventure" in Code and in Kentucky <http://www.digitalhumanities.org/dhq/vol/001/2/000009/000009.html>`_”
+“`Somewhere Nearby is Colossal Cave: Examining Will Crowther's Original ‘Adventure’ in Code and in Kentucky <http://www.digitalhumanities.org/dhq/vol/001/2/000009/000009.html>`_”
 from the Summer 2007 issue of the Digital Humanities Quarterly.
 
 .. more
@@ -67,28 +67,28 @@ De Morgan and old FORTRAN
 -------------------------
 
 The original FORTRAN language
-in which “Adventure” was written
-did not support “structured programming” —
-you could not combine several statements into a single block of code
-under the control of an ``IF`` statement or a loop.
-Instead,
-the ``IF`` statement could only control
-the single statement that followed it,
-so if several statements needed protection
-then you had to ``GOTO`` a line number
-placed down at the end of your “block.”
-Here is an except from ``advent.for``
+in which “Adventure” is written
+does not support “structured programming” —
+you cannot combine several statements into a single block of code
+under the control of an ``IF`` statement.
+Instead, ``IF`` can only govern
+the single statement that follows it.
+Several statements can be controlled by ``IF``
+only by pointing a ``GOTO`` at the first statement that follows them.
+Here, for example, is an except from ``advent.for``
 in which an ``IF`` clause controls two statements,
 with normal execution continuing at line ``2630``::
 
+ #!fortran
  2610    IF(WD1.NE.'WEST')GOTO 2630
          IWEST=IWEST+1
          IF(IWEST.EQ.10)CALL RSPEAK(17)
- 2630    ...
+ 2630
 
-In Python the line number and ``GOTO`` can be dispensed with
+In Python, the line number and ``GOTO`` disappear
 in favor of simply indenting the lines that run conditionally::
 
+            #!python
             if word1 == 'west':
                 full_wests += 1
                 if full_wests == 10:
@@ -98,24 +98,55 @@ You will note that my outer Python ``if`` statement
 tests a condition that is, in fact, the complete *opposite*
 of its equivalent in FORTRAN:
 the original code wants the word to not-equal ``'WEST'``
-whereas, in my rewrite, I want them to be equal.
+whereas, in my rewrite, I test whether they are equal.
 The reason is plain enough:
-while my modern Python code gets to test
-whether we want to execute the following block of code,
+while my modern Python code gets to directly test
+whether to execute the block of code,
 the original FORTRAN has to think backwards
-and test whether to invoke the ``GOTO``
-and thus *skip* the statements that follow.
+and test whether to *skip* the statements that follow.
 
 (Note that the second ``IF`` statement
 controls only a single line of code,
-and gets to be written “forwards” instead of “backwards” even in FORTRAN.
-It therefore survives its translation into Python unchanged.)
+and therefore is written “forwards” even in the FORTRAN code.)
 
 Flipping a simple ``.NE.`` so that it becomes ``==`` is simple enough.
 But what happens when I need to
 `reverse the polarity <http://en.wikipedia.org/wiki/Third_Doctor#.22Reverse_the_polarity.22>`_
-of a more complex expression
+of a more complex expression? ::
 
+ #!fortran
+         IF((WD1.NE.'WATER'.AND.WD1.NE.'OIL')
+         1	.OR.(WD2.NE.'PLANT'.AND.WD2.NE.'DOOR'))GOTO 2610
+         IF(AT(VOCAB(WD2,1)))WD2='POUR'
+ 2610
+
+I was delighted!
+Here — *finally* — was a use for De Morgan's laws,
+a mere seventeen years after I learned them in computer science class!
+
+De Morgan's laws state, basically,
+that instead of simply slapping ``not`` in front of a large expression —
+and thereby making your code even less easy to reason about —
+you can swap the expression's ``and`` and ``or`` operators
+and the result will be an expression that means precisely the opposite.
+You do have to be careful with parentheses
+since ``and`` and ``or`` have different precedence
+in most programming languages,
+but De Morgan let me convert the FORTRAN above
+into roughly this Python translation::
+
+        #!python
+        if ((word1 == 'water' or word1 == 'oil') and
+            (word2 == 'plant' or word2 == 'door') and
+            self.is_here(self.referent(word2))):
+            ...
+
+In general, much of the work
+of translating “Adventure” to Python
+was taking FORTRAN code that said one thing
+and making it say more or less the opposite,
+so that I could replace ``GOTO`` statements
+with more modern — and more readable — control flow.
 
 Great experiences at 1200 baud
 ------------------------------
