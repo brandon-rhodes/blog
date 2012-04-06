@@ -7,7 +7,7 @@ title: Adventure in Python 3
 ---
 
 I have just released
-`adventure 1.2 <http://pypi.python.org/pypi/adventure/>`_
+`adventure 1.2 <http://pypi.python.org/pypi/adventure/1.2/>`_
 on the Python Package Index,
 an update of my Python 3 port
 of the original Colossal Cave Adventure game
@@ -17,7 +17,7 @@ that I announced last year during the final round of
 .. image:: http://rhodesmill.org/brandon/2012/adventure-heathkit-h19.jpg
    :target: http://www.flickr.com/photos/brandonrhodes/6115627693/
 
-Released in the late 1970s,
+Written in the late 1970s,
 “Adventure” was the first game
 to offer players a virtual world to explore at their own pace,
 driven by their own curiosity.
@@ -49,19 +49,102 @@ from the Summer 2007 issue of the Digital Humanities Quarterly.
 Playing at the prompt
 ---------------------
 
-first lesson python can respond to single-word commands
+I was inspired to write the ``adventure`` package
+when I realized that typing a name at the Python prompt
+could invoke an action if the object it referenced
+did something useful inside of its ``__repr__()`` method.
 
-easy to respond to two-word commands
+Recall that a language like Ruby invokes a function
+if you merely mention the function's name::
 
-just had to inject symbols into calling context
+    #!ruby
+    jump    # call the "jump" function in Ruby
 
-so they can say .play() and the game can begin
+I imagine that this would make it easy
+to implement a game like Adventure at the Ruby prompt.
+Typing the name of a command like ``jump`` or ``n`` or ``sw``
+would simply invoke it, just like at the prompt of the original game.
 
-but one-word commands do no call
-simply naming a function does not invoke it
-unlike Ruby where you have to do a dance to get a ref to a function
+In Python, however —
+as in higher math more generally,
+whose scruples Python tends to honor more faithfully
+than do other popular languages —
+``jump`` is merely a name,
+and its mention merely retrieves a reference to the function it names.
+To actually invoke the function you need to follow the name
+with a pair of parentheses::
 
-so I overrode __repr__
+    #!python
+    jump()    # call the "jump" function in Python
+
+For more information about this distinction,
+see the discussion between Alice and the Red Knight
+about songs and names-of-songs in
+`Chapter VIII <http://en.wikisource.org/wiki/Through_the_Looking-Glass,_and_What_Alice_Found_There/Chapter_VIII>`_
+of *Through the Looking Glass*
+— remember that Lewis Carroll was a logician in his day job! —
+or, if you find his writing far too tedious and “cute,”
+start at the Wikipedia article on the
+`use-mention distinction <http://en.wikipedia.org/wiki/Use%E2%80%93mention_distinction>`_.
+And tell any analytic philosophers you know
+that Python is your favorite programming language.
+
+So the following line of Python code by definition does nothing,
+except, perhaps — depending on which implementation of Python you use —
+innocently incrementing and then decrementing
+the ``jump`` object's reference count::
+
+    #!python
+    jump    # fetches then discards a reference
+
+But things are quite different if,
+instead of appearing in a script on a line by itself,
+the bare name is typed at the interactive Python prompt,
+because the third action taken by the prompt's read-eval-print loop —
+the “print” action —
+invokes the object's ``__repr__()`` method.
+For a normal function this simply makes it describe itself::
+
+    #!python
+    >>> max
+    <built-in function max>
+
+But if we write a class of our own,
+we can do arbitrarily complex work when ``__repr__()`` is called! ::
+
+ #!python
+ >>> class C(object):
+ ...     def __repr__(self):
+ ...         print('[advancing the game state]')
+ ...         return 'There is a shiny brass lamp nearby.'
+ ...
+ >>> jump = C()
+
+We now have an object that, when simply named,
+causes something to happen and then returns a message
+that Python displays to show us the result. ::
+
+ #!python
+ >>> c
+ [advancing the game state]
+ There is a shiny brass lamp nearby.
+
+And this is what the ``adventure`` package does, in spades.
+When you invoke its ``play()`` function at the Python prompt,
+it uses the
+`inspect <http://docs.python.org/library/inspect.html>`_
+Standard Library module
+to reach into the scope of your Python prompt
+and define every “Adventure” game word as a symbol
+whose ``__repr__()`` is sitting ready to be triggered.
+
+The word objects are also supplied with other methods
+like ``__call__()`` and ``__getattr__()``
+so that words can be composed to form more complex commands,
+like ``get(lamp)`` or the equivalent ``get.lamp`` —
+see
+`prompt.py <https://bitbucket.org/brandon/adventure/src/86507c6fe2b9/adventure/prompt.py>`_
+if you want to read all of the details.
 
 De Morgan and old FORTRAN
 -------------------------
