@@ -234,7 +234,82 @@ and making it say more or less exactly the opposite,
 so that I could replace ``GOTO`` statements
 with more modern — and more readable — control flow.
 
+Testing randomness is tricky
+----------------------------
+
+The main tests for the game are two large walkthroughs.
+You can find them in the package's ``tests`` directory.
+Since the game is playable at the Python prompt,
+each walkthrough is simply a long docfile
+that starts the game and plays to completion.
+I pass them to a Standard Library
+`DocFileSuite <http://docs.python.org/library/doctest.html#doctest.DocFileSuite>`_
+and away they go.
+
+As soon as I started implementing game elements
+that involved chance, my tests started breaking,
+because the series of numbers from the
+`random <http://docs.python.org/library/random.html>`_
+Standard Library module is different every time you run Python.
+So at the beginning of each test
+I set the ``random`` generator's seed value,
+making the sequence of pseudo-random numbers
+unfold in the same order every time.
+In case anyone runs my tests in parallel,
+I even abandoned the global random number generator
+and gave each instance of my ``Game`` class
+its own ``Random()`` object,
+so that two games going at once
+will not interfere with each other's stream of random numbers.
+So each walkthrough starts with something like::
+
+ >>> import adventure
+ >>> adventure.play(seed=2)
+ WELCOME TO ADVENTURE!!  WOULD YOU LIKE INSTRUCTIONS?
+ <BLANKLINE>
+ >>> no
+
+After all of that caution, I felt betrayed and dismayed
+when the tests *still* wound up being random,
+giving different output every time they were run!
+
+It took me quite a long time to realize
+that my problem was this scrap of code::
+
+    #!python
+    locations = {
+        # every room reachable from here
+        }
+    next_room = self.random.choice(locations)
+
+Why is this code a problem?
+Well, to choose an item from a set ``s``,
+``choice()`` selects an integer ``0`` ``≤`` ``n`` ``<`` ``len(s)``
+and iterates over ``n`` items to find item number ``n``.
+Sets, by definition, have no inherent ordering.
+When faced with quite generic objects like my ``Room`` instances,
+the set hashes and stores them by their memory address.
+And — why did it take me several hours to remember this? —
+Python object memory address are not stable
+from one run of the interpreter to another
+even if you are running *exactly* the same code!
+
+So the random number generator
+would indeed return a stable value — for example, 3 —
+but iterating across ``locations`` would yield a different
+“object 3” each time I ran my tests.
+
+The worse part was that these random room decisions were hidden —
+their consequences were not immediately visible to the player —
+so the walkthrough would not fail until much later,
+when the code snippet above was long past.
+I kept staring at the code at the point of failure,
+not at all suspecting that the random number generator
+was being knocked off course invisibly
+a hundred lines earlier in the walkthrough!
+
 Great experiences at 1200 baud
 ------------------------------
 
-
+My final discovery was made quite by accident.
+Now that 
