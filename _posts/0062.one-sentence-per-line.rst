@@ -113,18 +113,24 @@ were all public copies destroyed
 during the devastating copyright battle
 that justly brought SCO to its ruin?)
 
-But thanks to an extensive Google search,
-I have finally found the source —
-and I could not be any prouder to announce
+But after an extensive search,
+I have found an earlier source —
+and I could not be any happier to discover
 that my inspiration is none other than 
 `Brian W. Kernighan <http://www.cs.princeton.edu/~bwk/>`_!
 
-In his original Bell Labs Technical Memorandum 74-1273-18
-from 29 October 1974,
-entitled
-“`UNIX for Beginners <http://miffy.tom-yam.or.jp/2238/ref/beg.pdf>`_”
-— the only clean copy I can find online is this PDF from Japan! —
-Kernighan shares his wisdom:
+He published “UNIX for Beginners”
+`[PDF] <http://miffy.tom-yam.or.jp/2238/ref/beg.pdf>`_
+as Bell Labs Technical Memorandum 74-1273-18
+on 29 October 1974.
+It describes a far more primitive version of the operating system
+than his more famous and more widely available
+“UNIX for Beginners — Second Edition” from 1978.
+After a long search I could only find the one copy linked above,
+hosted on obscure Japanese web page about
+`UNIX 6th Edition <http://miffy.tom-yam.or.jp/2238/ref/>`_.
+In the section “Hints for Preparing Documents,”
+Kernighan shares this wisdom:
 
  **Hints for Preparing Documents**
 
