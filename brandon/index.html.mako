@@ -41,13 +41,14 @@
     thanks to the Python community.
     While doing Python and occasional JavaScript programming
     for customers large and small,
-    I focus on giving back to the community that has given me so much.
+    I focus on giving back to a movement that has given me so much.
     My talks and tutorials have taken me everywhere from the
     <a href="http://pyarkansas.wordpress.com/">middle of Arkansas</a>
     to the <a href="http://pl.pycon.org/">country of Poland</a>,
     <!-- (videos and slides are linked below), -->
-    and people all over the world
-    use the software that I contribute back to the community.
+    and people from several continents
+    have offered improvements to the software
+    that I myself contribute back to the community.
   </p>
   <p>
     I live in Bluffton, Ohio, with my wife Jackie —
