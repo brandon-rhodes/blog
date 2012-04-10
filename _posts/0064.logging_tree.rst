@@ -1,0 +1,76 @@
+---
+categories: Python, Computing
+date: 2012/04/11 00:00:00
+permalink: http://rhodesmill.org/brandon/2012/logging_tree/
+tags: ''
+title: Introspect Python logging with logging_tree
+---
+
+It is frustrating that Python's ``logging`` module
+cannot display the tangled tree of configured loggers
+that can result
+when you combine your own application code
+with several libraries and frameworks.
+So I have released a new Python package named
+`logging_tree <http://pypi.python.org/pypi/logging_tree>`_,
+announced last month during the
+`closing lightning talks <http://pyvideo.org/video/721/sunday-afternoon-lightning-talks-90-minutes>`_
+at `PyCon 2012 <https://us.pycon.org/2012/>`_,
+which can display the current ``logging`` tree for debugging.
+Its output looks like this::
+
+    <--""
+       Level WARNING
+       Handler Stream <open file '<stderr>', mode 'w' at…>
+       |
+       o<--[cherrypy]
+           |
+           o<--"cherrypy.access"
+           |   Level INFO
+           |   Handler Stream <open file '<stdout>', mode 'w'…>
+           |
+           o<--"cherrypy.error"
+               Level INFO
+               Handler Stream <open file '<stderr>', mode 'w'…>
+
+The configuration shown here, it turns out, is a bug.
+This diagram helped me fix a real-life application
+for Atlanta startup `Rover Apps <http://roverapps.com/>`_,
+who generously let me open-source ``logging_tree``
+after I wrote the first version on their own time!
+
+In this post I am going to reproduce the problem
+using a simple 10-line CherryPy application,
+then show how I used this ``logging_tree`` diagram to find a solution.
+But, first, to read and understand these tree diagrams,
+you need to know three things about the Python ``logging`` module:
+
+.. more
+
+* Put reasons here.
+
+
+
+It uses the raw standard output stream in the hope that,
+even if all of the loggers are broken,
+the standard output might still be connected
+to the developer's terminal.
+
+
+::
+
+    <--""
+       Level WARNING
+       Handler Stream <open file '<stderr>', mode 'w' at…>
+       |
+       o   "cherrypy"
+           Propagate OFF
+           |
+           o<--"cherrypy.access"
+           |   Level INFO
+           |   Handler Stream <open file '<stdout>', mode 'w'…>
+           |
+           o<--"cherrypy.error"
+               Level INFO
+               Handler Stream <open file '<stderr>', mode 'w'…>
+
