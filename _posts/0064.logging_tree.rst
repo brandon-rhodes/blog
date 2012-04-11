@@ -50,11 +50,47 @@ you need to know three things about the Python ``logging`` module:
 * Put reasons here.
 
 
+::
+
+    import cherrypy
+    import logging
+
+    log = logging.getLogger()
+
+    class HelloWorld:
+        def index(self):
+            log.error('Test message')
+            return "Hello world!"
+        index.exposed = True
+
+    if __name__ == '__main__':
+        cherrypy.quickstart(HelloWorld())
+
+
+::
+
+    if __name__ == '__main__':
+        log.addHandler(logging.StreamHandler())
+        cherrypy.quickstart(HelloWorld())
+
+
+::
+
+    import logging_tree
+    logging_tree.printout()
+
+
 
 It uses the raw standard output stream in the hope that,
 even if all of the loggers are broken,
 the standard output might still be connected
 to the developer's terminal.
+
+
+::
+
+    logging.getLogger('cherrypy').propagate = False
+
 
 
 ::
