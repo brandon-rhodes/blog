@@ -8,15 +8,15 @@ title: Introspect Python logging with logging_tree
 
 It is frustrating that Python's ``logging`` module
 cannot display the tangled tree of configured loggers
-that can result
-when you combine your own application code
+that can result from combining your own application code
 with several libraries and frameworks.
 So I have released a new Python package named
 `logging_tree <http://pypi.python.org/pypi/logging_tree>`_,
-announced last month during the
-`closing lightning talks <http://pyvideo.org/video/721/sunday-afternoon-lightning-talks-90-minutes>`_
-at `PyCon 2012 <https://us.pycon.org/2012/>`_,
-which can display the current ``logging`` tree for debugging.
+which I announced last month during the
+`PyCon 2012 <https://us.pycon.org/2012/>`_
+`closing lightning talks <http://pyvideo.org/video/721/sunday-afternoon-lightning-talks-90-minutes>`_,
+which displays the current ``logging`` tree
+to help your debugging.
 Its output looks like this::
 
     <--""
@@ -33,21 +33,64 @@ Its output looks like this::
                Level INFO
                Handler Stream <open file '<stderr>', mode 'w'…>
 
-The configuration shown here, it turns out, is a bug.
+The configuration shown by this tree, it turns out, is a bug.
 This diagram helped me fix a real-life application
 for Atlanta startup `Rover Apps <http://roverapps.com/>`_,
 who generously let me open-source ``logging_tree``
-after I wrote the first version on their own time!
+after I wrote the first version
+to help them manage the ``logging`` module's behavior.
 
 In this post I am going to reproduce the problem
 using a simple 10-line CherryPy application,
-then show how I used this ``logging_tree`` diagram to find a solution.
-But, first, to read and understand these tree diagrams,
-you need to know three things about the Python ``logging`` module:
+and then show how I used this ``logging_tree`` diagram
+to solve our problem.
+But, first, you need to know three things
+about the Python ``logging`` module:
 
 .. more
 
-* Put reasons here.
+* Logging messages propagate up the tree by default,
+  even if they have already been logged by a handler!
+  This can only be turned off by setting
+  a logger's ``propagate`` attribute to false.
+  So the logger returned by ``getLogger('a.b.c')`` will, by default,
+  also send each message to the logger ``'a.b'``, ``'a'``,
+  and finally the root logger named ``''`` (the empty string).
+
+* When a logger considers a message —
+  either because the message was submitted using one of its own methods,
+  or because it was submitted
+  to a child logger whose ``propagate`` is true —
+  it checks the message's level against its own level
+  (or that of the nearest parent to specify one)
+  and prints it using its handlers
+  if the message is at least that important.
+
+* Confusingly, handlers themselves can also have levels,
+  which give messages a second chance to be thrown out as unimportant
+  even if the messages seemed important compared to the level
+  of the logger itself.
+
+Things can get even more complicated.
+Custom ``Filter`` objects can decide whether to print messages
+by checking other criteria besides a message's level.
+And some ``Handler`` objects can delegate to *other*
+``Handler`` objects inside of them.
+And ``logging_tree`` will at least display
+the custom filters and handlers that are in play,
+so that you can go read their code
+and try to determine how they will behave.
+
+But, in general, you can determine what will happen to a message
+by finding its logger in the tree that ``logging_tree`` displays
+and then asking for that logger and each of its parents,
+“is this message at least at the level specified for this handler?”
+If so, then that handler will output the message
+by invoking the ``Handler`` objects that are attached.
+
+The problem
+-----------
+
 
 
 ::
