@@ -1,8 +1,7 @@
 ---
 categories: Python, Computing
-date: 2012/04/11 00:00:00
+date: 2012/04/13 07:05:36
 permalink: http://rhodesmill.org/brandon/2012/logging_tree/
-tags: ''
 title: Introspect Python logging with logging_tree
 ---
 
@@ -46,23 +45,24 @@ But, first, you need to know three things
 about the Python ``logging`` module —
 and I would like to thank Marius Gedminas for his
 `recent post about logging levels <http://mg.pov.lt/blog/logging-levels>`_
-that does a good job of explaining several of these points.
+that helped me correct something I had misunderstood.
 
 .. more
 
-* When you call ``logger.log()`` or an equivalent helper
-  like ``error()`` or ``debug()``,
+* When you call a logger's ``log()`` method,
+  or an equivalent helper like ``error()`` or ``debug()``,
   your message has only one opportunity to be discarded:
-  it is compared against ``logger.level``
+  it is compared against that logger's ``level`` attribute
   and thrown away if it is not at least that important.
-  If it passes this one test,
+  But if it passes this one test,
   then the message will be submitted not only
-  to the handlers on ``logger``
-  (which, for example, might be named ``a.b.c``)
-  but also to the handlers on all of the logger's parents
-  (``a.b``, ``a``, and the root logger ``''``).
-  *The parent logger levels are ignored* —
-  they apply only to messages submitted directly to those loggers!
+  to the logger's own handlers,
+  but also to the handlers on all of the logger's parents —
+  so a message accepted by logger ``'a.b.c'``
+  will also be submitted to ``'a.b'``, ``'a'``,
+  and the root logger ``''`` (whose name is the empty string).
+  The ``level`` attribute of a parent logger *is completely ignored* —
+  it applies only to messages submitted directly to that logger!
 
 * Once a message passes this test against ``logger.level``
   and is accepted,
@@ -75,8 +75,9 @@ that does a good job of explaining several of these points.
   The first false ``propagate`` encountered on the way up the tree
   kills the message, and no further propagation takes place.
 
-* Confusingly, each handler can also have a ``level``
-  to decide whether the message gets output by that handler.
+* Confusingly, each handler can also choose
+  to do its own individual filtering by a ``level``
+  to decide which messages get output by that handler.
   Handlers can be configured with complex filters
   to determine which messages they are willing to output,
   and can even hand messages off to further handlers.
@@ -116,43 +117,50 @@ and produced a standard Apache log message,
 but our own log message was nowhere to be seen.
 I knew enough about ``logging`` to know that
 a root handler was necessary if I wanted output,
-so I tried adding a handler to the root logger::
+so I tried adding one::
 
+    #!python
+    ...
     if __name__ == '__main__':
         log.addHandler(logging.StreamHandler())
         cherrypy.quickstart(HelloWorld())
 
 The result was rather bizarre.
 While our ``Test`` ``message`` appeared in the output,
-the now server produced *two* copies of every Apache log message.
+the server now produced *two* copies of every CherryPy log message.
 
 It was at this point that,
 tired of trying to guess how the logging tree looked
-by searching our entire code base —
-and the code bases of our third-party libraries, like CherryPy —
+by searching our entire code base
+for calls to the ``logging`` package —
+and searching the code of our third-party libraries, like CherryPy —
 I instead wrote the first version of ``logging_tree()``
 so that I could really see what was going on.
 You can install it quite simply,
 and it supports any version of Python from 2.3 through 3.2::
 
+    #!bash
     pip install logging_tree
 
 Invoking it from your application can be as simple as::
 
+    #!python
     import logging_tree
     logging_tree.printout()
 
 These two lines, added to my ``index()`` method,
-let me display the logger configuration simply by reloading the page.
+printed the entire logger configuration to my terminal
+the next time I reloaded the page.
 
 Interpreting a tree
 -------------------
 
 This CherryPy application actually produces
-a quite complicated logging situation,
-which I simplified in the tree shown at the top of this post.
+a more complicated logging situation than in the simplified tree
+used for illustration at the top of this post.
 Here is what ``logging_tree`` really prints out —
-in a few places I have use ellipsis to fit the width of my blog,
+in a few places I have used ellipses to keep lines
+within the margins of my blog,
 but this time no lines are omitted::
 
  <--""
@@ -183,10 +191,8 @@ Loggers that have been created through actual calls to ``getLogger()``
 are displayed with their names in double quotes.
 When a logger only exists by implication,
 but has never actually been named in a ``getLogger()`` call —
-like the ``[cherrypy]`` node shown in this particular tree —
-then its name is shown in square brackets
-(and it is represented by a slender ``PlaceHolder`` object
-in the actual logging tree).
+like the ``[cherrypy]`` node —
+then its name is shown in square brackets.
 
 Each logger displays its own ``Level`` that, as discussed above,
 is only consulted when a message is submitted directly to that logger
@@ -214,7 +220,7 @@ CherryPy logging messages get printed by their own handlers
 and *also* by the new handler we have installed at the root.
 You can see this by imagining a new ``cherrypy.access`` error message
 and following the propagation arrows that will take it from its
-logger-of-origin up to the root where our own handler is installed.
+logger-of-origin up to the root, where our own handler is installed.
 
 We can see, in fact, that CherryPy creates several loggers
 to receive its Apache-style logging messages,
@@ -222,22 +228,19 @@ and goes ahead and suits those loggers up with handlers
 that write the messages to the correct files.
 Since I ran this application in debug mode from the command line,
 these handlers are directed at ``<stdout>``
-instead of being written to actual Apache log files.
+instead of actual log files.
 
-The solution to our problem was simply to turn off propagation.
-Since CherryPy already had handlers in place
-to make sure that its own messages were output,
-there was no reason to also submit those messages
-to our own handler up at the root.
-So we added a simple bit of code to our application::
+The solution to my problem was to simply turn off propagation,
+since CherryPy's handlers were already taking care of its messages::
 
+    #!python
     logging.getLogger('cherrypy').propagate = False
 
 The ``logging_tree`` package makes it very clear
 when propagation has been turned off,
-both by removing the arrow from next to the logger's name
-and also by saying ``Propagate`` ``OFF`` as the first of its attributes.
-So this is how the tree looked following our adjustment::
+both by removing the ``<--`` arrow from next to the logger's name,
+and also with a ``Propagate`` ``OFF`` message.
+So this is how the tree looked following the fix::
 
     <--""
        Level WARNING
@@ -249,8 +252,8 @@ So this is how the tree looked following our adjustment::
            ...
 
 I hope that ``logging_tree`` proves useful
-for many other Python programmers wrestling
-with logging misbehaviors!
+for many more Python programmers
+as we all wrestle with logging misbehavior!
 The package is available both
 `on the Python Package Index <http://pypi.python.org/pypi/logging_tree>`_
 and is also available as a
