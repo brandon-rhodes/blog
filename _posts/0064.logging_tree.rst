@@ -14,8 +14,8 @@ So I have released a new Python package named
 `logging_tree <http://pypi.python.org/pypi/logging_tree>`_,
 which I announced last month during the
 `PyCon 2012 <https://us.pycon.org/2012/>`_
-`closing lightning talks <http://pyvideo.org/video/721/sunday-afternoon-lightning-talks-90-minutes>`_,
-which displays the current ``logging`` tree
+`closing lightning talks <http://pyvideo.org/video/721/sunday-afternoon-lightning-talks-90-minutes>`_.
+The ``logging_tree`` package displays the current ``logging`` tree
 to help your debugging.
 Its output looks like this::
 
@@ -33,7 +33,7 @@ Its output looks like this::
                Level INFO
                Handler Stream <open file '<stderr>', mode 'w'…>
 
-The configuration shown by this tree, it turns out, is a bug.
+The configuration shown by this tree, it turns out, causes a bug.
 This diagram helped me fix a real-life application
 for Atlanta startup `Rover Apps <http://roverapps.com/>`_,
 who generously let me open-source ``logging_tree``
@@ -51,70 +51,66 @@ about the Python ``logging`` module:
 
 * Logging messages propagate up the tree by default,
   even if they have already been logged by a handler!
-  This can only be turned off by setting
-  a logger's ``propagate`` attribute to false.
-  So the logger returned by ``getLogger('a.b.c')`` will, by default,
-  also send each message to the logger ``'a.b'``, ``'a'``,
+  The only thing that can stop propagation
+  is making a logger's ``propagate`` attribute false,
+  instead of the default value of true.
+  So a message written to logger ``a.b.c`` will
+  also propagate to ``'a.b'``, ``'a'``,
   and finally the root logger named ``''`` (the empty string).
 
-* When a logger considers a message —
-  either because the message was submitted using one of its own methods,
-  or because it was submitted
-  to a child logger whose ``propagate`` is true —
-  it checks the message's level against its own level
+* When a logger considers a message,
+  it checks the message's level against its own ``level``
   (or that of the nearest parent to specify one)
   and prints it using its handlers
   if the message is at least that important.
 
-* Confusingly, handlers themselves can also have levels,
-  which give messages a second chance to be thrown out as unimportant
-  even if the messages seemed important compared to the level
-  of the logger itself.
+* Confusingly, handlers themselves can *also* have levels,
+  which give messages a second chance to be thrown out as unimportant;
+  and handlers can even hand messages off to further handlers.
 
-Things can get even more complicated.
-Custom ``Filter`` objects can decide whether to print messages
-by checking other criteria besides a message's level.
-And some ``Handler`` objects can delegate to *other*
-``Handler`` objects inside of them.
-And ``logging_tree`` will at least display
-the custom filters and handlers that are in play,
-so that you can go read their code
-and try to determine how they will behave.
-
-But, in general, you can determine what will happen to a message
-by finding its logger in the tree that ``logging_tree`` displays
-and then asking for that logger and each of its parents,
-“is this message at least at the level specified for this handler?”
-If so, then that handler will output the message
-by invoking the ``Handler`` objects that are attached.
+Some libraries also define custom filters and handlers.
+While ``logging_tree`` will at least print their names,
+it probably will not know anything else about them,
+so you will have to read their source code
+to learn more about how they work and behave.
 
 The problem
 -----------
 
+We wanted to add some logging of our own to our CherryPy application,
+so — as a simple first step — we grabbed the root logger ``''``
+and tried writing a message::
 
-
-::
-
+    #!python
     import cherrypy
     import logging
 
-    log = logging.getLogger()
+    log = logging.getLogger('')
 
     class HelloWorld:
         def index(self):
             log.error('Test message')
-            return "Hello world!"
+            return 'Hello world!'
         index.exposed = True
 
     if __name__ == '__main__':
         cherrypy.quickstart(HelloWorld())
 
-
-::
+The result was disappointing.
+The site displayed ``Hello`` ``world!`` in the browser
+and produced a standard Apache log message,
+but our own log message was nowhere to be seen.
+I knew enough about ``logging`` to know that
+“handlers” were necessary if I wanted log messages to be output,
+so I tried adding a handler to the root logger::
 
     if __name__ == '__main__':
         log.addHandler(logging.StreamHandler())
         cherrypy.quickstart(HelloWorld())
+
+The result was rather bizarre.
+While our ``Test`` ``message`` now appeared in the output,
+the server produced *two* copies of every Apache log message.
 
 
 ::
