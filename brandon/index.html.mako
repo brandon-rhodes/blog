@@ -78,6 +78,42 @@
   </p>
 </article>
 
+<article>
+  <div class="date">In print</div>
+  <h1>My Book</h1>
+  <a class="image-reference" href="http://www.amazon.com/gp/product/1430230037/ref=as_li_ss_il?ie=UTF8&tag=letsdisthemat-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=1430230037"><img border="0" src="http://ws.assoc-amazon.com/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=1430230037&MarketPlace=US&ID=AsinImage&WS=1&tag=letsdisthemat-20&ServiceVersion=20070822" ></a>
+  <p>
+    I recently had the privilege of revising John Goerzen's
+    <i>Foundations of Python Network Programming </i>to produce a
+    <a href="http://www.amazon.com/gp/product/1430230037/ref=as_li_ss_il?ie=UTF8&tag=letsdisthemat-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=1430230037"
+       >Second Edition</a>.
+  </p>
+  <p>
+    I was stunned at how far Python has come.
+    When the first edition was written in 2004,
+    <tt>HTMLParser</tt> was the preferred screen scraper,
+    <tt>xmlrpclib</tt> was the reigning RPC protocol,
+    and the book skipped web frameworks entirely (it ignored Zope)
+    to present chapters on <tt>cgi</tt>
+    and <tt>mod_python</tt> instead!
+  </p>
+  <p>
+    Take a look at the Second Edition if you are interested
+    in a thorough tour of the network stack as seen from modern Python,
+    including tutorial introductions to popular libraries like
+    <tt>BeautifulSoup</tt>,
+    <tt>lxml</tt>,
+    and <tt>paramiko</tt>.
+    All example programs from the book
+    are available for free from
+    <a href="https://bitbucket.org/brandon/foundations-of-python-network-programming"
+       >my BitBucket repository</a>
+    which also offers Python 3 versions of each script
+    in case you have already made the leap!
+  </p>
+  <img src="http://www.assoc-amazon.com/e/ir?t=letsdisthemat-20&l=as2&o=1&a=1430230037" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+</article>
+
 <article class="social-media">
   <div class="date">Social Media</div>
   <h1>Me, Elsewhere</h1>
