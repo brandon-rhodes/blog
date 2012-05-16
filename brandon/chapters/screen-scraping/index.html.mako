@@ -3,7 +3,7 @@
 
 <article>
 <h2 class="chapnum"><a id="ch10" /><a id="page_163" />C H A P T E R &#160;10</h2>
-<p class="normal"><img src="images/squ.jpg" alt="Image" /></p>
+<p class="normal"><img src="../images/squ.jpg" alt="Image" /></p>
 <h2 class="chaptitle">Screen Scraping</h2>
 <p class="normal">Most web sites are designed first and foremost for human eyes. While well-designed sites offer formal APIs by which you can construct Google maps, upload Flickr photos, or browse YouTube videos, many sites offer nothing but HTML pages formatted for humans. If you need a program to be able to fetch its data, then you will need the ability to dive into densely formatted markup and retrieve the information you need&#8212;a process known affectionately as screen scraping.</p>
 <p class="indent">In one&#39;s haste to grab information from a web page sitting open in your browser in front of you, it can be easy for even experienced programmers to forget to check whether an API is provided for data that they need. So try to take a few minutes investigating the site in which you are interested to see if some more formal programming interface is offered to their services. Even an RSS feed can sometimes be easier to parse than a list of items on a full web page.</p>
@@ -26,7 +26,7 @@
 <p class="normal">The task of grabbing information from a web site usually starts by reading it carefully with a web browser and finding a route to the information you need. <a href="Chapter10.html#fig_10_1">Figure 10&#8211;1</a> shows the site of the National Weather Service; for our first example, we will write a program that takes a city and state as arguments and prints out the current conditions, temperature, and humidity. If you will explore the site a bit, you will find that city-specific forecasts can be visited by typing the city name into the small &#8220;Local forecast&#8221; form in the left margin.</p>
 <div id="fig_10_1" class="figure-contents">
 <div class="mediaobject">
-<a href="images/nws.png"><img src="images/1001.jpg" alt="Image" /></a>
+<a href="../images/nws.png"><img src="../images/1001.jpg" alt="Image" /></a>
 </div>
 </div>
 <p class="normal"><a id="page_165" /><i><b>Figure 10&#8211;1.</b> The National Weather Service web site</i></p>
@@ -211,7 +211,7 @@ A Few Clouds&lt;br&gt;<br />
 <p class="indent"><a id="page_171" />There are two approaches to narrowing your attention to the specific area of the document in which you are interested. You can either search the HTML for a word or phrase close to the data that you want, or, as we mentioned previously, use Google Chrome or Firefox with Firebug to &#8220;Inspect Element&#8221; and see the element you want embedded in an attractive diagram of the document tree. <a href="Chapter10.html#fig_10_2">Figure 10&#8211;2</a> shows Google Chrome with its Developer Tools pane open following an Inspect Element command: my mouse is poised over the <code>&lt;font&gt;</code> element that was brought up in its document tree, and the element itself is highlighted in blue on the web page itself.</p>
 <div id="fig_10_2" class="figure-contents">
 <div class="mediaobject">
-<a href="images/inspect_element.png"><img src="images/1002.jpg" alt="Image" /></a>
+<a href="../images/inspect_element.png"><img src="../images/1002.jpg" alt="Image" /></a>
 </div>
 </div>
 <p class="normal"><i><b>Figure 10&#8211;2.</b> Examining Document Elements in the Browser</i></p>
