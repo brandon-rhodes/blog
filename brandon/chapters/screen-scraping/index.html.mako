@@ -1,13 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xml:lang="en-gb" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<title>Screen Scraping</title>
-<link rel="stylesheet" type="text/css" href="9781430230038.css" />
-<link rel="stylesheet" type="application/vnd.adobe-page-template+xml" href="page-template.xpgt" />
-</head>
-<body>
-<div class="booksection">
+<%inherit file="site.mako" />
+<%def name="title()">Chapter 10: Screen Scraping by Brandon Rhodes</%def>
+
+<article>
 <h2 class="chapnum"><a id="ch10" /><a id="page_163" />C H A P T E R &#160;10</h2>
 <p class="normal"><img src="images/squ.jpg" alt="Image" /></p>
 <h2 class="chaptitle">Screen Scraping</h2>
@@ -464,6 +458,4 @@ Humidity: NA</code>
 <p class="indent">To prepare to screen scrape, download a copy of the page, and use HTML tidy, or else your screen-scraping library of choice, to create a copy of the file that your eyes can more easily read. Always run your program against the ugly original copy, however, lest HTML tidy fixes something in the markup that your program will need to repair!</p>
 <p class="indent">Once you find the data you want in the web page, look around at the nearby elements for tags, classes, and text that are unique to that spot on the screen. Then, construct a Python command using your scraping library that looks for the pattern you have discovered and retrieves the element in question. By looking at its children, parents, or enclosed text, you should be able to pull out the data that you need from the web page intact.</p>
 <p class="indent"><a id="page_178" />When you have a basic script working, continue testing it; you will probably find many edge cases that have to be handled correctly before it becomes generally useful. Remember: when possible, always use true APIs, and treat screen scraping as a technique of last resort!</p>
-</div>
-</body>
-</html>
+</article>
