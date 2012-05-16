@@ -1,7 +1,7 @@
 <%inherit file="site.mako" />
-<%def name="title()">Chapter 10: Screen Scraping by Brandon Rhodes</%def>
-
-<article>
+<%def name="title()">Chapter 10: Screen Scraping by Brandon Rhodes</%def><%
+    book_url = 'http://www.amazon.com/gp/product/1430230037/ref=as_li_ss_il?ie=UTF8&tag=letsdisthemat-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=1430230037'
+%><article>
 <h2 class="chapnum"><a id="ch10" /><a id="page_163" />C H A P T E R &#160;10</h2>
 <p class="normal"><img src="../images/squ.jpg" alt="Image" /></p>
 <h2 class="chaptitle">Screen Scraping</h2>
@@ -10,7 +10,7 @@
 <p class="indent">Also be careful to check for a &#8220;terms of service&#8221; document on each site. YouTube, for example, offers an API and, in return, disallows programs from trying to parse their web pages. Sites usually do this for very important reasons related to performance and usage patterns, so I recommend always obeying the terms of service and simply going elsewhere for your data if they prove too restrictive.</p>
 <p class="indent">Regardless of whether terms of service exist, always try to be polite when hitting public web sites. Cache pages or data that you will need for several minutes or hours, rather than hitting their site needlessly over and over again. When developing your screen-scraping algorithm, test against a copy of their web page that you save to disk, instead of doing an HTTP round-trip with every test. And always be aware that excessive use can result in your IP being temporarily or permanently blocked from a site if its owners are sensitive to automated sources of load.</p>
 <h3 class="h3"><a id="fetching_web_pages" />Fetching Web Pages</h3>
-<p class="normal">Before you can parse an HTML-formatted web page, you of course have to acquire some. <a href="Chapter09.html#ch9">Chapter 9</a> provides the kind of thorough introduction to the HTTP protocol that can help you figure out how to fetch information even from sites that require passwords or cookies. But, in brief, here are some options for downloading content.</p>
+<p class="normal">Before you can parse an HTML-formatted web page, you of course have to acquire some. <a href="${book_url}">Chapter 9</a> provides the kind of thorough introduction to the HTTP protocol that can help you figure out how to fetch information even from sites that require passwords or cookies. But, in brief, here are some options for downloading content.</p>
 <ul style="list-style-type:disc">
 <li>You can use <code>urllib2</code>, or the even lower-level <code>httplib</code>, to construct an HTTP request that will return a web page. For each form that has to be filled out, you will have to build a dictionary representing the field names and data values inside; unlike a real web browser, these libraries will give you no help in submitting forms.</li>
 <li>You can to install <code>mechanize</code> and write a program that fills out and submits web forms much as you would do when sitting in front of a web browser. The downside is that, to benefit from this automation, you will need to download the page containing the form HTML before you can then submit it&#8212;possibly doubling the number of web requests you perform!</li>
