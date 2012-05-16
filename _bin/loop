@@ -8,6 +8,5 @@ inotifywait -m -e close_write -r \
 do
     echo 'Building...'
     _v/bin/blogofile build
-    cp -rp _site/. ~/_site
     echo 'Done.'
 done
