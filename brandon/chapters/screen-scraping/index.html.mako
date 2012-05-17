@@ -23,7 +23,7 @@
 <p class="indent">Among the better features of the United States government is its having long ago decreed that all publications produced by their agencies are public domain. This means, happily, that I can pull all sorts of data from their web site and not worry about the fact that copies of the data are working their way into this book.</p>
 <p class="indent">Of course, web sites change, so the source code package for this book available from the Apress web site will include the downloaded pages on which the scripts in this chapter are designed to work. That way, even if their site undergoes a major redesign, you will still be able to try out the code examples in the future. And, anyway&#8212;as I recommended previously&#8212;you should be kind to web sites by always developing your scraping code against a downloaded copy of a web page to help reduce their load.</p>
 <h3 class="h3"><a id="downloading_pages_through_form_submission" />Downloading Pages Through Form Submission</h3>
-<p class="normal">The task of grabbing information from a web site usually starts by reading it carefully with a web browser and finding a route to the information you need. <a href="Chapter10.html#fig_10_1">Figure 10&#8211;1</a> shows the site of the National Weather Service; for our first example, we will write a program that takes a city and state as arguments and prints out the current conditions, temperature, and humidity. If you will explore the site a bit, you will find that city-specific forecasts can be visited by typing the city name into the small &#8220;Local forecast&#8221; form in the left margin.</p>
+<p class="normal">The task of grabbing information from a web site usually starts by reading it carefully with a web browser and finding a route to the information you need. <a href="#fig_10_1">Figure 10&#8211;1</a> shows the site of the National Weather Service; for our first example, we will write a program that takes a city and state as arguments and prints out the current conditions, temperature, and humidity. If you will explore the site a bit, you will find that city-specific forecasts can be visited by typing the city name into the small &#8220;Local forecast&#8221; form in the left margin.</p>
 <div id="fig_10_1" class="figure-contents">
 <div class="mediaobject">
 <a href="../images/nws.png"><img src="../images/1001.jpg" alt="Image" /></a>
@@ -40,7 +40,7 @@
 &lt;/form&gt;</code>
 </div>
 <p class="indent">The only important elements here are the <code>&lt;form&gt;</code> itself and the <code>&lt;input&gt;</code> fields inside; everything else is just decoration intended to help human readers.</p>
-<p class="indent">This form does a <code>POST</code> to a particular URL with, it appears, just one parameter: an <code>inputstring</code> giving the city name and state. <a href="Chapter10.html#list_10_1">Listing 10&#8211;1</a> shows a simple Python program that uses only the Standard Library to perform this interaction, and saves the result to <code>phoenix.html</code>.</p>
+<p class="indent">This form does a <code>POST</code> to a particular URL with, it appears, just one parameter: an <code>inputstring</code> giving the city name and state. <a href="#list_10_1">Listing 10&#8211;1</a> shows a simple Python program that uses only the Standard Library to perform this interaction, and saves the result to <code>phoenix.html</code>.</p>
 <div id="list_10_1" class="listing">
 <p class="normal"><i><b>Listing 10&#8211;1.</b> Submitting a Form with &#8220;urllib2&#8221;</i></p>
 <code>#!/usr/bin/env python<br />
@@ -75,7 +75,7 @@ None None http://forecast.weather.gov/zipcity.php<br />
  &#160;&#160;&#160;button None None</code>
 </div>
 <p class="indent">Here, <code>mechanize</code> has helped us avoid reading any HTML at all. Of course, pages with very obscure form names and fields might make it very difficult to look at a list of forms like this and decide which is the form we see on the page that we want to submit; in those cases, inspecting the HTML ourselves can be helpful, or&#8212;if you use Google Chrome, or Firefox with Firebug installed&#8212;right-clicking the form and selecting &#8220;Inspect Element&#8221; to jump right to its element in the document tree.</p>
-<p class="indent">Once we have determined that we need the <code>zipcity.php</code> form, we can write a program like that shown in <a href="Chapter10.html#list_10_2">Listing 10&#8211;2</a>. You can see that at no point does it build a set of form fields manually itself, as was necessary in our previous listing. Instead, it simply loads the front page, sets the one field value that we care about, and then presses the form&#39;s submit button. Note that since this HTML form did not specify a name, we had to create our own filter function&#8212;the lambda function in the listing&#8212;to choose which of the three forms we wanted.</p>
+<p class="indent">Once we have determined that we need the <code>zipcity.php</code> form, we can write a program like that shown in <a href="#list_10_2">Listing 10&#8211;2</a>. You can see that at no point does it build a set of form fields manually itself, as was necessary in our previous listing. Instead, it simply loads the front page, sets the one field value that we care about, and then presses the form&#39;s submit button. Note that since this HTML form did not specify a name, we had to create our own filter function&#8212;the lambda function in the listing&#8212;to choose which of the three forms we wanted.</p>
 <div id="list_10_2" class="listing">
 <p class="normal"><i><b>Listing 10&#8211;2.</b> Submitting a Form with <code>mechanize</code></i></p>
 <code>#!/usr/bin/env python<br />
@@ -92,7 +92,7 @@ response = br.submit()</code><br />
 open('phoenix.html', 'w').write(content)</code>
 </div>
 <p class="indent">Many <code>mechanize</code> users instead choose to select forms by the order in which they appear in the page&#8212;in which case we could have called <code>select_form(nr=1)</code>. But I prefer not to rely on the order, since the real identity of a form is inherent in the action that it performs, not its location on a page.</p>
-<p class="indent">You will see immediately the problem with using <code>mechanize</code> for this kind of simple task: whereas <a href="Chapter10.html#list_10_1">Listing 10&#8211;1</a> was able to fetch the page we wanted with a single HTTP request, <a href="Chapter10.html#list_10_2">Listing 10&#8211;2</a> requires two round-trips to the web site to do the same task. For this reason, I avoid using <code>mechanize</code> for simple form submission. Instead, I keep it in reserve for the task at which it really shines: logging on to web sites like banks, which set cookies when you first arrive at their front page and require those cookies to be present as you log in and browse your accounts. Since these web sessions require a visit to the front page anyway, no extra round-trips are incurred by using <code>mechanize</code>.</p>
+<p class="indent">You will see immediately the problem with using <code>mechanize</code> for this kind of simple task: whereas <a href="#list_10_1">Listing 10&#8211;1</a> was able to fetch the page we wanted with a single HTTP request, <a href="#list_10_2">Listing 10&#8211;2</a> requires two round-trips to the web site to do the same task. For this reason, I avoid using <code>mechanize</code> for simple form submission. Instead, I keep it in reserve for the task at which it really shines: logging on to web sites like banks, which set cookies when you first arrive at their front page and require those cookies to be present as you log in and browse your accounts. Since these web sessions require a visit to the front page anyway, no extra round-trips are incurred by using <code>mechanize</code>.</p>
 <h3 class="h3"><a id="the_structure_of_web_pages" />The Structure of Web Pages</h3>
 <p class="normal">There is a veritable glut of online guides and published books on the subject of HTML, but a few notes about the format would seem to be appropriate here for users who might be encountering the format for the first time.</p>
 <p class="indent">The Hypertext Markup Language (HTML) is one of many markup dialects built atop the Standard Generalized Markup Language (SGML), which bequeathed to the world the idea of using thousands of angle brackets to mark up plain text. Inserting bold and italics into a format like HTML is as simple as typing eight angle brackets:</p>
@@ -164,7 +164,7 @@ http://www.w3.org/TR/REC-html40/</code>
 <p class="indent">But the state of the art may advance over the years, so be sure to consult its own documentation as well as recent blogs or Stack Overflow questions if you are having problems getting it to compile.</p>
 <h3 class="h3"><a id="diving_into_an_html_document" />Diving into an HTML Document</h3>
 <p class="normal">The tree of objects that a parser creates from an HTML file is often called a Document Object Model, or DOM, even though this is officially the name of one particular API defined by the standards bodies and implemented by browsers for the use of JavaScript running on a web page.</p>
-<p class="indent">The task we have set for ourselves, you will recall, is to find the current conditions, temperature, and humidity in the <code>phoenix.html</code> page that we have downloaded. You can view the page in full by downloading the source bundle for this book from Apress; I cannot include it verbatim here, because it <a id="page_170" />consists of nearly 17,000 characters of dense HTML code. But let me at least show you an excerpt: <a href="Chapter10.html#list_10_3">Listing 10&#8211;3</a>, which focuses on the pane that we are interested in.</p>
+<p class="indent">The task we have set for ourselves, you will recall, is to find the current conditions, temperature, and humidity in the <code>phoenix.html</code> page that we have downloaded. You can view the page in full by downloading the source bundle for this book from Apress; I cannot include it verbatim here, because it <a id="page_170" />consists of nearly 17,000 characters of dense HTML code. But let me at least show you an excerpt: <a href="#list_10_3">Listing 10&#8211;3</a>, which focuses on the pane that we are interested in.</p>
 <div id="list_10_3" class="listing">
 <p class="normal"><i><b>Listing 10&#8211;3.</b> Excerpt from the Phoenix Forecast Page</i></p>
 <code>&lt;!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN"&gt;&lt;html&gt;&lt;head&gt;<br />
@@ -208,7 +208,7 @@ A Few Clouds&lt;br&gt;<br />
 &lt;/table&gt;<br />
 ...</code>
 </div>
-<p class="indent"><a id="page_171" />There are two approaches to narrowing your attention to the specific area of the document in which you are interested. You can either search the HTML for a word or phrase close to the data that you want, or, as we mentioned previously, use Google Chrome or Firefox with Firebug to &#8220;Inspect Element&#8221; and see the element you want embedded in an attractive diagram of the document tree. <a href="Chapter10.html#fig_10_2">Figure 10&#8211;2</a> shows Google Chrome with its Developer Tools pane open following an Inspect Element command: my mouse is poised over the <code>&lt;font&gt;</code> element that was brought up in its document tree, and the element itself is highlighted in blue on the web page itself.</p>
+<p class="indent"><a id="page_171" />There are two approaches to narrowing your attention to the specific area of the document in which you are interested. You can either search the HTML for a word or phrase close to the data that you want, or, as we mentioned previously, use Google Chrome or Firefox with Firebug to &#8220;Inspect Element&#8221; and see the element you want embedded in an attractive diagram of the document tree. <a href="#fig_10_2">Figure 10&#8211;2</a> shows Google Chrome with its Developer Tools pane open following an Inspect Element command: my mouse is poised over the <code>&lt;font&gt;</code> element that was brought up in its document tree, and the element itself is highlighted in blue on the web page itself.</p>
 <div id="fig_10_2" class="figure-contents">
 <div class="mediaobject">
 <a href="../images/inspect_element.png"><img src="../images/1002.jpg" alt="Image" /></a>
@@ -311,7 +311,7 @@ http://codespeak.net/lxml/cssselect.html</code>
 http://www.crummy.com/software/BeautifulSoup/documentation.html#Searching the Parse Tree</code>
 </div>
 <p class="indent">The National Weather Service has not been kind to us in constructing this web page. The area that contains the current conditions seems to be constructed entirely of generic untagged elements; none of them have <code>id</code> or <code>class</code> values like <code>currentConditions</code> or <code>temperature</code> that might help guide us to them.</p>
-<p class="indent">Well, what are the features of the elements that contain the current weather conditions in <a href="Chapter10.html#list_10_3">Listing 10&#8211;3</a>? The first thing I notice is that the enclosing <code>&lt;td&gt;</code> element has the class <code>"big"</code>. Looking at the page visually, I see that nothing else seems to be of exactly that font size; could it be so simple as to search the document for every <code>&lt;td&gt;</code> with this CSS class? Let us try, using a CSS selector to begin with:</p>
+<p class="indent">Well, what are the features of the elements that contain the current weather conditions in <a href="#list_10_3">Listing 10&#8211;3</a>? The first thing I notice is that the enclosing <code>&lt;td&gt;</code> element has the class <code>"big"</code>. Looking at the page visually, I see that nothing else seems to be of exactly that font size; could it be so simple as to search the document for every <code>&lt;td&gt;</code> with this CSS class? Let us try, using a CSS selector to begin with:</p>
 <div class="pl">
 <code>&gt;&gt;&gt; from lxml.cssselect import CSSSelector<br />
 &gt;&gt;&gt; sel = CSSSelector('td.big')<br />
@@ -333,7 +333,7 @@ A Few Clouds&lt;br /&gt;<br />
 </div>
 <p class="indent">This is a common trick when using XPath against HTML: by prepending and appending spaces to the <code>class</code> attribute, the selector assures that it can look for the target class name with spaces around it and find a match regardless of where in the list of classes the name falls.</p>
 <p class="indent">Selectors, then, can make it simple, elegant, and also quite fast to find elements deep within a document that interest us. And if they break because the document is redesigned or because of a corner case we did not anticipate, they tend to break in obvious ways, unlike the tedious and deep procedure of walking the document tree that we attempted first.</p>
-<p class="indent">Once you have zeroed in on the part of the document that interests you, it is generally a very simple matter to use the ElementTree or the old BeautifulSoup API to get the text or attribute values you need. Compare the following code to the actual tree shown in <a href="Chapter10.html#list_10_3">Listing 10&#8211;3</a>:</p>
+<p class="indent">Once you have zeroed in on the part of the document that interests you, it is generally a very simple matter to use the ElementTree or the old BeautifulSoup API to get the text or attribute values you need. Compare the following code to the actual tree shown in <a href="#list_10_3">Listing 10&#8211;3</a>:</p>
 <div class="pl">
 <code>&gt;&gt;&gt; td = sel(tree)[0]<br />
 &gt;&gt;&gt; td.find('font').text<br />
@@ -364,7 +364,7 @@ u'\nA Few Clouds'<br />
 &gt;&gt;&gt; td.font.contents[4]<br />
 u'71&amp;deg;F'</code>
 </div>
-<p class="indent">Through a similar operation, we can direct either <code>lxml</code> or BeautifulSoup to the humidity datum. Since the word <code>Humidity:</code> will always occur literally in the document next to the numeric value, this search can be driven by a meaningful term rather than by something as random as the <code>big</code> CSS tag. See <a href="Chapter10.html#list_10_4">Listing 10&#8211;4</a> for a complete screen-scraping routine that does the same operation first with <code>lxml</code> and then with BeautifulSoup.</p>
+<p class="indent">Through a similar operation, we can direct either <code>lxml</code> or BeautifulSoup to the humidity datum. Since the word <code>Humidity:</code> will always occur literally in the document next to the numeric value, this search can be driven by a meaningful term rather than by something as random as the <code>big</code> CSS tag. See <a href="#list_10_4">Listing 10&#8211;4</a> for a complete screen-scraping routine that does the same operation first with <code>lxml</code> and then with BeautifulSoup.</p>
 <p class="indent">This complete program, which hits the National Weather Service web page for each request, takes the city name on the command line:</p>
 <div class="pl">
 <code>$ python weather.py Springfield, IL<br />
@@ -418,7 +418,7 @@ tr = soup.find('b', text='Humidity').parent.parent.parent<br />
 print 'Humidity:', tr('td')[1].string<br />
 print</code>
 </div>
-<p class="indent">If you look at the final form of <a href="Chapter10.html#list_10_4">Listing 10&#8211;4</a>, you will see a few other tweaks that I made as I noticed changes in format with different cities. It now seems to work against a reasonable selection of locations; again, note that it gives the same report twice, generated once with <code>lxml</code> and once with BeautifulSoup:</p>
+<p class="indent">If you look at the final form of <a href="#list_10_4">Listing 10&#8211;4</a>, you will see a few other tweaks that I made as I noticed changes in format with different cities. It now seems to work against a reasonable selection of locations; again, note that it gives the same report twice, generated once with <code>lxml</code> and once with BeautifulSoup:</p>
 <div class="pl">
 <code>$ python weather.py Springfield, IL<br />
 Condition: Fair<br />
