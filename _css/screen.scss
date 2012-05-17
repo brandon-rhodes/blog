@@ -169,7 +169,7 @@ article {
   img, iframe {
     max-width: 100%;
   }
-  tt {
+  tt, code {
     color: $titletxt;
     @include adjust-font-size-to(16px, 1, 18px);
     a {color: $titletxt;}
