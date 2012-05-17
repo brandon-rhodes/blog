@@ -19,7 +19,7 @@
 <li>Finally, if you really need a browser to load the site, both the Selenium and Windmill test platforms provide a way to drive a standard web browser from inside a Python program. You can start the browser up, direct it to the page of interest, fill out and submit forms, do whatever else is necessary to bring up the data you need, and then pull the resulting information directly from the DOM elements that hold them.</li>
 </ul>
 <p class="indent">These last two options both require third-party components or Python modules that are built against large libraries, and so we will not cover them here, in favor of techniques that require only pure Python.</p>
-<p class="indent">For our examples in this chapter, we will use the site of the United States National Weather Service, which lives here: <code><a href="http://www.weather.gov/">www.weather.gov/</a></code>.</p>
+<p class="indent">For our examples in this chapter, we will use the site of the United States National Weather Service, which lives at <code><a href="http://www.weather.gov/">www.weather.gov/</a></code>.</p>
 <p class="indent">Among the better features of the United States government is its having long ago decreed that all publications produced by their agencies are public domain. This means, happily, that I can pull all sorts of data from their web site and not worry about the fact that copies of the data are working their way into this book.</p>
 <p class="indent">Of course, web sites change, so the source code package for this book available from the Apress web site will include the downloaded pages on which the scripts in this chapter are designed to work. That way, even if their site undergoes a major redesign, you will still be able to try out the code examples in the future. And, anyway&#8212;as I recommended previously&#8212;you should be kind to web sites by always developing your scraping code against a downloaded copy of a web page to help reduce their load.</p>
 <h3 class="h3"><a id="downloading_pages_through_form_submission" />Downloading Pages Through Form Submission</h3>
@@ -35,7 +35,7 @@
 <code>&lt;form method="post" action="http://forecast.weather.gov/zipcity.php" ...&gt;<br />
 &#160;&#160;...<br />
 &#160;&#160;&lt;input type="text" id="zipcity" name="inputstring" size="9"<br />
-&#187;&#160;&#160;&#160;value="City, St" onfocus="this.value='';" /&gt;<br />
+&#160;&#160;&#160;&#160;value="City, St" onfocus="this.value='';" /&gt;<br />
 &#160;&#160;&lt;input type="submit" name="Go2" value="Go" /&gt;<br />
 &lt;/form&gt;</code>
 </div>
@@ -63,16 +63,16 @@ open('phoenix.html', 'w').write(content)</code>
 ...&#160;&#160;&#160;&#160;&#160;for control in form.controls:<br />
 ...&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;print '&#160;&#160;&#160;', control.type, control.name, repr(control.value)<br />
 None None http://search.usa.gov/search<br />
-&#187;&#160;&#160;&#160;hidden v:project 'firstgov'<br />
-&#187;&#160;&#160;&#160;text query ''<br />
-&#187;&#160;&#160;&#160;radio affiliate ['nws.noaa.gov']<br />
-&#187;&#160;&#160;&#160;submit None 'Go'<br />
+ &#160;&#160;&#160;hidden v:project 'firstgov'<br />
+ &#160;&#160;&#160;text query ''<br />
+ &#160;&#160;&#160;radio affiliate ['nws.noaa.gov']<br />
+ &#160;&#160;&#160;submit None 'Go'<br />
 None None http://forecast.weather.gov/zipcity.php<br />
-&#187;&#160;&#160;&#160;text inputstring 'City, St'<br />
-&#187;&#160;&#160;&#160;submit Go2 'Go'<br />
+ &#160;&#160;&#160;text inputstring 'City, St'<br />
+ &#160;&#160;&#160;submit Go2 'Go'<br />
 'jump' 'jump' http://www.weather.gov/<br />
-&#187;&#160;&#160;&#160;select menu ['http://www.weather.gov/alerts-beta/']<br />
-&#187;&#160;&#160;&#160;button None None</code>
+ &#160;&#160;&#160;select menu ['http://www.weather.gov/alerts-beta/']<br />
+ &#160;&#160;&#160;button None None</code>
 </div>
 <p class="indent">Here, <code>mechanize</code> has helped us avoid reading any HTML at all. Of course, pages with very obscure form names and fields might make it very difficult to look at a list of forms like this and decide which is the form we see on the page that we want to submit; in those cases, inspecting the HTML ourselves can be helpful, or&#8212;if you use Google Chrome, or Firefox with Firebug installed&#8212;right-clicking the form and selecting &#8220;Inspect Element&#8221; to jump right to its element in the document tree.</p>
 <p class="indent">Once we have determined that we need the <code>zipcity.php</code> form, we can write a program like that shown in <a href="Chapter10.html#list_10_2">Listing 10&#8211;2</a>. You can see that at no point does it build a set of form fields manually itself, as was necessary in our previous listing. Instead, it simply loads the front page, sets the one field value that we care about, and then presses the form&#39;s submit button. Note that since this HTML form did not specify a name, we had to create our own filter function&#8212;the lambda function in the listing&#8212;to choose which of the three forms we wanted.</p>
@@ -346,11 +346,11 @@ u'71&#176;F'</code>
 <code>&lt;p&gt;<br />
 &#160;&#160;My favorite play is&#160;&#160;&#160;&#160;# the &lt;p&gt; element's .text<br />
 &#160;&#160;&lt;i&gt;<br />
-&#187;&#160;&#160;&#160;Hamlet&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;# the &lt;i&gt; element's .text<br />
+ &#160;&#160;&#160;Hamlet&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;# the &lt;i&gt; element's .text<br />
 &#160;&#160;&lt;/i&gt;<br />
 &#160;&#160;which is not really&#160;&#160;&#160;&#160;&#160;&#160;# the &lt;i&gt; element's .tail<br />
 &#160;&#160;&lt;b&gt;<br />
-&#187;&#160;&#160;&#160;Danish&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;# the &lt;b&gt; element's .text<br />
+ &#160;&#160;&#160;Danish&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;# the &lt;b&gt; element's .text<br />
 &#160;&#160;&lt;/b&gt;<br />
 &#160;&#160;but English.&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;# the &lt;b&gt; element's .tail<br />
 &lt;/p&gt;</code>
@@ -387,8 +387,8 @@ from lxml.cssselect import CSSSelector<br />
 from BeautifulSoup import BeautifulSoup<br />
 <br />
 if len(sys.argv) &lt; 2:<br />
-&#187;&#160;&#160;&#160;print &gt;&gt;sys.stderr, 'usage: weather.py CITY, STATE'<br />
-&#187;&#160;&#160;&#160;exit(2)<br />
+ &#160;&#160;&#160;print &gt;&gt;sys.stderr, 'usage: weather.py CITY, STATE'<br />
+ &#160;&#160;&#160;exit(2)<br />
 <br />
 data = urllib.urlencode({'inputstring': ' '.join(sys.argv[1:])})<br />
 info = urllib2.urlopen('http://forecast.weather.gov/zipcity.php', data)<br />
@@ -399,7 +399,7 @@ parser = lxml.etree.HTMLParser(encoding='utf-8')<br />
 tree = lxml.etree.fromstring(content, parser)<br />
 big = CSSSelector('td.big')(tree)[0]<br />
 if big.find('font') is not None:<br />
-&#187;&#160;&#160;&#160;big = big.find('font')<br />
+ &#160;&#160;&#160;big = big.find('font')<br />
 print 'Condition:', big.text.strip()<br />
 print 'Temperature:', big.findall('br')[1].tail<br />
 tr = tree.xpath('.//td[b="Humidity"]')[0].getparent()<br />
@@ -410,7 +410,7 @@ print<br />
 soup = BeautifulSoup(content)&#160;&#160;# doctest: +SKIP<br />
 big = soup.find('td', 'big')<br />
 if big.font is not None:<br />
-&#187;&#160;&#160;&#160;big = big.font<br />
+ &#160;&#160;&#160;big = big.font<br />
 print 'Condition:', big.contents[0].string.strip()<br />
 temp = big.contents[3].string or big.contents[4].string&#160;&#160;# can be either<br />
 print 'Temperature:', temp.replace('&amp;deg;', ' ')<br />
