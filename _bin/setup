@@ -7,6 +7,10 @@ cd ..
 rm -rf _v
 virtualenv -p /usr/bin/python3.2 _v
 
+hg clone \
+    https://bitbucket.org/brandon/foundations-of-python-network-programming \
+    _listings_fopnp
+
 cd _v
 . ./bin/activate
 
