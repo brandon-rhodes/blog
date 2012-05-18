@@ -14,12 +14,12 @@
 <ul style="list-style-type:disc">
 <li>You can use <code>urllib2</code>, or the even lower-level <code>httplib</code>, to construct an HTTP request that will return a web page. For each form that has to be filled out, you will have to build a dictionary representing the field names and data values inside; unlike a real web browser, these libraries will give you no help in submitting forms.</li>
 <li>You can to install <code>mechanize</code> and write a program that fills out and submits web forms much as you would do when sitting in front of a web browser. The downside is that, to benefit from this automation, you will need to download the page containing the form HTML before you can then submit it&#8212;possibly doubling the number of web requests you perform!</li>
-<li><a id="page_164" />If you need to download and parse entire web sites, take a look at the Scrapy project, hosted at <code><a href="http://scrapy.org">http://scrapy.org</a></code>, which provides a framework for implementing your own web spiders. With the tools it provides, you can write programs that follow links to every page on a web site, tabulating the data you want extracted from each page.</li>
+<li><a id="page_164" />If you need to download and parse entire web sites, take a look at the Scrapy project, hosted at <code><a href="http://scrapy.org">scrapy.org</a></code>, which provides a framework for implementing your own web spiders. With the tools it provides, you can write programs that follow links to every page on a web site, tabulating the data you want extracted from each page.</li>
 <li>When web pages wind up being incomplete because they use dynamic JavaScript to load data that you need, you can use the <code>QtWebKit</code> module of the <code>PyQt4</code> library to load a page, let the JavaScript run, and then save or parse the resulting complete HTML page.</li>
 <li>Finally, if you really need a browser to load the site, both the Selenium and Windmill test platforms provide a way to drive a standard web browser from inside a Python program. You can start the browser up, direct it to the page of interest, fill out and submit forms, do whatever else is necessary to bring up the data you need, and then pull the resulting information directly from the DOM elements that hold them.</li>
 </ul>
 <p class="indent">These last two options both require third-party components or Python modules that are built against large libraries, and so we will not cover them here, in favor of techniques that require only pure Python.</p>
-<p class="indent">For our examples in this chapter, we will use the site of the United States National Weather Service, which lives at <code><a href="http://www.weather.gov/">www.weather.gov/</a></code>.</p>
+<p class="indent">For our examples in this chapter, we will use the site of the United States National Weather Service, which lives at <code><a href="http://www.weather.gov/">www.weather.gov</a></code>.</p>
 <p class="indent">Among the better features of the United States government is its having long ago decreed that all publications produced by their agencies are public domain. This means, happily, that I can pull all sorts of data from their web site and not worry about the fact that copies of the data are working their way into this book.</p>
 <p class="indent">Of course, web sites change, so the source code package for this book available from the Apress web site will include the downloaded pages on which the scripts in this chapter are designed to work. That way, even if their site undergoes a major redesign, you will still be able to try out the code examples in the future. And, anyway&#8212;as I recommended previously&#8212;you should be kind to web sites by always developing your scraping code against a downloaded copy of a web page to help reduce their load.</p>
 <h3 class="h3"><a id="downloading_pages_through_form_submission" />Downloading Pages Through Form Submission</h3>
@@ -144,8 +144,8 @@ http://www.w3.org/TR/REC-html40/</code>
 <div class="pl">
 <code>&lt;ul&gt;<br />
 &#160;&#160;&lt;li&gt;First&lt;/li&gt;<br />
-&#160;&#160;&lt;li&gt;Second&lt;/li&gt;</code><br />
-<code><a id="page_169" />&#160;&#160;&lt;li&gt;Third&lt;/li&gt;<br />
+&#160;&#160;&lt;li&gt;Second&lt;/li&gt;<br />
+<a id="page_169" />&#160;&#160;&lt;li&gt;Third&lt;/li&gt;<br />
 &#160;&#160;&lt;li&gt;Fourth&lt;/li&gt;<br />
 &lt;/ul&gt;</code>
 </div>

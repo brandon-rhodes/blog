@@ -1,5 +1,17 @@
 import re
 
+linkblock_re = r'(?s)<div class="pl">\n<code>((?:www|http).*?)</code>\n</div>'
+
+def nicelink(url):
+    if not url.startswith('http://'):
+        url = 'http://' + url
+    return '<tt><a href="{}">{}</a></tt>'.format(url, url)
+
+def linkblock_fix(match):
+    text = match.group(1).strip()
+    links = text.split('<br />\n')
+    return '<ul>{}</ul>'.format('<br>'.join(nicelink(link) for link in links))
+
 codeblock_re = r'(?s)<div class="pl">\n<code>(.*?)</code>\n</div>'
 
 def codeblock_fix(match):
@@ -29,6 +41,7 @@ def listing_fix(match):
 
 def run(content):
     content = re.sub(r'<a id="page_\d+" />', '', content)
+    content = re.sub(linkblock_re, linkblock_fix, content)
     content = re.sub(codeblock_re, codeblock_fix, content)
     content = re.sub(listing_re, listing_fix, content)
     return content
