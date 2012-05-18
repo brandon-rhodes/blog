@@ -212,19 +212,14 @@ article {
   }
 }
 
-/* "div.pl" and "div.listing" are for EPUB content */
-
-pre, div.pl, div.listing {
+pre {
   @include box-shadow(0px 0px 7px #640);
   background-color: white;
   padding: 0.3em 0.5em;
   width: 40em;  /* nearly 80 characters with Inconsolata */
+  @include adjust-font-size-to(14px, 0.75, 18px);
   font-family: "Inconsolata", "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, Courier, monospace, sans-serif;
-}
-
-pre {
   white-space: pre;
-  @include adjust-font-size-to(14px, 1, 18px);
 }
 
 body .pygments_autumn .nc, body .pygments_autumn .nn{
