@@ -42,3 +42,4 @@
 <%def name="css_links()"></%def>
 <%def name="body_attributes()"></%def>
 <%def name="title()">${bf.config.blog.name}</%def>
+<%def name="filter(chain)">${bf.filter.run_chain(chain, capture(caller.body))}</%def>
