@@ -25,18 +25,27 @@ def codeblock_fix(match):
 listing_re = (
     r'(?s)(<div id="list_[\d_]+" class="listing">\n'
     r'<p class="normal">.*?</p>\n)'
-    r'.*?Chapter (\d+) - (.*?)<br />'
-    r'.*?'
+    r'(.*?)'
     r'</div>'
     )
+listing_filename_re = r'Chapter (\d+) - (.*?)<br />'
 
 def listing_fix(match):
-    chapter = match.group(2)
-    filename = match.group(3)
-    path = '_listings_fopnp/python2/{}/{}'.format(chapter, filename)
-    with open(path) as f:
-        text = f.read()
-    lang = 'python'
+    body = match.group(2)
+    match2 = re.search(listing_filename_re, body)
+    if match2:
+        chapter = match2.group(1)
+        filename = match2.group(2)
+        path = '_listings_fopnp/python2/{}/{}'.format(chapter, filename)
+        with open(path) as f:
+            text = f.read()
+        lang = 'python'
+    else:
+        text = body.replace('<code>', '').replace('</code>', '').replace(
+            '<br />', '')
+        lang = ('html' if text.startswith(('<', '&lt;'))
+                else 'bash' if text.startswith('$')
+                else 'python')
     return '{}</div><pre>\n#!{}\n{}</pre>'.format(match.group(1), lang, text)
 
 def run(content):
