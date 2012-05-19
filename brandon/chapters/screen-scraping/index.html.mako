@@ -2,9 +2,41 @@
 <%def name="title()">Chapter 10: Screen Scraping by Brandon Rhodes</%def><%
     book_url = 'http://www.amazon.com/gp/product/1430230037/ref=as_li_ss_il?ie=UTF8&tag=letsdisthemat-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=1430230037'
 %><article><%self:filter chain="apress_fix, rst_syntax_highlight">
-<h2 class="chapnum"><a id="ch10" /><a id="page_163" />C H A P T E R &#160;10</h2>
-<p class="normal"><img src="../images/squ.jpg" alt="Image" /></p>
-<h2 class="chaptitle">Screen Scraping</h2>
+<div class="date">Foundations of Python Network Programming</div>
+<h1 class="chaptitle">Screen Scraping with BeautifulSoup and lxml</h1>
+<a class="image-reference" href="http://www.amazon.com/gp/product/1430230037/ref=as_li_ss_il?ie=UTF8&tag=letsdisthemat-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=1430230037"><img border="0" src="http://ws.assoc-amazon.com/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=1430230037&MarketPlace=US&ID=AsinImage&WS=1&tag=letsdisthemat-20&ServiceVersion=20070822" ></a>
+<blockquote>
+  Please enjoy this — a <b>free Chapter</b> of the
+  <a href="http://www.amazon.com/gp/product/1430230037/ref=as_li_ss_il?ie=UTF8&tag=letsdisthemat-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=1430230037"
+     >Python network programming book</a>
+  that I revised for Apress in 2010!<br>
+  <br>
+  I completely rewrote this chapter for the book's second edition,
+  to feature two powerful libraries
+  that have appeared since the book first came out.
+  I show how to screen-scrape a real-life web page
+  using both <b>BeautifulSoup</b>
+  and also the powerful <b>lxml</b> library
+  (their web sites are
+  <a href="http://www.crummy.com/software/BeautifulSoup/">here</a>
+  and
+  <a href="http://lxml.de/">here</a>).<br>
+  <br>
+  I chose this chapter for release
+  because screen scraping is often
+  the first network task that a novice Python programmer tackles.
+  Because this material is oriented towards beginners,
+  it explains the entire process —
+  from fetching web pages, to understanding HTML,
+  to querying for specific elements in the document.<br>
+  <br>
+  Program listings are available for this chapter in both
+  <a href="https://bitbucket.org/brandon/foundations-of-python-network-programming/src/f4b1736ba300/python2/10/"
+       >Python 2</a> and also in
+  <a href="https://bitbucket.org/brandon/foundations-of-python-network-programming/src/f4b1736ba300/python3/10/"
+       >Python 3</a>.
+  Let me know if you have any questions!
+</blockquote>
 <p class="normal">Most web sites are designed first and foremost for human eyes. While well-designed sites offer formal APIs by which you can construct Google maps, upload Flickr photos, or browse YouTube videos, many sites offer nothing but HTML pages formatted for humans. If you need a program to be able to fetch its data, then you will need the ability to dive into densely formatted markup and retrieve the information you need&#8212;a process known affectionately as screen scraping.</p>
 <p class="indent">In one&#39;s haste to grab information from a web page sitting open in your browser in front of you, it can be easy for even experienced programmers to forget to check whether an API is provided for data that they need. So try to take a few minutes investigating the site in which you are interested to see if some more formal programming interface is offered to their services. Even an RSS feed can sometimes be easier to parse than a list of items on a full web page.</p>
 <p class="indent">Also be careful to check for a &#8220;terms of service&#8221; document on each site. YouTube, for example, offers an API and, in return, disallows programs from trying to parse their web pages. Sites usually do this for very important reasons related to performance and usage patterns, so I recommend always obeying the terms of service and simply going elsewhere for your data if they prove too restrictive.</p>
@@ -458,4 +490,6 @@ Humidity: NA</code>
 <p class="indent">To prepare to screen scrape, download a copy of the page, and use HTML tidy, or else your screen-scraping library of choice, to create a copy of the file that your eyes can more easily read. Always run your program against the ugly original copy, however, lest HTML tidy fixes something in the markup that your program will need to repair!</p>
 <p class="indent">Once you find the data you want in the web page, look around at the nearby elements for tags, classes, and text that are unique to that spot on the screen. Then, construct a Python command using your scraping library that looks for the pattern you have discovered and retrieves the element in question. By looking at its children, parents, or enclosed text, you should be able to pull out the data that you need from the web page intact.</p>
 <p class="indent"><a id="page_178" />When you have a basic script working, continue testing it; you will probably find many edge cases that have to be handled correctly before it becomes generally useful. Remember: when possible, always use true APIs, and treat screen scraping as a technique of last resort!</p>
+<img src="http://www.assoc-amazon.com/e/ir?t=letsdisthemat-20&l=as2&o=1&a=1430230037" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<blockquote><i>©2010 by Brandon Rhodes and John Goerzen</i></blockquote>
 </article></%self:filter>
