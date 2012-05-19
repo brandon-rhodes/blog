@@ -53,7 +53,7 @@
 <p class="indent">These last two options both require third-party components or Python modules that are built against large libraries, and so we will not cover them here, in favor of techniques that require only pure Python.</p>
 <p class="indent">For our examples in this chapter, we will use the site of the United States National Weather Service, which lives at <code><a href="http://www.weather.gov/">www.weather.gov</a></code>.</p>
 <p class="indent">Among the better features of the United States government is its having long ago decreed that all publications produced by their agencies are public domain. This means, happily, that I can pull all sorts of data from their web site and not worry about the fact that copies of the data are working their way into this book.</p>
-<p class="indent">Of course, web sites change, so the source code package for this book available from the Apress web site will include the downloaded pages on which the scripts in this chapter are designed to work. That way, even if their site undergoes a major redesign, you will still be able to try out the code examples in the future. And, anyway&#8212;as I recommended previously&#8212;you should be kind to web sites by always developing your scraping code against a downloaded copy of a web page to help reduce their load.</p>
+<p class="indent">Of course, web sites change, so the <a href="https://bitbucket.org/brandon/foundations-of-python-network-programming/src/f4b1736ba300/python2/10">online source code</a> for this chapter includes the <a href="https://bitbucket.org/brandon/foundations-of-python-network-programming/src/f4b1736ba300/python2/10/phoenix.html">downloaded web page</a> on which the scripts in this chapter are designed to work. That way, even if their site undergoes a major redesign, you will still be able to try out the code examples in the future. And, anyway&#8212;as I recommended previously&#8212;you should be kind to web sites by always developing your scraping code against a downloaded copy of a web page to help reduce their load.</p>
 <h3 class="h3"><a id="downloading_pages_through_form_submission" />Downloading Pages Through Form Submission</h3>
 <p class="normal">The task of grabbing information from a web site usually starts by reading it carefully with a web browser and finding a route to the information you need. <a href="#fig_10_1">Figure 10&#8211;1</a> shows the site of the National Weather Service; for our first example, we will write a program that takes a city and state as arguments and prints out the current conditions, temperature, and humidity. If you will explore the site a bit, you will find that city-specific forecasts can be visited by typing the city name into the small &#8220;Local forecast&#8221; form in the left margin.</p>
 <div id="fig_10_1" class="figure-contents">
@@ -61,7 +61,7 @@
 <a href="../images/nws.png"><img src="../images/1001.jpg" alt="Image" /></a>
 </div>
 </div>
-<p class="normal"><a id="page_165" /><i><b>Figure 10&#8211;1.</b> The National Weather Service web site</i></p>
+<p class="normal"><a id="page_165" /><i><b>Figure 10&#8211;1.</b> The National Weather Service web site<br>(click to enlarge)</i></p>
 <p class="indent">When using the <code>urllib2</code> module from the Standard Library, you will have to read the web page HTML manually to find the form. You can use the View Source command in your browser, search for the words &#8220;Local forecast,&#8221; and find the following form in the middle of the sea of HTML:</p>
 <div class="pl">
 <code>&lt;form method="post" action="http://forecast.weather.gov/zipcity.php" ...&gt;<br />
@@ -150,7 +150,7 @@ open('phoenix.html', 'w').write(content)</code>
 www.w3.org/MarkUp/Guide/Advanced.html<br />
 www.w3.org/MarkUp/Guide/Style</code>
 </div>
-<p class="indent">The brief bare-bones guide, and the long and verbose HTML standard itself, are good resources to have when trying to remember an element name or the name of a particular attribute value:</p>
+<p class="indent">The brief Bare Bones Guide, and the long and verbose HTML standard itself, are good resources to have when trying to remember an element name or the name of a particular attribute value:</p>
 <div class="pl">
 <code>http://werbach.com/barebones/barebones.html<br />
 http://www.w3.org/TR/REC-html40/</code>
@@ -196,7 +196,7 @@ http://www.w3.org/TR/REC-html40/</code>
 <p class="indent">But the state of the art may advance over the years, so be sure to consult its own documentation as well as recent blogs or Stack Overflow questions if you are having problems getting it to compile.</p>
 <h3 class="h3"><a id="diving_into_an_html_document" />Diving into an HTML Document</h3>
 <p class="normal">The tree of objects that a parser creates from an HTML file is often called a Document Object Model, or DOM, even though this is officially the name of one particular API defined by the standards bodies and implemented by browsers for the use of JavaScript running on a web page.</p>
-<p class="indent">The task we have set for ourselves, you will recall, is to find the current conditions, temperature, and humidity in the <code>phoenix.html</code> page that we have downloaded. You can view the page in full by downloading the source bundle for this book from Apress; I cannot include it verbatim here, because it <a id="page_170" />consists of nearly 17,000 characters of dense HTML code. But let me at least show you an excerpt: <a href="#list_10_3">Listing 10&#8211;3</a>, which focuses on the pane that we are interested in.</p>
+<p class="indent">The task we have set for ourselves, you will recall, is to find the current conditions, temperature, and humidity in the <code><a href="https://bitbucket.org/brandon/foundations-of-python-network-programming/src/f4b1736ba300/python2/10/phoenix.html">phoenix.html</a></code> page that we have downloaded. Here is an excerpt: <a href="#list_10_3">Listing 10&#8211;3</a>, which focuses on the pane that we are interested in.</p>
 <div id="list_10_3" class="listing">
 <p class="normal"><i><b>Listing 10&#8211;3.</b> Excerpt from the Phoenix Forecast Page</i></p>
 <code>&lt;!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN"&gt;&lt;html&gt;&lt;head&gt;<br />
@@ -246,7 +246,7 @@ A Few Clouds&lt;br&gt;<br />
 <a href="../images/inspect_element.png"><img src="../images/1002.jpg" alt="Image" /></a>
 </div>
 </div>
-<p class="normal"><i><b>Figure 10&#8211;2.</b> Examining Document Elements in the Browser</i></p>
+<p class="normal"><i><b>Figure 10&#8211;2.</b> Examining Document Elements in the Browser<br>(click to enlarge)</i></p>
 <p class="indent">Note that Google Chrome does have an annoying habit of filling in &#8220;conceptual&#8221; tags that are not actually present in the source code, like the <code>&lt;tbody&gt;</code> tags that you can see in every one of the tables shown here. For that reason, I look at the actual HTML source before writing my Python code; I mainly use Chrome to help me find the right places in the HTML.</p>
 <p class="indent">We will want to grab the text &#8220;A Few Clouds&#8221; as well as the temperature before turning our attention to the table that sits to this element&#39;s right, which contains the humidity.</p>
 <p class="indent">A properly indented version of the HTML page that you are scraping is good to have at your elbow while writing code. I have included <code>phoenix-tidied.html</code> with the source code bundle for this chapter so that you can take a look at how much easier it is to read!</p>
