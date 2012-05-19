@@ -1,0 +1,4 @@
+#!/bin/bash
+
+tidy -e -utf8 --new-blocklevel-tags article,header,footer \
+    _site/brandon/index.html

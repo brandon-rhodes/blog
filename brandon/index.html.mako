@@ -81,11 +81,11 @@
 <article>
   <div class="date">In print</div>
   <h1>My Book</h1>
-  <a class="image-reference" href="http://www.amazon.com/gp/product/1430230037/ref=as_li_ss_il?ie=UTF8&tag=letsdisthemat-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=1430230037"><img border="0" src="http://ws.assoc-amazon.com/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=1430230037&MarketPlace=US&ID=AsinImage&WS=1&tag=letsdisthemat-20&ServiceVersion=20070822" ></a>
+  <a class="image-reference" href="http://www.amazon.com/gp/product/1430230037/ref=as_li_ss_il?ie=UTF8&amp;tag=letsdisthemat-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=1430230037"><img border="0" src="http://ws.assoc-amazon.com/widgets/q?_encoding=UTF8&amp;Format=_SL160_&amp;ASIN=1430230037&amp;MarketPlace=US&amp;ID=AsinImage&amp;WS=1&amp;tag=letsdisthemat-20&amp;ServiceVersion=20070822" ></a>
   <p>
     I recently had the privilege of revising John Goerzen's
     <i>Foundations of Python Network Programming </i>to produce a
-    <a href="http://www.amazon.com/gp/product/1430230037/ref=as_li_ss_il?ie=UTF8&tag=letsdisthemat-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=1430230037"
+    <a href="http://www.amazon.com/gp/product/1430230037/ref=as_li_ss_il?ie=UTF8&amp;tag=letsdisthemat-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=1430230037"
        >Second Edition</a>.
   </p>
   <p>
@@ -111,7 +111,7 @@
     which also offers Python 3 versions of each script
     in case you have already made the leap!
   </p>
-  <img src="http://www.assoc-amazon.com/e/ir?t=letsdisthemat-20&l=as2&o=1&a=1430230037" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+  <img src="http://www.assoc-amazon.com/e/ir?t=letsdisthemat-20&amp;l=as2&amp;o=1&amp;a=1430230037" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 </article>
 
 <article class="social-media">
