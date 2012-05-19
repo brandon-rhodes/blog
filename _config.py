@@ -45,9 +45,6 @@ blog.description = "Thoughts and ideas from Brandon Rhodes"
 ## blog_timezone -- the timezone that you normally write your blog posts from
 blog.timezone = "US/Eastern"
 
-## Pygments
-filters.syntax_highlight.style = 'autumn'
-
 ## Markdown extensions
 ## These are turned off by default, but turned on
 ## to show examples in /blog/2009/07/24/post-2/
