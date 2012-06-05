@@ -43,6 +43,24 @@
 <p class="indent">Regardless of whether terms of service exist, always try to be polite when hitting public web sites. Cache pages or data that you will need for several minutes or hours, rather than hitting their site needlessly over and over again. When developing your screen-scraping algorithm, test against a copy of their web page that you save to disk, instead of doing an HTTP round-trip with every test. And always be aware that excessive use can result in your IP being temporarily or permanently blocked from a site if its owners are sensitive to automated sources of load.</p>
 <h3 class="h3"><a id="fetching_web_pages" />Fetching Web Pages</h3>
 <p class="normal">Before you can parse an HTML-formatted web page, you of course have to acquire some. <a href="${book_url}">Chapter 9</a> provides the kind of thorough introduction to the HTTP protocol that can help you figure out how to fetch information even from sites that require passwords or cookies. But, in brief, here are some options for downloading content.</p>
+
+<div class="warning">
+<p class="admonition-title">From the Future</p>
+<p>
+  If you need a simple way to fetch web pages before scraping them,
+  try Kenneth Reitz's
+  <tt><a href="http://docs.python-requests.org/en/latest/index.html"
+         >requests</a></tt>
+  library!
+</p>
+<p>
+  The library was not released until after the book was published,
+  but has already taken the Python world by storm.
+  The simplicity and convenience of its API
+  has made it the tool of choice for making web requests from Python.
+</p>
+</div>
+
 <ul style="list-style-type:disc">
 <li>You can use <code>urllib2</code>, or the even lower-level <code>httplib</code>, to construct an HTTP request that will return a web page. For each form that has to be filled out, you will have to build a dictionary representing the field names and data values inside; unlike a real web browser, these libraries will give you no help in submitting forms.</li>
 <li>You can to install <code>mechanize</code> and write a program that fills out and submits web forms much as you would do when sitting in front of a web browser. The downside is that, to benefit from this automation, you will need to download the page containing the form HTML before you can then submit it&#8212;possibly doubling the number of web requests you perform!</li>
@@ -194,6 +212,29 @@ http://www.w3.org/TR/REC-html40/</code>
 </div>
 <p class="indent">And if you consult the <code>lxml</code> documentation, you will find that it can optionally use the BeautifulSoup parser to build its own ElementTree-compliant trees of elements. This leaves very little reason to use BeautifulSoup by itself unless its selectors happen to be a perfect fit for your problem; we will discuss them later in this chapter.</p>
 <p class="indent">But the state of the art may advance over the years, so be sure to consult its own documentation as well as recent blogs or Stack Overflow questions if you are having problems getting it to compile.</p>
+
+<div class="warning">
+  <p class="admonition-title">From the Future</p>
+  <p>
+    The
+    <a href="http://www.crummy.com/software/BeautifulSoup/">BeautifulSoup</a>
+    project has recovered!
+    While the text below — written in late 2010 — avoids the broken 3.2
+    release in favor of 3.0,
+    BeautifulSoup has now released a rewrite named
+    <a href="http://pypi.python.org/pypi/beautifulsoup4">beautifulsoup4</a>
+    on the Python Package Index that works with both Python 2 and 3.
+    Once installed, simply import it like this:
+  </p>
+  <p>
+    <tt>from bs4 import BeautifulSoup</tt>
+  </p>
+  <p>
+    I just ran a test,
+    and it reads the malformed <tt>phoenix.html</tt> page perfectly.
+  </p>
+</div>
+
 <h3 class="h3"><a id="diving_into_an_html_document" />Diving into an HTML Document</h3>
 <p class="normal">The tree of objects that a parser creates from an HTML file is often called a Document Object Model, or DOM, even though this is officially the name of one particular API defined by the standards bodies and implemented by browsers for the use of JavaScript running on a web page.</p>
 <p class="indent">The task we have set for ourselves, you will recall, is to find the current conditions, temperature, and humidity in the <code><a href="https://bitbucket.org/brandon/foundations-of-python-network-programming/src/f4b1736ba300/python2/10/phoenix.html">phoenix.html</a></code> page that we have downloaded. Here is an excerpt: <a href="#list_10_3">Listing 10&#8211;3</a>, which focuses on the pane that we are interested in.</p>
