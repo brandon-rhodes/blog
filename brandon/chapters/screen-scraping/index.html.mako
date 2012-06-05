@@ -219,8 +219,8 @@ http://www.w3.org/TR/REC-html40/</code>
     The
     <a href="http://www.crummy.com/software/BeautifulSoup/">BeautifulSoup</a>
     project has recovered!
-    While the text below — written in late 2010 — avoids the broken 3.2
-    release in favor of 3.0,
+    While the text below — written in late 2010 —
+    has to carefully avoid the broken 3.2 release in favor of 3.0,
     BeautifulSoup has now released a rewrite named
     <a href="http://pypi.python.org/pypi/beautifulsoup4">beautifulsoup4</a>
     on the Python Package Index that works with both Python 2 and 3.
