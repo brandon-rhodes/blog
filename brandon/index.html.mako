@@ -76,7 +76,7 @@
 </article>
 
 <article>
-  <div class="date">In print</div>
+  <div class="date">Free Preview!</div>
   <h1>My Book</h1>
   <a class="image-reference" href="http://www.amazon.com/gp/product/1430230037/ref=as_li_ss_il?ie=UTF8&amp;tag=letsdisthemat-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=1430230037"><img border="0" src="http://ws.assoc-amazon.com/widgets/q?_encoding=UTF8&amp;Format=_SL160_&amp;ASIN=1430230037&amp;MarketPlace=US&amp;ID=AsinImage&amp;WS=1&amp;tag=letsdisthemat-20&amp;ServiceVersion=20070822" ></a>
   <p>
@@ -85,6 +85,12 @@
     <a href="http://www.amazon.com/gp/product/1430230037/ref=as_li_ss_il?ie=UTF8&amp;tag=letsdisthemat-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=1430230037"
        >Second Edition</a>.
   </p>
+  <blockquote>
+    Free chapter:<br>
+    <a href="/brandon/chapters/screen-scraping/">
+      Chapter 10 — Screen Scraping
+    </a>
+  </blockquote>
   <p>
     I was stunned at how far Python has come.
     When the first edition was written in 2004,
