@@ -28,9 +28,8 @@
   <p>
     I made the fateful decision
     to attend <a href="https://us.pycon.org/">PyCon 2008</a> and two
-    <a href="http://plone.org/events/conferences">Plone conferences</a>
-    the next year.
-    I was hooked!
+    <a href="http://plone.org/events/conferences">Plone conferences</a>,
+    after which, I was hooked!
     A few months later I resigned my position
     and became an independent developer
     so that I could send myself
@@ -51,9 +50,7 @@
     that I myself contribute back to the community.
   </p>
   <p>
-    I live in Bluffton, Ohio, with my wife Jackie —
-    a professor at the university here in town —
-    and two cats.
+    I live in Bluffton, Ohio, with my wife Jackie and two cats.
   </p>
 </article>
 
@@ -92,7 +89,7 @@
     I was stunned at how far Python has come.
     When the first edition was written in 2004,
     <tt>HTMLParser</tt> was the preferred screen scraper,
-    <tt>xmlrpclib</tt> was the reigning RPC protocol,
+    <tt>xmlrpclib</tt> was the reigning protocol for async web requests,
     and the book skipped web frameworks entirely (it ignored Zope)
     to present chapters on <tt>cgi</tt>
     and <tt>mod_python</tt> instead!
