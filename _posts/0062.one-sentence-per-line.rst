@@ -105,7 +105,7 @@ by bundling the system with its most powerful typesetting tools.
 The attempt failed, of course —
 I am told that AT&T was terrible at marketing computers,
 just as Xerox had no idea what to do
-with the ideas bubbling around the same time at Xerox PARC —
+with the ideas that were bubbling at PARC in the 1970s —
 but my father worked at Bell Labs
 and had a copy of the Workbench documentation around the house.
 (I cannot find a copy on the Internet —
@@ -126,8 +126,8 @@ on 29 October 1974.
 It describes a far more primitive version of the operating system
 than his more famous and more widely available
 “UNIX for Beginners — Second Edition” from 1978.
-After a long search I could only find the one copy linked above,
-hosted on obscure Japanese web page about
+After a long search I have found the lone copy linked above,
+hosted on an obscure Japanese web page about
 `UNIX 6th Edition <http://miffy.tom-yam.or.jp/2238/ref/>`_.
 In the section “Hints for Preparing Documents,”
 Kernighan shares this wisdom:
