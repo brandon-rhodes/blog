@@ -107,10 +107,11 @@ the lines of longitude will bulge farthest apart at the equator
 and then gradually narrow together as they approach the poles.
 This has several consequences.
 
-1. The distance between two lines of longitude
-   will look constant — they are, after all, drawn parallel —
+1. The distance between two particular lines of longitude
+   will look constant all up and down the map —
+   they are, after all, drawn parallel —
    but in fact there is less and less real-life distance
-   between them as your eye is drawn to higher latitude.
+   between them as your eye is drawn toward the poles.
    So the land forms depicted between two lines of longitude
    get magnified as you move away from the equator
    and closer to the pole.
@@ -130,7 +131,7 @@ This has several consequences.
 
 All of which means that a Doppler radar beam pointing exactly northeast
 from Sioux Falls, for example,
-across the *x* and *y* pixels of a pretty Google Map,
+across the pixels of a pretty Google Map,
 will not actually march diagonally.
 It will start its journey by making an exact diagonal,
 but it will soon start swinging south as its path —
@@ -139,9 +140,9 @@ warps as it is mapped to the distortion of Mercator's grid.
 
 And, even more importantly at the scales we are concerned with,
 the beam will appear to speed up as it heads north,
-since distances high on a Mercator map as so much smaller —
-making a kilometer of weather data a much bigger deal high on the map
-than down low where a kilometer takes up much less of your screen.
+since distances high on a Mercator map are so much smaller.
+A kilometer-long severe storm far north of Sioux Falls
+should look larger than one caught at the south end of its beam.
 
 How Radarmatic Could Be Adjusted
 --------------------------------
@@ -149,8 +150,7 @@ How Radarmatic Could Be Adjusted
 `Spherical geometry <http://en.wikipedia.org/wiki/Spherical_geometry>`_
 is the branch of mathematics that deals with these relationships,
 and, quite happily, I discovered that I did not need it at all —
-because Google Maps already implements
-all of the essential formulae in its
+because Google Maps already implements the essential formulae in its
 `spherical <https://developers.google.com/maps/documentation/javascript/reference#spherical>`_
 namespace!
 This meant that I could close a half-dozen browser tabs
@@ -173,7 +173,7 @@ whenever you want to draw a point on the map,
 you *must* figure out the real latitude and longitude
 that you are targeting,
 and then submit those values to the API
-to learn their true *x* and *y* coordinates.
+to learn their true x- and y-coordinates.
 
 If you wanted Radarmatic to render accurate radar maps,
 you could simply drop into place
@@ -186,8 +186,8 @@ As you will see if you read the code,
 there are three crucial steps:
 
 1. Find the real latitude-longitude point that you want to plot.
-2. Trust the real spherical formulae, and not your own trigonometry,
-   to turn that latitude and longitude into an (x, y) for the screen.
+2. Use the spherical formulae to turn
+   that latitude and longitude into an (x, y) for the screen.
 3. Make sure that you draw that coordinate in the right place on your canvas.
 
 The result is quite gratifying,
@@ -234,3 +234,8 @@ who always have to stare at the very edges of a radar plot
 to determine whether a storm is coming,
 will be quite happy if the site
 some day rolled out this improvement.
+
+And, yes, I am, in fact,
+`the guy who mapped Middle Earth on to Google Earth. <http://rhodesmill.org/brandon/2009/google-earth-and-middle-earth/>`_
+I know.
+Small world.
