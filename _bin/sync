@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cd $(dirname "$0")/..
-rsync -crlpv \
+rsync -crlpv "$@" \
  _site/.htaccess \
  _site/brandon \
  _site/favicon.ico \
