@@ -244,6 +244,22 @@ body .pygments_autumn .err {
     background: none;
 }
 
+.mouseover-image-stack {
+    position: relative;
+    img {
+        margin: 0;
+    }
+    img:last-child {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    &:hover img:last-child {
+        display: block;
+    }
+}
+
 /* Variation of https://github.com/john2x/solarized-pygment */
 
 $pdark: 20;
