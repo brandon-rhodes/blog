@@ -73,7 +73,7 @@ You can find Saint Cloud near the storm's northern tip in these images:
    :target: /brandon/2012/radarmatic-storm.jpg
 
 Through reading Radarmatic's Google-Maps-powered code —
-its JavaScript is delivered to the browser as friendly source-code
+its JavaScript is delivered to the browser as friendly source code
 instead of being minified,
 which is very helpful since it is not publicly licensed
 nor published as a public repository —
