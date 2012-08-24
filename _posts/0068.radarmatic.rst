@@ -60,8 +60,8 @@ how did I *know* that the problem was with the radars?
    <blockquote class="twitter-tweet" data-in-reply-to="237976663307194368"><p><a href="https://twitter.com/brandon_rhodes"><s>@</s><b>brandon_rhodes</b></a> I think it's more likely the developer isn't doing a proper mapping to Google maps...</p>&mdash; Eric Floehr (@ForecastWatch) <a href="https://twitter.com/ForecastWatch/status/237997298263683072" data-datetime="2012-08-21T19:39:12+00:00">August 21, 2012</a></blockquote>
    <script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-Eric was right!
-But where, then, did the error lie?
+All right: good point, Eric.
+So how could I discover for sure where the error lay?
 I opened Radarmatic and saw no activity in my area,
 but over in Minnesota there was an excellent candidate —
 a bright line of storms that Radarmatic painted
