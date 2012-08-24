@@ -13,6 +13,7 @@ $titletxt: #700;
 
 body {
   background: $pagebg url('/brandon/sidebar.jpg') repeat-y center top;
+  padding-top: 1.5em;
   font-family: 'Crimson Text', serif;
   @media screen and (min-width: 400px) {@include adjust-font-size-to(18px);}
   @media screen and (min-width: 480px) {background-position: right top;}
@@ -63,7 +64,6 @@ footer {
 
 @mixin main-content {
   margin: 2.5em auto;
-  &:first-child {margin-top: 4em;}
   max-width: 32em;
   padding: 0.8em 5%;
 }
