@@ -69,8 +69,8 @@ as west of Saint Cloud when viewed from the Sioux Falls radar,
 but as east of the exact same location when viewed from La Crosse.
 You can find Saint Cloud near the storm's northern tip in these images:
 
-.. image:: /brandon/2012/radarmatic-storm.jpg
-   :target: /brandon/2012/radarmatic-storm.jpg
+.. image:: http://rhodesmill.org/brandon/2012/radarmatic-storm.jpg
+   :target: http://rhodesmill.org/brandon/2012/radarmatic-storm.jpg
 
 Through reading Radarmatic's Google-Maps-powered code —
 its JavaScript is delivered to the browser as friendly source code
