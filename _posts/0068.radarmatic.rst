@@ -190,6 +190,27 @@ there are three crucial steps:
    that latitude and longitude into an (x, y) for the screen.
 3. Make sure that you draw that coordinate in the right place on your canvas.
 
+The two really crucial functions to use in this case are:
+
+``spherical.computeOffset(latLng, distance, heading)``
+    Google has saved us lots of trigonometry with this one.
+    It speaks only the language of latitude and longitude;
+    it is a purely real-world function
+    that has nothing to do with how your Google Map is instantiated
+    or configured, or even whether you have a map on your page at all!
+    Given a starting location together with a distance that you plan
+    to travel along the given heading,
+    it will figure out where you will wind up —
+    taking into account all of the complexities of motion
+    across an oblate spheroid like the Earth.
+
+``projection.fromLatLngToDivPixel(latLng)``
+    Once you know the real global location
+    of a point that you want to use in rendering,
+    this is the function that lets you avoid guessing
+    about that point's location on the surface of your Google Map.
+    Real-world latitude and longitude go in, an x and y come out.
+
 The result is quite gratifying,
 as you can see by mousing over this map
 to compare the two versions of the image:
