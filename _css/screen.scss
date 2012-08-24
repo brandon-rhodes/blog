@@ -195,6 +195,7 @@ article {
   img, .image-reference {
     display: block;
     margin: 0.2em auto 1em;
+    max-width: 100%;
   }
   img.inline {
     display: inline;
