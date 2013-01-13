@@ -5,7 +5,7 @@ set -e
 cd $(dirname "$0")
 cd ..
 rm -rf _v
-virtualenv -p /usr/bin/python3.2 _v
+python3.3 ~/usr/src/virtualenv/virtualenv.py _v
 
 hg clone \
     https://bitbucket.org/brandon/foundations-of-python-network-programming \
@@ -14,15 +14,11 @@ hg clone \
 cd _v
 . ./bin/activate
 
-pip install mock
+pip install docutils==0.10
 pip install lxml
+pip install mock
+pip install Blogofile
+pip install blogofile_blog
 
-git clone git://github.com/EnigmaCurry/blogofile.git
-cd blogofile
-python setup.py develop
-cd ..
-
-git clone git://github.com/EnigmaCurry/blogofile_blog.git
-cd blogofile_blog
-python setup.py develop
-cd ..
+sed -e 's/docutils==0.9.1/docutils==0.10/' \
+    _v/lib/python3.3/site-packages/Blogofile-0.8b1-py3.3.egg-info/requires.txt
