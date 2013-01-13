@@ -19,7 +19,7 @@
       <title>${post.title}</title>
       <link>${post.permalink}</link>
       <pubDate>${post.date.strftime("%a, %d %b %Y %H:%M:%S %Z")}</pubDate>
-% for category in post.categories:
+% for category in sorted(post.categories):
       <category><![CDATA[${category}]]></category>
 % endfor
 % if post.guid:
