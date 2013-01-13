@@ -1,0 +1,846 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.10: http://docutils.sourceforge.net/" />
+<title></title>
+<link rel="stylesheet" href="../css/slides2.css" type="text/css" />
+<link rel="stylesheet" href="../css/pygments.css" type="text/css" />
+</head>
+<body>
+<div class="document">
+
+
+<!-- Aiming for 50 minutes
+Run Notebooks in Chrome at 150% magnification -->
+<div class="section" id="slide">
+
+<div class="line-block">
+<div class="line"><strong>Touring the Universe</strong></div>
+<div class="line"><strong>With Scientific Python</strong></div>
+</div>
+<div class="line-block">
+<div class="line">&#64;brandon_rhodes</div>
+<div class="line">CodeMash 2013</div>
+</div>
+</div>
+<div class="section" id="id1">
+
+<div class="line-block">
+<div class="line">The iPython Notebooks</div>
+<div class="line">that go with this talk:</div>
+</div>
+<p><a class="reference external" href="https://github.com/brandon-rhodes/astronomy-notebooks">https://github.com/brandon-rhodes/astronomy-notebooks</a></p>
+</div>
+<div class="section" id="id2">
+
+<div class="line-block">
+<div class="line">They will continue evolving,</div>
+<div class="line">but you can always rewind to today!</div>
+</div>
+<div class="highlight"><pre><span class="n">git</span> <span class="n">checkout</span> <span class="s">&#39;master@{2013-01-11 12:00:00}&#39;</span>
+</pre></div>
+
+</div>
+<div class="section" id="goal">
+<h1>Goal?</h1>
+<p><em>a modest introduction</em></p>
+</div>
+<div class="section" id="id3">
+<h1>Goal</h1>
+<div class="line-block">
+<div class="line">To talk about <strong>astronomy</strong></div>
+<div class="line"><em>while</em></div>
+<div class="line">introducing a simple</div>
+<div class="line"><strong>scientific Python</strong></div>
+<div class="line">tool stack</div>
+</div>
+</div>
+<div class="section" id="the-stack">
+<h1>The Stack</h1>
+<ul class="simple">
+<li>iPython Notebook</li>
+<li>matplotlib <em>or</em> mayavi</li>
+<li>SciPy</li>
+<li>NumPy</li>
+<li>Python 2.7</li>
+</ul>
+</div>
+<div class="section" id="id4">
+
+<div class="line-block">
+<div class="line">An iPython Notebook consists</div>
+<div class="line">of <em>cells</em> of code (or titles or text)</div>
+<div class="line">that you run with <strong>Shift + Enter</strong></div>
+</div>
+</div>
+<div class="section" id="notebook">
+<h1>Notebook:</h1>
+<p>“The Inspiration”</p>
+</div>
+<div class="section" id="takeaways">
+<h1>Takeaways</h1>
+<ul>
+<li><div class="first line-block">
+<div class="line">Array-agnostic functions are an <em>art</em></div>
+</div>
+</li>
+<li><div class="first line-block">
+<div class="line">Vectors properly take <em>singular</em> names</div>
+<div class="line">(much like relations in SQL!)</div>
+</div>
+</li>
+<li><div class="first line-block">
+<div class="line">Use <tt class="docutils literal">print</tt> and <tt class="docutils literal">assert</tt> as</div>
+<div class="line">lightweight in-notebook tests</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="syntax-quick-reference">
+<h1>Syntax quick reference—</h1>
+</div>
+<div class="section" id="remember-dijkstra">
+<h1>Remember Dijkstra!</h1>
+<div class="line-block">
+<div class="line">“0 ≤ <em>i</em> &lt; <em>N</em></div>
+<div class="line">…</div>
+<div class="line">“let us let our ordinals start at zero:</div>
+<div class="line">an element's ordinal (subscript)</div>
+<div class="line">equals the number of elements</div>
+<div class="line">preceding it in the sequence.”</div>
+</div>
+<p><em>— ED831</em></p>
+</div>
+<div class="section" id="first-element">
+<h1>First element</h1>
+<p><tt class="docutils literal">a[0]</tt></p>
+</div>
+<div class="section" id="fourth-element">
+<h1>Fourth element</h1>
+<p><tt class="docutils literal">a[3]</tt></p>
+</div>
+<div class="section" id="next-to-last-element">
+<h1>Next-to-last element</h1>
+<p><tt class="docutils literal"><span class="pre">a[-2]</span></tt></p>
+</div>
+<div class="section" id="last-element">
+<h1>Last element</h1>
+<p><tt class="docutils literal"><span class="pre">a[-1]</span></tt></p>
+</div>
+<div class="section" id="id5">
+
+<p>Or, for those who took Latin—</p>
+</div>
+<div class="section" id="ultimate-element">
+<h1>Ultimate element</h1>
+<p><tt class="docutils literal"><span class="pre">a[-1]</span></tt></p>
+</div>
+<div class="section" id="penultimate-element">
+<h1>Penultimate element</h1>
+<p><tt class="docutils literal"><span class="pre">a[-2]</span></tt></p>
+</div>
+<div class="section" id="antepenultimate-element">
+<h1>Antepenultimate element</h1>
+<p><tt class="docutils literal"><span class="pre">a[-3]</span></tt></p>
+</div>
+<div class="section" id="slicing">
+<h1>Slicing</h1>
+<p>Again, remember Dijkstra:</p>
+<div class="line-block">
+<div class="line">0 ≤ <em>i</em> &lt; <em>N</em></div>
+</div>
+<p>As well as C-style languages:</p>
+<p><tt class="docutils literal">for (i = 0; i &lt; N; <span class="pre">i++)</span> ;</tt></p>
+</div>
+<div class="section" id="id6">
+<h1>Slicing</h1>
+<p>Elements 3, 4, and 5</p>
+<p><tt class="docutils literal">a[3:6]</tt></p>
+</div>
+<div class="section" id="id7">
+<h1>Slicing</h1>
+<p>First three elements 0, 1, and 2</p>
+<p><tt class="docutils literal"><span class="pre">a[:3]</span></tt></p>
+</div>
+<div class="section" id="id8">
+<h1>Slicing</h1>
+<p>All but first element</p>
+<p><tt class="docutils literal">a[1:]</tt></p>
+</div>
+<div class="section" id="id9">
+<h1>Slicing</h1>
+<p>Last three elements</p>
+<p><tt class="docutils literal"><span class="pre">a[-3:]</span></tt></p>
+</div>
+<div class="section" id="id10">
+<h1>Slicing</h1>
+<p>New copy of entire list</p>
+<p><tt class="docutils literal"><span class="pre">a[:]</span></tt></p>
+</div>
+<div class="section" id="id11">
+
+<div class="line-block">
+<div class="line">So that is how built-in Python</div>
+<div class="line"><em>lists</em> and <em>tuples</em> are indexed</div>
+</div>
+</div>
+<div class="section" id="numpy-arrays">
+<h1>NumPy Arrays</h1>
+<div class="line-block">
+<div class="line">Generalize Python lists</div>
+<div class="line">to <em>n</em> dimensions</div>
+</div>
+</div>
+<div class="section" id="id12">
+<h1>NumPy Arrays</h1>
+<div class="line-block">
+<div class="line">Use compact binary instead</div>
+<div class="line">of storing each item as an object</div>
+</div>
+<div class="line-block">
+<div class="line"><tt class="docutils literal">[1, 2, 3]</tt> — four objects</div>
+<div class="line"><tt class="docutils literal"><span class="pre">np.array([1,</span> 2, 3])</tt> — one object!</div>
+</div>
+</div>
+<div class="section" id="id13">
+<h1>NumPy Arrays</h1>
+<div class="line-block">
+<div class="line">Index and slice work as expected,</div>
+<div class="line">with comma separating dimensions</div>
+</div>
+</div>
+<div class="section" id="id14">
+<h1>NumPy Arrays</h1>
+<div class="highlight"><pre><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">]])</span>
+
+<span class="k">print</span> <span class="n">a</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+
+<p>produces</p>
+<div class="highlight"><pre><span class="p">[[</span><span class="mi">2</span> <span class="mi">3</span><span class="p">]</span>
+ <span class="p">[</span><span class="mi">6</span> <span class="mi">7</span><span class="p">]]</span>
+</pre></div>
+
+</div>
+<div class="section" id="id15">
+<h1>NumPy Arrays</h1>
+<div class="line-block">
+<div class="line">Support both element-wise</div>
+<div class="line"><em>and</em> aggregate operators</div>
+</div>
+<div class="highlight"><pre><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+
+<span class="k">print</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">10</span>   <span class="c"># =&gt; [11 12 13]</span>
+<span class="k">print</span> <span class="n">a</span> <span class="o">+</span> <span class="n">a</span>    <span class="c"># =&gt; [2 4 6]</span>
+<span class="k">print</span> <span class="n">a</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>  <span class="c"># =&gt; 6</span>
+</pre></div>
+
+</div>
+<div class="section" id="id16">
+
+<p>Enough</p>
+</div>
+<div class="section" id="id17">
+
+<div class="line-block">
+<div class="line">Let's look at a</div>
+<div class="line">larger data set</div>
+</div>
+</div>
+<div class="section" id="id18">
+<h1>Notebook:</h1>
+<p>“Asteroids”</p>
+</div>
+<div class="section" id="id19">
+
+<p>Was that crazy, or what?</p>
+</div>
+<div class="section" id="id20">
+
+<div class="highlight"><pre><span class="n">theta</span><span class="p">[</span><span class="n">r</span> <span class="o">&gt;</span> <span class="mf">4.5</span><span class="p">]</span>
+</pre></div>
+
+<p>My first reaction: <em>“Crazy!”</em></p>
+</div>
+<div class="section" id="id21">
+
+<div class="highlight"><pre><span class="n">theta</span><span class="p">[</span><span class="n">r</span> <span class="o">&gt;</span> <span class="mf">4.5</span><span class="p">]</span>
+</pre></div>
+
+<p><strong>How</strong> does that work?</p>
+</div>
+<div class="section" id="id22">
+
+<p>My first hypothesis:</p>
+<p><strong>They cheated</strong></p>
+</div>
+<div class="section" id="id23">
+
+<div class="highlight"><pre><span class="n">theta</span><span class="p">[</span><span class="n">r</span> <span class="o">&gt;</span> <span class="mf">4.5</span><span class="p">]</span>
+</pre></div>
+
+<div class="line-block">
+<div class="line">“Obviously, applying <tt class="docutils literal">&gt;</tt> to an</div>
+<div class="line">array returns a <em>magic object</em> that</div>
+<div class="line">remembers the comparison, and</div>
+<div class="line"><tt class="docutils literal"><span class="pre">x[…]</span></tt> knows how to apply it.”</div>
+</div>
+</div>
+<div class="section" id="id24">
+
+<p><strong>I was wrong</strong></p>
+</div>
+<div class="section" id="id25">
+
+<p><strong>I was wrong</strong></p>
+<p><em>and</em></p>
+<p>NumPy is really beautiful!</p>
+</div>
+<div class="section" id="id26">
+
+<div class="line-block">
+<div class="line">The behavior of <tt class="docutils literal">&gt;</tt> is</div>
+<div class="line"><em>completely symmetric</em> with how</div>
+<div class="line">arrays treat other operators!</div>
+</div>
+</div>
+<div class="section" id="id27">
+
+<div class="highlight"><pre><span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">,</span> <span class="mf">3.1</span><span class="p">,</span> <span class="mf">4.7</span> <span class="p">])</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span> <span class="p">])</span>
+
+<span class="n">r</span> <span class="o">+</span> <span class="mf">1.5</span>         <span class="c"># =&gt; [ 1.5  2.5  3.5  4.5]</span>
+</pre></div>
+
+</div>
+<div class="section" id="id28">
+
+<div class="highlight"><pre><span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">,</span> <span class="mf">3.1</span><span class="p">,</span> <span class="mf">4.7</span> <span class="p">])</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span> <span class="p">])</span>
+
+<span class="n">r</span> <span class="o">+</span> <span class="mf">1.5</span>         <span class="c"># =&gt; [ 1.5  2.5  3.5  4.5]</span>
+<span class="n">r</span> <span class="o">&gt;</span> <span class="mf">1.5</span>         <span class="c"># =&gt; [False False  True  True]</span>
+</pre></div>
+
+</div>
+<div class="section" id="id29">
+
+<div class="highlight"><pre><span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">,</span> <span class="mf">3.1</span><span class="p">,</span> <span class="mf">4.7</span> <span class="p">])</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span> <span class="p">])</span>
+
+<span class="n">r</span> <span class="o">+</span> <span class="mf">1.5</span>         <span class="c"># =&gt; [ 1.5  2.5  3.5  4.5]</span>
+<span class="n">r</span> <span class="o">&gt;</span> <span class="mf">1.5</span>         <span class="c"># =&gt; [False False  True  True]</span>
+<span class="n">theta</span><span class="p">[</span><span class="n">r</span> <span class="o">&gt;</span> <span class="mf">1.5</span><span class="p">]</span>  <span class="c"># =&gt; [ 3.1  4.7]</span>
+</pre></div>
+
+</div>
+<div class="section" id="id30">
+
+<div class="highlight"><pre><span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">,</span> <span class="mf">3.1</span><span class="p">,</span> <span class="mf">4.7</span> <span class="p">])</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span> <span class="p">])</span>
+
+<span class="n">r</span> <span class="o">+</span> <span class="mf">1.5</span>         <span class="c"># =&gt; [ 1.5  2.5  3.5  4.5]</span>
+<span class="n">r</span> <span class="o">&gt;</span> <span class="mf">1.5</span>         <span class="c"># =&gt; [False False  True  True]</span>
+<span class="n">theta</span><span class="p">[</span><span class="n">r</span> <span class="o">&gt;</span> <span class="mf">1.5</span><span class="p">]</span>  <span class="c"># =&gt; [ 3.1  4.7]</span>
+</pre></div>
+
+<div class="line-block">
+<div class="line">The secret: you can index into</div>
+<div class="line">an array with a subscript that</div>
+<div class="line">is <em>another</em> array of booleans!</div>
+</div>
+</div>
+<div class="section" id="id31">
+
+<div class="highlight"><pre><span class="n">theta</span><span class="p">[</span><span class="n">r</span> <span class="o">&gt;</span> <span class="mf">4.5</span><span class="p">]</span>
+</pre></div>
+
+<div class="line-block">
+<div class="line">Zen of Python:</div>
+</div>
+<div class="line-block">
+<div class="line"><em>“Special cases aren't special</em></div>
+<div class="line"><em>enough to break the rules”</em></div>
+</div>
+</div>
+<div class="section" id="id32">
+
+<div class="highlight"><pre><span class="n">theta</span><span class="p">[</span><span class="n">r</span> <span class="o">&gt;</span> <span class="mf">4.5</span><span class="p">]</span>
+</pre></div>
+
+<div class="line-block">
+<div class="line">The best Python API tricks occur when</div>
+<div class="line">orthogonal, separately useful behaviors</div>
+<div class="line">can be combined in interesting ways</div>
+</div>
+</div>
+<div class="section" id="id33">
+
+<div class="line-block">
+<div class="line">A quick reflection on</div>
+<div class="line">the science behind this talk</div>
+</div>
+</div>
+<div class="section" id="a-caveat">
+<h1>A Caveat</h1>
+<div class="line-block">
+<div class="line">This talk does not</div>
+<div class="line">describe how <em>real</em></div>
+<div class="line">astronomers work!</div>
+</div>
+</div>
+<div class="section" id="observational-astronomy-workflow">
+<h1>Observational Astronomy Workflow</h1>
+<div class="line-block">
+<div class="line">Model</div>
+<div class="line">↓</div>
+<div class="line">Point telescope</div>
+<div class="line">↓</div>
+<div class="line">Images and Data</div>
+<div class="line">↓</div>
+<div class="line">Process and Hypothesize</div>
+<div class="line">↓</div>
+<div class="line">Model</div>
+</div>
+</div>
+<div class="section" id="the-important-step">
+<h1>The Important Step</h1>
+<div class="line-block">
+<div class="line">Model</div>
+<div class="line">↓</div>
+<div class="line">Point telescope</div>
+<div class="line">↓</div>
+<div class="line">Images and Data</div>
+<div class="line">↓</div>
+<div class="line"><em>Process and Hypothesize</em></div>
+<div class="line">↓</div>
+<div class="line">Model</div>
+</div>
+</div>
+<div class="section" id="id34">
+
+<div class="line-block">
+<div class="line"><strong>Real astronomers:</strong></div>
+<div class="line">hard work to interpret</div>
+<div class="line">raw data and images</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Amateurs like me:</strong></div>
+<div class="line">run models,</div>
+<div class="line">draw pictures!</div>
+</div>
+</div>
+<div class="section" id="take-away">
+<h1>Take-away</h1>
+<div class="line-block">
+<div class="line">Those were not <em>real</em> asteroid</div>
+<div class="line">positions that we just plotted</div>
+</div>
+</div>
+<div class="section" id="id35">
+<h1>Take-away</h1>
+<div class="line-block">
+<div class="line">Those were <em>imperfect</em> predictions</div>
+<div class="line">based on models that keep improving</div>
+</div>
+</div>
+<div class="section" id="models-used-so-far">
+<h1>Models Used So Far</h1>
+<div class="line-block">
+<div class="line">Planet positions: <strong>VSOP87, DE405</strong></div>
+<div class="line">Asteroid positions: <strong>Kepler</strong></div>
+</div>
+</div>
+<div class="section" id="our-next-example">
+<h1>Our Next Example</h1>
+<div class="line-block">
+<div class="line"><em>Model:</em></div>
+<div class="line">SGP4</div>
+<div class="line">↓</div>
+<div class="line"><em>Predictions:</em></div>
+<div class="line">Satellite positions</div>
+<div class="line">↓</div>
+<div class="line"><em>Visualization:</em></div>
+<div class="line">3D globe with satellites</div>
+</div>
+</div>
+<div class="section" id="id36">
+<h1>Notebook:</h1>
+<div class="line-block">
+<div class="line">“3D Earth Satellites”</div>
+</div>
+</div>
+<div class="section" id="id37">
+
+<div class="line-block">
+<div class="line">We can apply the same</div>
+<div class="line">3D tools to the whole</div>
+<div class="line">solar system</div>
+</div>
+</div>
+<div class="section" id="id38">
+<h1>Notebook:</h1>
+<div class="line-block">
+<div class="line">“3D Solar System”</div>
+</div>
+</div>
+<div class="section" id="id39">
+<h1>Take-away</h1>
+<div class="line-block">
+<div class="line"><strong>Scale</strong> varies <em>wildly</em></div>
+<div class="line">as you ascend from atom</div>
+<div class="line">to planet to star system</div>
+</div>
+</div>
+<div class="section" id="id40">
+
+<div class="line-block">
+<div class="line">It is usually cleanest</div>
+<div class="line">to build a <strong>separate</strong> 3D</div>
+<div class="line">visualization specific to each scale</div>
+</div>
+<div class="line-block">
+<div class="line"><em>Low Earth orbit</em></div>
+<div class="line"><em>Earth-Moon</em></div>
+<div class="line"><em>Solar System</em></div>
+<div class="line"><br /></div>
+<div class="line">⋮</div>
+</div>
+</div>
+<div class="section" id="id41">
+
+<div class="line-block">
+<div class="line">A sky chart combining solar system</div>
+<div class="line">bodies with distant stars can simply</div>
+<div class="line">“mix down” each object into an <em>x,y</em></div>
+<div class="line">coordinate and plot them in 2D</div>
+</div>
+</div>
+<div class="section" id="other-directions">
+<h1>Other Directions</h1>
+<div class="line-block">
+<div class="line">There are <em>many ways</em> to</div>
+<div class="line">pack a diagram with information</div>
+</div>
+</div>
+<div class="section" id="id42">
+
+<p>Glyphs can <em>vary</em> in—</p>
+<div class="line-block">
+<div class="line"><strong>Position</strong></div>
+<div class="line"><strong>Opacity</strong></div>
+<div class="line"><strong>Color</strong></div>
+<div class="line"><strong>Size</strong></div>
+</div>
+</div>
+<div class="section" id="id43">
+<h1>Notebook:</h1>
+<div class="line-block">
+<div class="line">“Stars”</div>
+</div>
+</div>
+<div class="section" id="id44">
+
+<div class="line-block">
+<div class="line">Our visualizations</div>
+<div class="line">so far have emphasized</div>
+<div class="line"><em>physical</em> space</div>
+</div>
+</div>
+<div class="section" id="id45">
+
+<div class="line-block">
+<div class="line">Diagrams can also</div>
+<div class="line">relate <em>non-spatial</em> data</div>
+<div class="line">sets to each other</div>
+</div>
+</div>
+<div class="section" id="id46">
+<h1>Notebook:</h1>
+<div class="line-block">
+<div class="line">“Hertzsprung-Russell”</div>
+</div>
+</div>
+<div class="section" id="id47">
+
+<div class="line-block">
+<div class="line">While <strong>NumPy</strong> provides</div>
+<div class="line">efficient vector arrays,</div>
+</div>
+<div class="line-block">
+<div class="line">the <strong>SciPy</strong> library provides</div>
+<div class="line">numeric processing</div>
+</div>
+</div>
+<div class="section" id="scipy">
+<h1>SciPy</h1>
+<ul class="simple">
+<li>Statistics</li>
+<li>Optimization</li>
+<li>Numerical integration</li>
+<li>BLAS/LINPACK <em>(linear algebra)</em></li>
+<li>Fourier transforms</li>
+<li>Signal processing</li>
+<li>Image processing</li>
+<li>ODE solvers</li>
+<li>Special functions</li>
+</ul>
+</div>
+<div class="section" id="id48">
+<h1>Notebook:</h1>
+<div class="line-block">
+<div class="line">“Stellar-Color-Index”</div>
+</div>
+</div>
+<div class="section" id="notebook-superpowers">
+<h1>Notebook Superpowers</h1>
+</div>
+<div class="section" id="file-download-as">
+<h1>File » Download As</h1>
+<div class="line-block">
+<div class="line">When viewing a Notebook</div>
+<div class="line">through someone else's server,</div>
+<div class="line">you can <strong>download</strong> it to your</div>
+<div class="line">own hard drive and run it</div>
+</div>
+</div>
+<div class="section" id="drag-and-drop">
+<h1>Drag and drop</h1>
+<div class="line-block">
+<div class="line">Drag <tt class="docutils literal">.py</tt> and <tt class="docutils literal">.ipynb</tt></div>
+<div class="line">files into the <em>iPython Dashboard</em>,</div>
+<div class="line">and a local copy of the code</div>
+<div class="line">is created for you to edit</div>
+</div>
+</div>
+<div class="section" id="id49">
+<h1>Notebook:</h1>
+<div class="line-block">
+<div class="line">“iPython Features”</div>
+</div>
+</div>
+<div class="section" id="r-magic">
+<h1>R Magic</h1>
+<div class="line-block">
+<div class="line">Jonathan Taylor of Stanford's</div>
+<div class="line">extension for cells that contain</div>
+<div class="line"><strong>R-language</strong> statistics code</div>
+</div>
+<div class="highlight"><pre><span class="o">%%</span><span class="n">R</span> <span class="o">-</span><span class="n">i</span> <span class="n">X</span><span class="p">,</span><span class="n">Y</span> <span class="o">-</span><span class="n">o</span> <span class="n">XYcoef</span>
+<span class="n">XYlm</span> <span class="o">=</span> <span class="n">lm</span><span class="p">(</span><span class="n">Y</span><span class="o">~</span><span class="n">X</span><span class="p">)</span>
+<span class="n">XYcoef</span> <span class="o">=</span> <span class="n">coef</span><span class="p">(</span><span class="n">XYlm</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">summary</span><span class="p">(</span><span class="n">XYlm</span><span class="p">))</span>
+<span class="n">par</span><span class="p">(</span><span class="n">mfrow</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">XYlm</span><span class="p">)</span>
+</pre></div>
+
+</div>
+<div class="section" id="additional-languages">
+<h1>Additional Languages</h1>
+<div class="line-block">
+<div class="line"><em>Native —</em> Bash, Cython, Octave, Perl, R, Ruby</div>
+<div class="line"><em>3rd party —</em> Matlab, Mathematica</div>
+</div>
+</div>
+<div class="section" id="publishing">
+<h1>Publishing</h1>
+<div class="line-block">
+<div class="line">Thanks to HTML export,</div>
+<div class="line">iPython can be used to write</div>
+<div class="line"><strong>blog posts</strong> or even <strong>entire books</strong></div>
+<div class="line">that can be <em>re-executed</em> to verify</div>
+<div class="line">their code and diagrams</div>
+</div>
+</div>
+<div class="section" id="nbviewer-ipython-org">
+<h1>nbviewer.ipython.org</h1>
+<div class="line-block">
+<div class="line">An online in-the-cloud</div>
+<div class="line">iPython Notebook interpreter</div>
+</div>
+</div>
+<div class="section" id="ipython-parallel-module">
+<h1>iPython “parallel” module</h1>
+<div class="line-block">
+<div class="line">Can distribute computations</div>
+<div class="line">across either a <em>dedicated</em> or</div>
+<div class="line">an <em>in-the-cloud</em> cluster</div>
+</div>
+<div class="line-block">
+<div class="line">Compatible with MIT's</div>
+<div class="line"><strong>StarCluster</strong> for EC2</div>
+</div>
+</div>
+<div class="section" id="visual-studio-2010">
+<h1>Visual Studio 2010</h1>
+<div class="line-block">
+<div class="line">Python Plugin includes</div>
+<div class="line">an iPython client</div>
+</div>
+</div>
+<div class="section" id="id50">
+
+<p><em>and</em></p>
+</div>
+<div class="section" id="id51">
+
+<div class="line-block">
+<div class="line">Takafumi Arakaki has written</div>
+<div class="line">an <em>Emacs client</em> for iPython Notebook</div>
+</div>
+<img alt="emacs_ipython.png" src="emacs_ipython.png" />
+</div>
+<div class="section" id="internals-communication">
+<h1>Internals: Communication</h1>
+<div class="line-block">
+<div class="line">Front-ends use a simple,</div>
+<div class="line">well-documented protocol over <strong>ØMQ</strong></div>
+<div class="line">to communicate with Notebook server</div>
+</div>
+</div>
+<div class="section" id="internals-notebook-format">
+<h1>Internals: Notebook Format</h1>
+<div class="line-block">
+<div class="line">JSON that is designed to support</div>
+<div class="line"><strong>both</strong> machine <strong>and</strong> hand-editing</div>
+</div>
+<div class="highlight"><pre><span class="p">{</span>
+ <span class="s">&quot;cell_type&quot;</span><span class="p">:</span> <span class="s">&quot;code&quot;</span><span class="p">,</span>
+ <span class="s">&quot;collapsed&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+ <span class="s">&quot;input&quot;</span><span class="p">:</span> <span class="p">[</span>
+  <span class="s">&quot;from mayavi import mlab</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+ <span class="p">],</span>
+ <span class="s">&quot;language&quot;</span><span class="p">:</span> <span class="s">&quot;python&quot;</span><span class="p">,</span>
+ <span class="s">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{},</span>
+ <span class="s">&quot;outputs&quot;</span><span class="p">:</span> <span class="p">[]</span>
+<span class="p">},</span>
+</pre></div>
+
+</div>
+<div class="section" id="id52">
+<h1>Internals: Notebook Format</h1>
+<div class="line-block">
+<div class="line">The frequent and predictable newlines</div>
+<div class="line">make it <strong>version-control</strong> friendly!</div>
+</div>
+<div class="highlight"><pre><span class="p">{</span>
+ <span class="s">&quot;cell_type&quot;</span><span class="p">:</span> <span class="s">&quot;code&quot;</span><span class="p">,</span>
+ <span class="s">&quot;collapsed&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+ <span class="s">&quot;input&quot;</span><span class="p">:</span> <span class="p">[</span>
+  <span class="s">&quot;from mayavi import mlab</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+ <span class="p">],</span>
+ <span class="s">&quot;language&quot;</span><span class="p">:</span> <span class="s">&quot;python&quot;</span><span class="p">,</span>
+ <span class="s">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{},</span>
+ <span class="s">&quot;outputs&quot;</span><span class="p">:</span> <span class="p">[]</span>
+<span class="p">},</span>
+</pre></div>
+
+</div>
+<div class="section" id="id53">
+<h1>Internals: Notebook Format</h1>
+<div class="line-block">
+<div class="line">Unless you <tt class="docutils literal">Cell » All Output » Clear</tt></div>
+<div class="line">before saving, inline images and media</div>
+<div class="line">get saved as base64 strings—</div>
+</div>
+</div>
+<div class="section" id="id54">
+<h1>Internals: Notebook Format</h1>
+<div class="line-block">
+<div class="line">—this means that an iPython Notebook</div>
+<div class="line">can survive uploading or emailing</div>
+<div class="line">with <em>all</em> of its images intact!</div>
+</div>
+</div>
+<div class="section" id="impact">
+<h1>Impact</h1>
+<div class="line-block">
+<div class="line">“Computing is the <strong>backbone</strong></div>
+<div class="line">of all of science”</div>
+</div>
+<p><em>— Fernando Perez</em></p>
+</div>
+<div class="section" id="big-take-away">
+<h1>Big take-away</h1>
+<div class="line-block">
+<div class="line">Because the language runtime</div>
+<div class="line"><em>builds state</em> behind iPython Notebook,</div>
+</div>
+<div class="line-block">
+<div class="line">it supports <em>rapid iteration</em> as you</div>
+<div class="line">work on a particular step in your</div>
+<div class="line">processing or visualization</div>
+</div>
+</div>
+<div class="section" id="why-python">
+<h1>Why Python?</h1>
+<div class="line-block">
+<div class="line">Clean</div>
+<div class="line">Elegant</div>
+<div class="line">Natural notation</div>
+</div>
+<div class="highlight"><pre><span class="mi">3</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+
+</div>
+<div class="section" id="performance">
+<h1>Performance</h1>
+<div class="line-block">
+<div class="line">Large array operations</div>
+<div class="line">are performed in C or FORTRAN,</div>
+<div class="line"><em>amortizing away</em> dynamic language costs</div>
+</div>
+</div>
+<div class="section" id="john-d-hunter-19682012">
+<h1>John D. Hunter (1968–2012)</h1>
+<img alt="hunter.jpg" src="hunter.jpg" />
+<div class="line-block">
+<div class="line">2002–2012 — Create, maintain Matplotlib</div>
+<div class="line">18 July 2012 — SciPy 2012 keynote speaker</div>
+<div class="line">28 August 2012 — Died from cancer</div>
+</div>
+</div>
+<div class="section" id="id55">
+
+<p>I am <strong>&#64;brandon_rhodes</strong></p>
+<p>Thank you!</p>
+<!-- * Pacific and Columbus
+* moon
+* comets
+* Voyager
+* Asteroids with stalks
+* Contour plot of asteroids
+* Resonance of Trojan asteroids
+* Comets and Oort cloud
+* 3D distribution of stars
+* Deneb
+* Galaxy shape
+* 3D distribution of galaxies
+* motion of the sky:
+
+  earth orbits
+  also revolves
+  animate by moving the camera?
+  have horizon?
+  show satellite going overhead, live?
+  use the animation to show the next year (or month) of sky events!
+  use newton (or something?) to solve for equinox, solstice, eclipses,
+  conjunctions? -->
+<!-- single quote: ’
+double quotes: x“”x
+em-dash: —
+arrows: ←, ↑, →, ↓, ↔, ↕, ↖, ↗, ↘, ↙ -->
+<script>
+  window.slide_transition_time = 200;
+</script>
+<script src="../js/jquery-1.6.2.min.js"></script>
+<script src="../js/jquery.url.min.js"></script>
+<script src="../js/slides2.js"></script></div>
+</div>
+</body>
+</html>
