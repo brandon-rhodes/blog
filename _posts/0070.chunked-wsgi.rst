@@ -1,0 +1,80 @@
+---
+categories: Computing Python
+date: 2013/02/14 07:35:40
+permalink: http://rhodesmill.org/brandon/2013/chunked-wsgi/
+title: WSGI breaks chunked responses
+---
+
+The great triumph of `WSGI <http://www.python.org/dev/peps/pep-3333/>`_
+is that Python for the Web was suddenly pluggable.
+Whether you wrote your application as a raw WSGI callable
+or built atop a framework like Django or Pyramid,
+you could move from `mod_wsgi <http://code.google.com/p/modwsgi/>`_
+running under Apache
+to `flup <http://pypi.python.org/pypi/flup/>`_ running behind nginx
+to `gunicorn <http://gunicorn.org/>`_ running on Heroku
+without batting an eye or rewriting a single line of code.
+
+The great tragedy of WSGI is its complexity.
+Despite the fact that there are code examples inlined into its PEP,
+it seems that hardly anyone can put together
+a fully correct server or piece of middleware.
+Writers like Armin Ronacher and Graham Dumpleton
+are always enlightening on the subject,
+as in Graham's recent pair of posts
+`WSGI middleware and the hidden write() callable
+<http://blog.dscpl.com.au/2012/10/wsgi-middleware-and-hidden-write.html>`_
+and `Obligations for calling close() on the iterable returned by a WSGI application
+<http://blog.dscpl.com.au/2012/10/obligations-for-calling-close-on.html>`_,
+the latter of which makes the telling observation that,
+“Despite the WSGI specification having been around for so long,
+one keeps seeing instances where it is implemented wrongly.”
+The problem is that WSGI makes a very awkward gesture toward
+asynchronicity — an iterable response body — but lets
+the application block while doing all of the rest of its work.
+The resulting architecture is still completely unusable
+for actual async folks like the Twisted or Tornado teams,
+while managing to make life awkward for everybody else.
+Add in WSGI's other features,
+like an obscure synchronous ``write()`` call
+and the ability of the application to call ``start_response()``
+several times if it changes its mind,
+and correctness starts to become very difficult to achieve.
+
+The great salvation of WSGI
+is that hardly anyone actually has to touch it.
+Nearly the entire working mass
+of the world's Python web programmers
+are protected from the Terrible Secret of WSGI
+by working behind some web framework or other.
+This lets WSGI's one great benefit shine —
+that servers and applications can be plugged into one other
+fairly arbitrarily —
+without anyone but the framework authors
+having to wallow in its complexity
+and then attend the Web Summit to recuperate.
+
+But, on to my topic for today.
+To my great surprise,
+it turns out that — for all its complexity —
+WSGI still manages to be under-specified!
+If you are writing the sort of application
+that starts streaming back data without knowing its content length,
+where you might need to abort the response,
+the standard offers neither guidance about how to behave
+nor a guarantee about how the server beneath you will behave.
+Consider the following application::
+
+    def simple_app(environ, start_response):
+        headers = [('Content-type', 'text/plain')]
+        start_response('200 OK', headers)
+        return content()
+
+    def content():
+        yield 'The dwarves of yore made mighty spells,'
+        yield 'While hammers fell like ringing bells'
+        raise ValueError('poetry ended prematurely')
+        yield 'In places deep, where dark things sleep,'
+        yield 'In hollow halls beneath the fells.'
+
+
