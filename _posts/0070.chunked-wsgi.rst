@@ -5,6 +5,14 @@ permalink: http://rhodesmill.org/brandon/2013/chunked-wsgi/
 title: WSGI breaks chunked responses
 ---
 
+I may be almost through with WSGI.
+While its design is at least tolerable,
+and it has certainly gotten me through a number
+of close-to-the-wire HTTP projects over the years,
+I seem finally to have reached an edge case where
+— as a standard — it cannot guarantee
+that I even return a correct response to browsers!
+
 The great triumph of `WSGI <http://www.python.org/dev/peps/pep-3333/>`_
 is that Python for the Web was suddenly pluggable.
 Whether you wrote your application as a raw WSGI callable
@@ -68,13 +76,52 @@ Consider the following application::
     def simple_app(environ, start_response):
         headers = [('Content-type', 'text/plain')]
         start_response('200 OK', headers)
+
+        def content():
+            yield 'The dwarves of yore made mighty spells,'
+            yield 'While hammers fell like ringing bells'
+
+            raise ValueError('poetry ended prematurely')
+            start_response('500 Error', headers)
+            return ''
+
+            yield 'In places deep, where dark things sleep,'
+            yield 'In hollow halls beneath the fells.'
+
         return content()
 
-    def content():
-        yield 'The dwarves of yore made mighty spells,'
-        yield 'While hammers fell like ringing bells'
-        raise ValueError('poetry ended prematurely')
-        yield 'In places deep, where dark things sleep,'
-        yield 'In hollow halls beneath the fells.'
 
+This tiny example manages to contain
+every essential property of the situation
+in which a much larger application has placed me:
 
+* My WSGI application returns a generator,
+  instead of waiting until the entire response has been computed
+  and returning a list of strings.
+  First, this protects my application against situations
+  where the entire response body is larger than RAM —
+  in which case the approach of queueing strings in a list
+  would exhaust memory.
+  And second, it lets the web server
+  start streaming the response to the client immediately;
+  an early version of the design that delayed transmission
+  until the whole response body was ready
+  often resulted in clients abandoning their connections
+  before any response body could be sent.
+
+* The application does not know the content-length of the response
+  until the final chunk of response body has been generated.
+  The WSGI server that is hosting my application
+  will therefore have to used chunked encoding on the response body.
+  (For reasons that we will see in a moment,
+  using the older HTTP convention of closing the socket
+  when the body has finished is not appropriate here.)
+
+* Finally, the response body may be impossible to deliver,
+  but the application will often not learn this
+  until it has partially returned the response.
+  The back-end service for which it is a mediator
+  may return quite a bit of data before going down,
+  becoming unresponsive, or returning some kind of error.
+  Only at that point does the application learn
+  that it cannot, in fact, return a valid response after all.
