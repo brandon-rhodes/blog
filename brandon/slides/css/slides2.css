@@ -58,6 +58,9 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 body {
   font-family: "Gentium";
 }
+body.reading-mode {
+  background-color: #eee;
+}
 body.presentation-mode {
   background-color: #000;
   color: #fff;
@@ -72,13 +75,12 @@ body.presentation-mode {
   display: table;
 }
 
-.section {
-  border-top: 2px solid #eee;
-  border-bottom: 1px solid #bbb;
+body.reading-mode .section {
+  margin: 1em auto;
+  max-width: 24em;
+  padding: 0.5em;
 }
 body.presentation-mode .section {
-  border-top: none;
-  border-bottom: none;
   display: table-cell;
   height: 768px;
 }
