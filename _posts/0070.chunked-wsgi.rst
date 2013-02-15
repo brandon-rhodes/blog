@@ -6,9 +6,8 @@ title: WSGI breaks chunked responses
 ---
 
 I may be almost through with WSGI.
-While its design is at least tolerable,
-and it has certainly gotten me through a number
-of close-to-the-wire HTTP projects over the years,
+While it has certainly worked
+for a number of my close-to-the-wire HTTP projects over the years,
 I seem finally to have reached an edge case where
 — as a standard — it cannot guarantee
 that I even return a correct response to browsers!
@@ -63,14 +62,10 @@ having to wallow in its complexity
 and then attend the Web Summit to recuperate.
 
 But, on to my topic for today.
+
 To my great surprise,
 it turns out that — for all its complexity —
 WSGI still manages to be under-specified!
-If you are writing the sort of application
-that starts streaming back data without knowing its content length,
-where you might need to abort the response,
-the standard offers neither guidance about how to behave
-nor a guarantee about how the server beneath you will behave.
 Consider the following application::
 
     def simple_app(environ, start_response):
@@ -78,20 +73,24 @@ Consider the following application::
         start_response('200 OK', headers)
 
         def content():
+            # We start off fine.
             yield 'The dwarves of yore made mighty spells,'
             yield 'While hammers fell like ringing bells'
 
-            raise ValueError('poetry ended prematurely')
-            start_response('500 Error', headers)
-            return ''
+            # The back-end fails!
+            try:
+                1/0
+            except:
+                start_response('500 Error', headers, sys.exc_info())
+                return
 
+            # So rest of the response is never available.
             yield 'In places deep, where dark things sleep,'
             yield 'In hollow halls beneath the fells.'
 
         return content()
 
-
-This tiny example manages to contain
+This tiny example manages to exhibit
 every essential property of the situation
 in which a much larger application has placed me:
 
@@ -117,7 +116,7 @@ in which a much larger application has placed me:
   using the older HTTP convention of closing the socket
   when the body has finished is not appropriate here.)
 
-* Finally, the response body may be impossible to deliver,
+* The response body may be impossible to deliver,
   but the application will often not learn this
   until it has partially returned the response.
   The back-end service for which it is a mediator
@@ -125,3 +124,136 @@ in which a much larger application has placed me:
   becoming unresponsive, or returning some kind of error.
   Only at that point does the application learn
   that it cannot, in fact, return a valid response after all.
+
+* Many resources will be cacheable by clients —
+  some thanks to an `ETag`
+  and others thanks to a far-future `Expires` header.
+  This means that returning a truncated response
+  without any indication of failure
+  not only ruins the client's current attempt to use the resource,
+  but might render the client *permanently* unable to proceed
+  because it might never fetch a complete copy of the resource.
+
+So it is absolutely imperative
+that the WSGI server running my application
+correctly signal truncated responses to HTTP clients.
+There are, to my knowledge, only two ways of doing so.
+
+First, an HTTP server can specify a Content-Length
+but then close the socket before sending that much data.
+Standards-loving HTTP client libraries
+will always recognize failure in this case.
+However, one of the limitations that I have already stated
+is that I do not know the Content-Length until I have finished
+generating and returning the resource, so that is not an option here.
+
+Second, an HTTP server can use chunked encoding
+but then close the socket prematurely
+*without* finishing the current chunk
+and then wrapping up the whole message with the concluding
+zero-length chunk ``0\r\n\r\n``.
+An HTTP client will recognize this as a failure
+to receive the entire response.
+
+As you can see in the example app above,
+I am doing everything right:
+
+* I am catching the exception instead of letting it propagate
+  up into the WSGI server behind me.
+  While polite WSGI servers will catch exceptions
+  and return 500 status codes to clients,
+  there is no guarantee of this,
+  and some of them will just let your thread crash
+  and leave a dangling open socket behind them!
+
+* I am calling `start_response()` with the magic third argument
+  that informs the server, on no uncertain terms,
+  that I need to terminate the response
+  because of an exception.
+
+* The one dicey aspect of this sample application
+  is that I am making my second `start_response()` call
+  from inside of my generator,
+  instead of from inside the application function itself.
+  This is where we get to the part
+  about WSGI not being entirely fully specified:
+  it is not entirely clear from the PEP
+  whether this is how you terminate a generated response body,
+  because the standard does not quite discuss the issue!
+
+So, that is my situation.
+
+I need to stream large responses without knowing their length
+and in circumstances where the client receiving the response
+body must always be able to recognize a truncated response
+so that they do not run off and try to operate upon
+the truncated data.
+
+How do four common WSGI servers stack up
+when presented with the sample application above?
+
+* ``wsgiref.simple_server`` — **Complete disaster!**
+  When confronted with a generated response body,
+  ``wsgiref`` falls back to primitive HTTP/1.0
+  that simply appends the response body to the outgoing headers
+  and then closes the socket upon completion.
+  When confronted with the early termination of my iterator,
+  it simply closes the socket early,
+  making truncated output indistinguishable from a full response.
+
+* ``gevent.pywsgi`` — **Disaster!**
+  This popular WSGI server fails in a different way.
+  On the one hand,
+  it does not create semantic ruin
+  by delivering what looks like a valid response:
+  it creates a chunked HTTP/1.1 response
+  and puts each line of poetry in its own chunk,
+  and then never finishes the response —
+  after the second line of data, no further data appears.
+  So at least clients will not be fooled
+  into thinking that the response is complete!
+  But it balances this advantage with a downside:
+  it actually leaves the socket hanging open indefinitely,
+  so after this has happened enough times to your application
+  it will run out of unclosed file descriptors and crash!
+
+* ``gunicorn`` — **Invalid.**
+  This is not so bad, though somewhat awkward:
+  after sending the first two chunks in an HTTP/1.1 chunked response,
+  Gunicorn decides to throw correctness to the wind
+  and follow the second chunk with the HTML
+  of its standard 500 error message!
+  Following an HTTP chunk with anything but a hexadecimal integer
+  is a violation of the protocol and conforming clients
+  will raise an error — but at least there is no chance
+  that a client will mistake the response for valid HTTP,
+  and the socket does get closed and reclaimed.
+
+* ``cherrypy.wsgiserver`` — well, look at that!
+  Robert Brewer will get a beer from me at PyCon this year,
+  and CherryPy keeps its reputation as an the go-to production-ready
+  multi-threaded web server written in Python.
+  (My own reason for not using it often is because it does not log,
+  but that is another story.)
+  It does **everything right:**
+  it starts with two HTTP/1.1 chunks and then,
+  when my generator fails,
+  CherryPy is smart enough to recognize
+  that the only correct way to signal failure to the client
+  is to *close the socket* without further output.
+
+I will probably not use CherryPy in this particular application
+because, for other reasons, I am building it upon ``gevent``
+and have therefore figured out how to work around
+the problems with its ``pywsgi`` server
+(and will soon be putting those changes together into a pull request).
+But it was heartening to see that,
+at the very gray edges of the WSGI standard
+where HTTP itself needs very careful handling —
+since HTTP includes no *explicit* way to say,
+“Wait! Never mind! I cannot finish this response after all!” —
+that at least one of the WSGI servers on my short list
+manages to put together
+the most utterly correct behavior I can think of.
+
+I will let you know which brand of beer Robert chooses.
