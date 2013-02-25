@@ -1,0 +1,104 @@
+---
+categories: Computing
+date: 2013/02/25 11:44:45
+permalink: http://rhodesmill.org/brandon/2013/os9-keyboard-codes/
+title: OS-9 Keyboard Codes
+---
+
+This chart has been haunting my desk drawer for more than twenty years.
+I have kept it because of nostalgia —
+not from any real likelihood of needing it again —
+and should post it here online
+on the slender chance that it might someday be useful to someone else:
+
+.. image:: /brandon/1990s/os9-keyboard-codes.jpg
+   :target: /brandon/1990s/os9-keyboard-codes.pdf
+
+It is a chart of every ASCII character that it is possible to type
+on the keyboard of a Radio Shack Color Computer
+running the OS-9 operating system.
+Apparently I was a very thorough teenager.
+Did I really needed a complete reference sheet like this?
+Or was it a convenient excuse to play with graphic design
+and format a complicated document
+with Knuth's `TeX <http://en.wikipedia.org/wiki/TeX>`_ typesetting system?
+
+The Color Computer's keyboard was severely limited.
+You would never guess, at a first glance,
+that it could in fact support the entire ASCII printable character set,
+but the OS-9 operating system heaped key combinations
+atop each other until the chart was filled.
+
+.. figure:: http://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/TRS-80_Color_Computer_2-64K.jpg/800px-TRS-80_Color_Computer_2-64K.jpg
+
+   The Color Computer keyboard included a big red “Break” key
+   (photos from the
+   `Wikipedia entry <http://en.wikipedia.org/wiki/TRS-80_Color_Computer>`_)
+
+But the keyboard under OS-9
+cannot be used to type the characters Group Separator,
+Record Separator, or Unit Separator.
+This was an important omission,
+because Group Separator —
+also known as ``^]`` or control-right-bracket —
+is how you shut down a hung Telnet session
+when talking to a Unix machine over a modem.
+So the upper-right corner of my chart
+includes instructions for how to patch the operating system at runtime
+to add extra characters to the keyboard map!
+
+Note that this was not Mac OS 9, for which Steve Jobs held a funeral,
+but OS-9 with a real honest *hyphen,*
+from the wild 1970s and 1980s
+when punctuation was flung so freely and extravagantly
+into the names of computers, programming languages,
+and operating systems.
+
+.. figure:: http://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/CoCo3system.jpg/800px-CoCo3system.jpg
+
+   With the investment of several hundred more dollars,
+   the Color Computer's cartridge slot could be expanded
+   to support several drives, printers, and serial lines.
+
+The web suggests that `one vendor still supports OS-9
+<http://www.radisys.com/products/microware-os-9/>`_
+— though probably not on the 8-bit Motorola 6809 processor
+where I once ran it!
+My Radio Shack Color Computer 2
+did not support hardware memory management,
+so an operating system could not protect processes
+from writing into each other's address spaces.
+But OS-9 did provide real preëmptive multitasking
+that let me switch between multiple terminals and shells
+all running at the same time —
+quite a feat on a machine whose 16-bit address registers
+supported a maximum of only 64k of memory.
+
+In retrospect, I should have spent more time with Basic09,
+OS-9's structured interpreted dynamic language
+that enforced consistent indentation and compiled to bytecode —
+features that I now enjoy every day in Python.
+But I was a programming language conservative back then,
+and was more comfortable sticking with “official” languages:
+the awkward Microsoft Basic that came built-in to the Color Computer,
+and C, the Korn shell, and awk when using my father's Unix machine.
+
+.. figure:: http://upload.wikimedia.org/wikipedia/commons/d/db/Coco2boot.png
+
+   The screen that has greeted me ten thousand times.
+
+My OS-9 keyboard chart seems to now exist as only a single copy,
+from which I scanned the PDF above.
+I apologize for the ghosting —
+it appears that I printed it, corrected a few mistakes in pencil,
+then turned the sheet of paper over to print the final version,
+resulting in the first printout of the chart
+showing faintly through from the other side of the paper.
+
+Whenever I am tempted to dissuade a young programmer
+from installing Arch Linux and burning a week of their life
+learning how thumb drives auto-mount when plugged into USB,
+I stop myself, think back,
+and remember those days long ago when I would track down
+the particular byte in memory that could be patched
+to let me type exactly the character code that I needed.
