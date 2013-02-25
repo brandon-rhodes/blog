@@ -1,4 +1,4 @@
-<%inherit file="site.mako" />
+<%inherit file="../../../_templates/site.mako" />
 <%def name="title()">Chapter 10: Screen Scraping by Brandon Rhodes</%def><%
     book_url = 'http://www.amazon.com/gp/product/1430230037/ref=as_li_ss_il?ie=UTF8&tag=letsdisthemat-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=1430230037'
 %><article><%self:filter chain="apress_fix, rst_syntax_highlight">
