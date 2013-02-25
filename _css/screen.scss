@@ -64,7 +64,7 @@ footer {
 
 @mixin main-content {
   margin: 2.5em auto;
-  max-width: 32em;
+  max-width: 40em;
   padding: 0.8em 5%;
 }
 
@@ -149,7 +149,7 @@ article {
     display: block;
     text-align: center;
     margin: 0.3em 10%;
-    padding-top: 1em;
+    padding-top: 0.5em;
   }
   blockquote {
     border-top: 1px solid darken($contentbg, 10%);
