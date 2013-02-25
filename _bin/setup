@@ -5,7 +5,7 @@ set -e
 cd $(dirname "$0")
 cd ..
 rm -rf _v
-python3.3 ~/usr/src/virtualenv/virtualenv.py _v
+python3 ~/usr/src/virtualenv/virtualenv.py _v
 
 hg clone \
     https://bitbucket.org/brandon/foundations-of-python-network-programming \
