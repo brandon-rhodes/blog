@@ -13,7 +13,7 @@
     ${post.date.strftime('%Y %b %d').replace(' 0', ' ')}
   </p>
   <h2>
-    <a href="${post.path}">${post.title}</a>
+    <a href="${post.path.rstrip('/') + '/'}">${post.title}</a>
   </h2>
   <p class="excerpt">
     ${post.excerpt}…

@@ -11,8 +11,8 @@ not from any real likelihood of needing it again —
 and should post it here online
 on the slender chance that it might someday be useful to someone else:
 
-.. image:: /brandon/1990s/os9-keyboard-codes.jpg
-   :target: /brandon/1990s/os9-keyboard-codes.pdf
+.. image:: http://rhodesmill.org/brandon/1990s/os9-keyboard-codes.jpg
+   :target: http://rhodesmill.org/brandon/1990s/os9-keyboard-codes.pdf
 
 It is a chart of every ASCII character that it is possible to type
 on the keyboard of a Radio Shack Color Computer
