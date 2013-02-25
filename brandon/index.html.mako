@@ -1,4 +1,4 @@
-<%inherit file="../_templates/site.mako" />
+<%inherit file="site.mako" />
 <%def name="title()">by Brandon Rhodes</%def>
 <%def name="body_attributes()">class="index"</%def>
 <%def name="css_links()"><link rel="stylesheet" type="text/css" href="/brandon/flickr.css" /></%def>
@@ -142,9 +142,9 @@
       ><img src="stackoverflow.png"></a>
     </div>
     <br>
-    <div><%include file="../_templates/stackoverflow.html" /></div>
+    <div><%include file="stackoverflow.html" /></div>
     <br>
-    <div><%include file="../_templates/twitter.html" /></div>
-    <div><%include file="../_templates/flickr.html" /></div>
+    <div><%include file="twitter.html" /></div>
+    <div><%include file="flickr.html" /></div>
   </div>
 </article>
