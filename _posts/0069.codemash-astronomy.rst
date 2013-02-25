@@ -1,5 +1,5 @@
 ---
-categories: Computing Emacs Python PyEphem
+categories: Computing, Emacs, Python, PyEphem
 date: 2013/01/12 23:58:04
 permalink: http://rhodesmill.org/brandon/2013/codemash-astronomy/
 title: iPython Notebook and Astronomy at CodeMash

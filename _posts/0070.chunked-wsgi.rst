@@ -1,5 +1,5 @@
 ---
-categories: Computing Python
+categories: Computing, Python
 date: 2013/02/14 21:42:26
 permalink: http://rhodesmill.org/brandon/2013/chunked-wsgi/
 title: WSGI and truncated chunked response bodies
