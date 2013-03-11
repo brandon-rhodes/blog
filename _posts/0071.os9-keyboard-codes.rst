@@ -5,7 +5,8 @@ permalink: http://rhodesmill.org/brandon/2013/os9-keyboard-codes/
 title: OS-9 Keyboard Codes
 ---
 
-This chart has been haunting my desk drawer for more than twenty years.
+I designed and printed this chart long ago.
+It has now been haunting my desk drawer for more than twenty years.
 I have kept it because of nostalgia —
 not from any real likelihood of needing it again —
 and should post it here online
