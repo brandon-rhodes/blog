@@ -145,6 +145,9 @@ pre {
   text-align: left;
   font-size: 18px;
 }
+body.reading-mode pre {
+  font-size: 18px;  /* allows for 48 characters */
+}
 body.presentation-mode pre {
   font-size: 32px;  /* allows for 48 characters */
 }
