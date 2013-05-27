@@ -167,6 +167,11 @@ strong {
   color: #a34809; /*#c45b0b;*/
 }
 
+body.reading-mode img {
+  max-width: 100%;
+  height: auto !important;
+}
+
 /* Extra pygments */
 .p {
   color: #9b3b23;
