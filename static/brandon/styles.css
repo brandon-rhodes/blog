@@ -1,0 +1,15 @@
+body {
+    background-color: #fff; /*#f7f4e4; /*#bb9d69;*/
+}
+h2 {
+    clear: both;
+}
+div.talk {
+    float: left;
+    max-width: 180px;
+    /*background-color: #f7f4e4;*/
+    text-align: center;
+}
+div.talk img {
+    max-width: 90%;
+}
