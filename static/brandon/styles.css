@@ -4,12 +4,17 @@ body {
     max-width: 48em;
     background-color: #f7f4e4;
     /* background-color: #e2daaf; */
-    background-color: #F0EAD4;
+    background-color: #F1EBD5;
     padding: 0 1em;
     color: #111;
     font-size: 12pt;
-    font-family: Brawler, serif;
-    line-height: 1.36;
+    /* font-family: Brawler, serif; */
+    /* font-family: Montaga, serif; */
+    /* font-family: Rosarivo, serif; */
+    /* font-family: Fenix, serif; */
+    font-family: Prociono, serif;
+    /* font-family: Junction, serif; */
+    line-height: 1.4;
     /* font-family: "EB Garamond", serif; */
     /* font-family: "Libre Baskerville", serif; */
 }
@@ -48,16 +53,26 @@ h1 {
     position: relative;
     max-width: 32em;
     margin: 2.2em auto;
-    color: #665632;
+    color: #9D574F;
     font-style: italic;
 }
-.note:before {
+.note:first-letter {
+    float: left;
+    font-size: 200%;
+    margin-top: -0.3em;
+    margin-left: -1.08em;
+    width: 1.0em;
+    text-align: right;
+}
+.note-off:before {
     position: absolute;
-    top: 0.2em;
-    left: -1.1em;
+    top: 0.05em;
+    left: -1.4em;
+    border: 1px solid #809070;
+    box-shadow: 0.1em 0.3em 0.2em #bbb;
     width: 0.9em;
     height: 1em;
-    background-color: #85977F;
+    background-color: #9D574F;
     color: #fff;
     content: " ";
 }
