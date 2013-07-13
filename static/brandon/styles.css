@@ -1,15 +1,47 @@
 body {
-    background-color: #fff; /*#f7f4e4; /*#bb9d69;*/
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 48em;
+    background-color: #f7f4e4; /*#bb9d69;*/
+    padding: 1em;
+    /* background-color: #fff; /\*#f7f4e4; /\*#bb9d69;*\/ */
+    font-family: Brawler, serif;
+    /* font-family: "EB Garamond", serif; */
+    /* font-family: "Libre Baskerville", serif; */
 }
 h2 {
+    font-weight: normal;
+}
+.talk {
+    /* float: left; */
+    /* background-color: #fff; */
+    /* text-align: center; */
+    /* text-shadow: 2px 3px 3px #aaa;  /\* 0.1em 0.1em #333; *\/ */
+}
+.talk img {
+    float: left;
+    max-width: 14em;
+    /* padding: 8pt; */
+    border: 2pt solid black;
+    box-shadow: 0.5em 0.8em 0.4em #888;
+    /* border-right: 2px solid #e2daaf; */
+    /* border-bottom: 2px solid #e2daaf; */
+    /* max-width: 90%; */
+}
+.talk h2, .talk p {
+    padding-left: 192pt;
+}
+.talk h2 {
+    line-height: 1.12;
+}
+.talk p {
+    padding-top: 0;
+    margin-top: 0;
+    /* padding-bottom: 8pt; */
+}
+.talk blockquote {
     clear: both;
 }
-div.talk {
-    float: left;
-    max-width: 180px;
-    /*background-color: #f7f4e4;*/
-    text-align: center;
-}
-div.talk img {
-    max-width: 90%;
+blockquote.twitter-tweet {
+    max-width: 24em;
 }
