@@ -2,34 +2,74 @@ body {
     margin-left: auto;
     margin-right: auto;
     max-width: 48em;
-    background-color: #f7f4e4; /*#bb9d69;*/
-    padding: 1em;
-    /* background-color: #fff; /\*#f7f4e4; /\*#bb9d69;*\/ */
+    background-color: #f7f4e4;
+    /* background-color: #e2daaf; */
+    background-color: #F0EAD4;
+    padding: 0 1em;
+    color: #111;
+    font-size: 12pt;
     font-family: Brawler, serif;
+    line-height: 1.36;
     /* font-family: "EB Garamond", serif; */
     /* font-family: "Libre Baskerville", serif; */
 }
-h2 {
+h1, h2 {
     font-weight: normal;
+    color: #000;
+}
+h1 {
+    /* display: inline-block; */
+    /* float: left; */
+    margin-top: 0;
+    /* background-color: #e2daaf; */
+    text-align: center;
+}
+.byline {
+    /* background-color: #e2daaf; */
+    text-align: right;
+}
+.byline a {
+    display: inline-block;
+    width: 480px;
+    /* padding: 3pt 0 0; */
+    /* border-bottom: 1px solid black; */
+    /* background: url(http://rhodesmill.org/brandon/sidebar.jpg); */
+    margin: 0 auto;
+    color: #700;
+    /* color: #fff; */
+    /* text-align: right; */
+    /* color: #700; */
+    text-decoration: none;
+}
+.byline a:hover {
+    text-decoration: underline;
+}
+.note {
+    position: relative;
+    max-width: 32em;
+    margin: 2.2em auto;
+    color: #665632;
+    font-style: italic;
+}
+.note:before {
+    position: absolute;
+    top: 0.2em;
+    left: -1.1em;
+    width: 0.9em;
+    height: 1em;
+    background-color: #85977F;
+    color: #fff;
+    content: " ";
 }
 .talk {
-    /* float: left; */
-    /* background-color: #fff; */
-    /* text-align: center; */
-    /* text-shadow: 2px 3px 3px #aaa;  /\* 0.1em 0.1em #333; *\/ */
+    clear: both;
+    margin-bottom: 2em;
 }
 .talk img {
-    float: left;
-    max-width: 14em;
-    /* padding: 8pt; */
-    border: 2pt solid black;
-    box-shadow: 0.5em 0.8em 0.4em #888;
-    /* border-right: 2px solid #e2daaf; */
-    /* border-bottom: 2px solid #e2daaf; */
-    /* max-width: 90%; */
-}
-.talk h2, .talk p {
-    padding-left: 192pt;
+    max-width: 96%;
+    width: 240pt;
+    border: 2px solid black;
+    box-shadow: 0.4em 0.5em 0.4em #888;
 }
 .talk h2 {
     line-height: 1.12;
@@ -37,11 +77,19 @@ h2 {
 .talk p {
     padding-top: 0;
     margin-top: 0;
-    /* padding-bottom: 8pt; */
 }
 .talk blockquote {
     clear: both;
 }
 blockquote.twitter-tweet {
     max-width: 24em;
+}
+@media (min-width: 480pt) {
+    .talk img {
+        float: left;
+        max-width: 166pt;
+    }
+    .talk h2, .talk p {
+        padding-left: 192pt;
+    }
 }
