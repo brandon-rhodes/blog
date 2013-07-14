@@ -29,27 +29,16 @@ h1, h2 {
     color: #000;
 }
 h1 {
-    /* display: inline-block; */
-    /* float: left; */
-    margin-top: 0;
-    /* background-color: #e2daaf; */
     text-align: center;
 }
 .byline {
-    /* background-color: #e2daaf; */
     width: 100%;
     text-align: right;
 }
 .byline a {
     display: inline-block;
-    /* padding: 3pt 0 0; */
-    /* border-bottom: 1px solid black; */
-    /* background: url(http://rhodesmill.org/brandon/sidebar.jpg); */
     margin: 0 auto;
-    color: #700;
-    /* color: #fff; */
-    /* text-align: right; */
-    /* color: #700; */
+    color: #9D574F;
     text-decoration: none;
 }
 .byline a:hover {
@@ -96,16 +85,6 @@ h1 {
 }
 .talk h2 {
     line-height: 1.12;
-}
-.talk p {
-    padding-top: 0;
-    margin-top: 0;
-}
-.talk blockquote {
-    clear: both;
-}
-blockquote.twitter-tweet {
-    max-width: 24em;
 }
 @media (min-width: 480pt) {
     .talk img {
