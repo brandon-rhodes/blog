@@ -1,8 +1,8 @@
 @font-face {
-  font-family: 'Prociono';
-  font-style: normal;
-  font-weight: 400;
-  src: url(/Prociono-Regular.woff) format('woff');
+    font-family: 'Prociono';
+    font-style: normal;
+    font-weight: 400;
+    src: url(/Prociono-Regular.woff) format('woff');
 }
 body {
     margin-left: auto;
