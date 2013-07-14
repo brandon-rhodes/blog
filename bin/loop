@@ -1,0 +1,9 @@
+#!/bin/bash
+
+cd $(dirname "$0")/.. || exit
+
+inotifywait -m -e close_write -r static texts \
+| while read line
+do
+    make
+done
