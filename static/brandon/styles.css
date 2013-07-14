@@ -37,11 +37,11 @@ h1 {
 }
 .byline {
     /* background-color: #e2daaf; */
+    width: 100%;
     text-align: right;
 }
 .byline a {
     display: inline-block;
-    width: 480px;
     /* padding: 3pt 0 0; */
     /* border-bottom: 1px solid black; */
     /* background: url(http://rhodesmill.org/brandon/sidebar.jpg); */
@@ -64,11 +64,13 @@ h1 {
 }
 .note:first-letter {
     float: left;
-    font-size: 200%;
-    margin-top: -0.3em;
-    margin-left: -1.08em;
-    width: 1.0em;
-    text-align: right;
+    font-size: 250%;
+    margin-right: 0.1em;
+    padding-left: 0.1em;
+    padding-right: 0.2em;
+    background: #9D574F;
+    line-height: 1.0;
+    color: #F1EBD5;
 }
 .note-off:before {
     position: absolute;
