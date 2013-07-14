@@ -6,10 +6,6 @@ from bottle import SimpleTemplate
 
 if __name__ == '__main__':
     in_path, out_path = sys.argv[1:]
-    out_dir = os.path.dirname(out_path)
-    if not os.path.isdir(out_dir):
-        os.makedirs(out_dir)
-
     in_html = open(in_path).read().decode('utf-8')
     tpl = SimpleTemplate(in_html, lookup=['templates'])
     out_html = tpl.render()
