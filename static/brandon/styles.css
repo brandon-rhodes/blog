@@ -1,8 +1,8 @@
 @font-face {
-  font-family: 'Andada';
-  font-style: normal;
-  font-weight: 400;
-  src: url(/Andada.woff) format('woff');
+    font-family: 'Andada';
+    font-style: normal;
+    font-weight: 400;
+    src: url(/Andada.woff) format('woff');
 }
 @font-face {
     font-family: 'Prociono';
