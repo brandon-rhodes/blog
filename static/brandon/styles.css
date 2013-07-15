@@ -17,9 +17,10 @@ body {
     background-color: #f7f4e4;
     /* background-color: #e2daaf; */
     background-color: #F1EBD5;
-    padding: 0 1em;
-    color: #111;
-    font-size: 12pt;
+    padding-left: 1em;
+    padding-right: 1em;
+    color: #333;
+    font-size: 13pt;
     /* font-family: Brawler, serif; */
     /* font-family: Montaga, serif; */
     /* font-family: Rosarivo, serif; */
@@ -46,7 +47,6 @@ h1 {
 }
 .byline a {
     display: inline-block;
-    margin: 0 auto;
     color: #9D574F;
     text-decoration: none;
 }
@@ -54,9 +54,8 @@ h1 {
     text-decoration: underline;
 }
 .note {
-    position: relative;
     max-width: 32em;
-    margin: 2.2em auto;
+    margin: 2em auto 2.5em;
     color: #9D574F;
 }
 .note:first-letter {
@@ -66,33 +65,31 @@ h1 {
     padding-left: 0.1em;
     padding-right: 0.1em;
     background: #9D574F;
-    line-height: 1.0;
     color: #F1EBD5;
-}
-.note-off:before {
-    position: absolute;
-    top: 0.05em;
-    left: -1.4em;
-    border: 1px solid #809070;
-    box-shadow: 0.1em 0.3em 0.2em #bbb;
-    width: 0.9em;
-    height: 1em;
-    background-color: #9D574F;
-    color: #fff;
-    content: " ";
+    line-height: 1.0;
 }
 .talk {
     clear: both;
     margin-bottom: 2em;
 }
 .talk img {
+    display: block;
+    margin: 0 auto;
     max-width: 96%;
     width: 240pt;
     border: 2px solid black;
     box-shadow: 0.4em 0.5em 0.4em #888;
 }
 .talk h2 {
-    line-height: 1.12;
+    line-height: 1.2;
+}
+@media (max-width: 480pt) {
+    .talk:before {
+        display: block;
+        margin: 1em auto;
+        text-align: center;
+        content: "❖";
+    }
 }
 @media (min-width: 480pt) {
     .talk img {
