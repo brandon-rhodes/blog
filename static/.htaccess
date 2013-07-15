@@ -3,8 +3,3 @@ Options +MultiViews -ExecCGI
 <FilesMatch \.(cgi|py)$>
   SetHandler default-handler
 </FilesMatch>
-
-RedirectMatch permanent ^/brandon/slides/(2013-01-codemash|2013-05-djangoconeu)/slides.html$ http://rhodesmill.org/brandon/slides/$1/
-RedirectMatch permanent ^/brandon/static/2010/pycon-mighty-dictionary/$ http://rhodesmill.org/brandon/slides/2010-03-pycon/
-RedirectMatch permanent ^/brandon/talks/(2011-07-pyohio|2011-09-pyatl|2011-09-pyconpl|2011-10-pyarkansas|2012-03-pycon)/(.*)/slides.html$ http://rhodesmill.org/brandon/slides/$1/$2/
-RedirectMatch permanent ^/brandon/talks/(2011-07-pyohio|2011-09-pyatl|2011-09-pyconpl|2011-10-pyarkansas|2012-03-pycon)/(.*)$ http://rhodesmill.org/brandon/slides/$1/$2
