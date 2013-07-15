@@ -58,14 +58,13 @@ h1 {
     max-width: 32em;
     margin: 2.2em auto;
     color: #9D574F;
-    font-style: italic;
 }
 .note:first-letter {
     float: left;
     font-size: 250%;
     margin-right: 0.1em;
     padding-left: 0.1em;
-    padding-right: 0.2em;
+    padding-right: 0.1em;
     background: #9D574F;
     line-height: 1.0;
     color: #F1EBD5;
