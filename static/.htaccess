@@ -4,13 +4,6 @@ Options +MultiViews -ExecCGI
   SetHandler default-handler
 </FilesMatch>
 
-RedirectMatch permanent ^/brandon/projects/pyephem.html$ http://rhodesmill.org/pyephem/
-RedirectMatch permanent ^/brandon/small/rhodestw.ps$ http://rhodesmill.org/brandon/projects/tabspace-guide.pdf
-RedirectMatch permanent ^/brandon/small/rhodestw.ini$ http://rhodesmill.org/brandon/projects/tabspace.ini
-
-RedirectMatch permanent ^/brandon/about-2/$ http://rhodesmill.org/brandon/
-RedirectMatch permanent ^/brandon/comments/feed/$ http://feeds.feedburner.com/LetsDiscussTheMatterFurther-comments
-
 RedirectMatch permanent ^/brandon/slides/(2013-01-codemash|2013-05-djangoconeu)/slides.html$ http://rhodesmill.org/brandon/slides/$1/
 RedirectMatch permanent ^/brandon/static/2010/pycon-mighty-dictionary/$ http://rhodesmill.org/brandon/slides/2010-03-pycon/
 RedirectMatch permanent ^/brandon/talks/(2011-07-pyohio|2011-09-pyatl|2011-09-pyconpl|2011-10-pyarkansas|2012-03-pycon)/(.*)/slides.html$ http://rhodesmill.org/brandon/slides/$1/$2/
