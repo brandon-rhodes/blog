@@ -1,4 +1,3 @@
-DirectoryIndex index.html index.xml
 Options +MultiViews -ExecCGI
 
 <FilesMatch \.(cgi|py)$>
