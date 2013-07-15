@@ -1,4 +1,10 @@
 @font-face {
+  font-family: 'Andada';
+  font-style: normal;
+  font-weight: 400;
+  src: url(/Andada.woff) format('woff');
+}
+@font-face {
     font-family: 'Prociono';
     font-style: normal;
     font-weight: 400;
@@ -18,13 +24,16 @@ body {
     /* font-family: Montaga, serif; */
     /* font-family: Rosarivo, serif; */
     /* font-family: Fenix, serif; */
+    font-family: Lusitana, serif;
     font-family: Prociono, serif;
+    font-family: Andada, serif;
     /* font-family: Junction, serif; */
     line-height: 1.4;
     /* font-family: "EB Garamond", serif; */
     /* font-family: "Libre Baskerville", serif; */
 }
 h1, h2 {
+    font-family: Prociono, serif;
     font-weight: normal;
     color: #000;
 }
