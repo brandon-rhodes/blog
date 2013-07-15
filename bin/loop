@@ -2,7 +2,7 @@
 
 cd $(dirname "$0")/.. || exit
 
-inotifywait -m -e close_write -r static texts \
+inotifywait -m -e close_write -r static templates texts \
 | while read line
 do
     make
