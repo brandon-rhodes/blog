@@ -2,13 +2,13 @@
     font-family: 'Andada';
     font-style: normal;
     font-weight: 400;
-    src: url(/Andada.woff) format('woff');
+    src: url(/fonts/Andada.woff) format('woff');
 }
 @font-face {
     font-family: 'Prociono';
     font-style: normal;
     font-weight: 400;
-    src: url(/Prociono-Regular.woff) format('woff');
+    src: url(/fonts/Prociono-Regular.woff) format('woff');
 }
 body {
     margin-left: auto;
