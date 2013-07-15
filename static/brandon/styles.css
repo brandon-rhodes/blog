@@ -53,7 +53,7 @@ h1 {
 }
 .note {
     max-width: 32em;
-    margin: 2em auto 2.5em;
+    margin: 2em auto;
     color: #820002;
 }
 .note:first-letter {
