@@ -2,4 +2,4 @@
 
 cd $(dirname "$0")/..
 rsync -crlv --dry-run \
- output/brandon/ ~/Dropbox/rhodesmill.org/brandon/
+ output/ ~/Dropbox/rhodesmill.org/
