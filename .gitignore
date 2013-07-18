@@ -5,6 +5,4 @@ _site/
 _v/
 brandon/screen.css
 *.pyc
-.doit.db
-cache/
 output/
