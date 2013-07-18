@@ -1,8 +1,10 @@
 
-statics := $(addprefix output/, $(shell cd static && find -type f))
+find = $(shell find $(1) -printf '%P\n')
 
-texts_in := $(shell find texts -name "*.html")
-texts_out := $(patsubst texts/%.html, output/%/index.html, $(texts_in))
+statics := $(addprefix output/, $(call find, static -type f))
+
+texts_in := $(call find, texts -name "*.html")
+texts_out := $(patsubst %.html, output/%/index.html, $(texts_in))
 
 directories := $(sort $(dir $(statics) $(texts_out)))
 silent := $(shell mkdir -p $(directories))
