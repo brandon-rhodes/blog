@@ -9,13 +9,15 @@ pages := $(patsubst %.html, output/%/index.html, \
 directories := $(sort $(dir $(statics) $(texts_out)))
 silent := $(shell mkdir -p $(directories))
 
+style := templates/layout.html bin/helpers.py
+
 all: $(statics) $(indexes) $(pages)
 
 $(statics): output/%: static/%
 	cp $< $@
 
-$(indexes): output/%: texts/% templates/layout.html
+$(indexes): output/%: texts/% $(style)
 	bin/html $< $@
 
-$(pages): output/%/index.html: texts/%.html templates/layout.html
+$(pages): output/%/index.html: texts/%.html $(style)
 	bin/html $< $@

@@ -39,6 +39,12 @@ h1, h2 {
 h1 {
     text-align: center;
 }
+table {
+    font-size: 13pt;
+}
+td {
+    padding-right: 1em;
+}
 .byline {
     width: 100%;
     text-align: right;

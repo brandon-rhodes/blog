@@ -1,0 +1,25 @@
+%import helpers
+%posts = helpers.Posts('_posts')
+
+<h2>Recent Posts</h2>
+
+<table>
+  %for post in reversed(posts.posts[-7:]):
+  <tr>
+    <td><i>{{ post['date'].strftime('%Y %B %d').replace(' 0', ' ') }}</i></td>
+    <td><a href="{{ post['permalink'] }}">{{ post['title'] }}</a></td>
+  </tr>
+  %end
+</table>
+
+<p>
+  <a href="/brandon/all/">All Posts Ever</a>
+</p>
+<p>
+  Tags:
+  %for tag, postlist in sorted(posts.tags().items()):
+  <a href="/brandon/category/{{ tag }}/">{{ tag }} ({{ len(postlist) }})</a>
+  %end
+</p>
+
+%rebase layout title=None
