@@ -71,6 +71,7 @@ and what fraction of talks that can be accepted overall.
 **“Learning Hosting Best-Practices From WebFaction” (2010)** —
 `Accepted proposal
 <http://rhodesmill.org/brandon/2013/example-pycon-proposals/webfaction.txt>`__
+— `Video and slides </brandon/talks/#webfaction>`__
 
     I cannot imagine this talk being accepted today,
     now that containerized deployment solutions like Heroku
