@@ -1,0 +1,64 @@
+* The Naming of Ducks: Where Dynamic Types Meet Smart Conventions
+** Category: Best Practices/Patterns
+** Audience level: Intermediate
+** Duration: 30 minutes
+** Outline
+
+While Java and C# use static type declarations to eliminate ambiguity,
+the Python programmer must survive
+through sheer clarity and consistency in naming variables.
+We will explore the deep unspoken conventions
+that the Python community has developed and honed over two decades
+to make Python code readable and meaningful within the freedom
+that a dynamically-typed language grants us.
+
+** Abstract
+
+“The naming of cats is a difficult matter” — T.S. Eliot
+
+Think of all of the names that you see in a typical Python program —
+names like `item`, `fileobj`, `sys`, `url`, and even `name`.
+How, your C# or Java friend might ask,
+can you possibly understand what they mean,
+when a dynamic language like Python
+places absolutely no restriction
+on the object to which a given name can refer?
+
+The answer is that you primarily identify values by their names.
+Of course, you have other clues.
+You might see the name imported from a familiar library,
+or see what look like string methods being applied to it.
+But unless we want to be burdened by having
+to follow clues like Sherlock Holmes
+every time we sit down to puzzle out someone else's code,
+we must rely on each other to chose reasonable and informative
+names for our classes, parameters, and temporary objects.
+Python programmers often chatter about PEP-8
+and whether names have underscores or camelcase,
+but the actual conventions that we must all follow
+to make our Python code readable
+go far beyond the simple lexicographic decrees
+that appear in the standards.
+
+This talk will finally explore our unspoken conventions
+in all of the depth that they deserve.
+It will start with simple and familiar examples
+that all practicing Python programmers deal with every day.
+Is the name of your `for` loop variable simply the singular version
+of the pluralized container name that you are looping over,
+or are they related in some other way?
+As you loop over URLs,
+should `page` be the URL of the resource you are fetching,
+the live file-like HTTP object,
+or the string holding the content that you finally receive?
+With occasional nods to Lewis Carroll, T.S. Elliot,
+and other thinkers who have taught us about naming,
+we will try to run to ground all of the very best practices
+that the community has developed to keep our names sane,
+informative, and readable.
+
+Beautifully-chosen names give Python programmers
+the benefits that explicit types provide in C# and Java:
+they are our written code's one crucial semantic constraint
+that allows it to be concise, consistent,
+and — ultimately — *readable.*

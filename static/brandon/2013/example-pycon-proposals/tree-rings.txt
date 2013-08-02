@@ -1,0 +1,49 @@
+===================
+PyCon Talk Proposal
+===================
+
+Tree Rings in the Standard Library
+----------------------------------
+
+The Python community is always discovering
+new ways to use Python beautifully.
+In our first 20 years we have come a long way.
+By comparing old with recent modules
+in the Standard Library — our great community edifice —
+this talk will explore the design patterns
+that have gone in and out of style
+as we have learned to write convenient, extensible,
+and testable APIs and implementations.
+
+Abstract
+--------
+
+The idea of what “Pythonic” code looks like
+has developed slowly over the years,
+gaining momentum and shape as the community has
+learned from experience how to use the Python language effectively.
+Approaches that seemed like obvious best practices a decade ago
+can appear quite dated today,
+even though much of the language was already mature at that point.
+
+This talk is //not//
+about blaming older sections of the Standard Library
+for not using features of later versions of Python.
+Of course ‘os.path.walk()’ was not written as a generator;
+generators did not yet exist!
+And the talk is not about stylistic innovations like PEP-8
+despite its importance to good coding practices.
+
+Instead, this talk will examine modern design patterns
+that could easily have been implemented
+in earlier eras of Python history,
+but that took a long time to develop
+because our approach to writing code
+was not yet sufficiently mature.
+Three specific areas of focus are:
+
+# “Recovering from the Java hangover.” The fact that Python supported object-oriented programming encouraged us to import design patterns from other languages, when these patterns were simply inappropriate and unnecessary in a dynamic language. But because these techniques were just barely flexible enough, they persisted for a long time as fundamental tools before being superseded. A prime example is how often subclassing was offered as the primary means of customization and code re-use in the early Standard Library. The talk will cover: the 1990s OOP movement which led many people to believe that subclassing was the great key to code re-use; the specific situations in which this turned out to be an anti-pattern; and how — when the promise of subclassing proved empty — dynamic languages like Python were in the best position to recover.
+# Since the concept was named in 2000, duck typing has been recognized as a great asset of Python. But this was not always clear earlier in Python history; when ‘httplib’ was written, for example, it made ‘isinstance()’ the litmus tests for what kind of handlers were being supplied during its instantiation. And with abstract base classes rearing their head in Python 3, we might begin to see a retreat from pure duck typing and from non-type mechanisms for determining how a class should be used. But for code bases that are now in their prime, better conventions have emerged to signal how each user-provided object is designed to be used.
+# A stronger culture of testing than existed ten years ago has driven Python programmers to write classes that are far more strongly decoupled than before. That, the talk will argue, is the biggest reason why dependency injection is sweeping away subclassing as the main vehicle of code integration and re-use: because a subclass necessarily mixes API code with the code being written to use it, creating a tightly coupled mess which it can be difficult to cleanly test. We will look at how many recent classes in the Standard Library take callables and complex objects as arguments, instead of insisting that customization be performed by overriding their code.
+
+The goal of the talk — using real-life examples from the Standard Library that people can go home and examine — is to expose both novice and experienced programmers to some of the strongest design patterns available in Python, and to help them understand why the whole purpose of a design pattern is different in Python than in a static language like C++ or Java. There, design patterns primarily exist so that code can be rearranged later — so that particular classes are not locked in to only using each other. Gang-of-Four style design patterns, in other words, are mostly an attempt to salvage a few of the benefits of a dynamic language in a static one! In Python, our few design patterns serve another purpose: to enable duck-typing so that our classes stay ignorant of each other, so that we can mix and reuse them later without having to rewrite code. This, the talk will conclude, is true re-use.

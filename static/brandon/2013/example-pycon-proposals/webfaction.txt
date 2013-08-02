@@ -1,0 +1,134 @@
+===================
+PyCon Talk Proposal
+===================
+
+:Title: Learning Hosting Best-Practices From WebFaction
+:Duration: 30 min
+:Level: Intermediate
+:Categories: "application development" deploying network
+ nginx "package management" scaling security "software development" web wsgi
+
+Summary
+=======
+
+The rise of WebFaction has been dramatic in the world of Python-friendly hosting services.  What are the secrets to getting the most out of their features?  From the point of view of a customer with no other affiliation with WebFaction — as a customer advising other customers — this talk offers lessons learned in using WebFaction to host everything from lone static content to multiple Python web applications and services co-existing together.  WebFaction uses some unique techniques to support both user-local *and* application-local Python packages.  Should you use their special installation techniques, or install and use virtualenv on your own initiative?  Learn the trade-offs, and learn how *not* to get yourself in trouble while running ``easy_install`` on WebFaction, my favorite hosting service.
+
+Description
+===========
+
+This talk will consider three interesting features that WebFaction
+offers that the beginning or intermediate application deployer needs to
+understand.
+
+I think that all of these concepts are actually quite *general*
+concepts, that have helped me, even in situations where I'm not using
+WebFaction, think more clearly about how to separate concerns during
+application deployment.
+
+1. Their security and deployment model: they enforce (at least by
+   default) strict privacy on home directories thanks to POSIX access
+   lists, and strict control over which entries get created in your
+   "~/webapps" directory.  As long as you leave these defaults in place,
+   it is really through the ports you leave open on your web apps, and
+   not the files you leave around, that represent your exposure to other
+   hosting accounts on the same box.
+
+2. Their ``easy_install`` support: they have modified Python so that it
+   scans the directory in which a script exists to see if *any* of the
+   filesystem levels above that file (up to the root directory) include
+   a ``./lib/python2.5`` (or whatever version) directory, and, if so,
+   they automatically include these paths in their PATH information.
+   They leverage this by making their default ``easy_install`` install
+   to your home directory's ``~/lib``, and when you use their control
+   panel to install a web application, its modules all get installed in
+   ``~/webapps/APP/lib`` so that, for example, it's easy to install two
+   web apps running on different versions of Django.
+
+3. Their control panel support: when you create a new web service,
+   WebFaction (a) installs the app in ``~/webapps/APP``, (b) chooses a
+   port number for it and configures it to offer HTTP on that port, and
+   (c) configures the nginx instance on your web server to redirect HTTP
+   requests for your hostname to your particular port.  But this
+   mechanism is actually quite general: rather than running one of the
+   pre-packaged web frameworks that they support, you can have the
+   front-end simply generate a port for you, and you can take charge of
+   providing the web service by having your program grab that port.
+
+The talk outline will be something like this:
+
+**Introduction to Web Hosting** (4 minutes)
+ I will begin by trying to point out what is general about my talk: the
+ issues of deployment, repeatability, and separation occur in all
+ hosting environments, and WebFaction machines are general Linux
+ machines so their techniques are quite widely applicable.  To situate
+ WebFaction on the map of options out there, I will talk about the
+ general kinds of web hosting available today on the Internet (dedicated
+ box, virtual box, account on shared box), and specifically about
+ popular options in the third category (since that is the category
+ occupied by WebFaction).
+
+**The lay of the land** (4 minutes)
+ Before delving into the web account itself, I will look at the
+ environment that WebFaction builds around your account: host name
+ mapping, an SMTP service, and databases (unless, of course, you want to
+ compile and run your own) are all provided for you, configurable
+ through the WebFaction control panel.  I will look at how this
+ separates concerns at the socket layer, and requires your web app
+ itself to authenticate (using SMTP auth, or a database password) in
+ order to affect other parts of the system.  I will also point out that
+ this is a general deployment technique applicable elsewhere (we used it
+ all the time where I worked in central IT at Georgia Tech, for
+ example).
+
+**Keeping Things Safe** (4 minutes)
+ I will show a diagram of what a typical WebFaction user account looks
+ like, and point out the security features wrapped up in how permissions
+ are set at each directory level.  This involves fun use of POSIX ACLs
+ that I had not seen in production before, that makes it easy for them
+ to be very selective in choosing what Unix users can see your data (so
+ that, for example, your directories neither have to be world-readable,
+ nor assigned to the ``www-data`` group, to be accesible to nginx).  I
+ might use POSIX ACLs elsewhere after seeing this good example.
+
+**Concentric Python Module Installation** (5 minutes)
+ Good Python programmers learn to use virtualenv to install packages in
+ a local area of their account, so that each web application can have
+ the version of a popular module that they need.  WebFaction has done
+ something very similar, but with both an account-wide
+ ``~/lib/pythonX.Y`` directory and application-local ``lib/pythonX.Y``
+ directory.  Until the user figures out that this is where their
+ ``easy_install`` puts things, it can cause a bit of confusion as to
+ which web apps can see which modules, and which upgrades are safely run
+ with which options.  I will discuss the upsides and downsides to their
+ approach, and offer a recommendation for whether to ditch their
+ mechanism and just use virtualenv instead.
+
+**Keeping things running** (4 minutes)
+ I will look at how WebFaction keeps services running: not only at the
+ fairly obvious mechanism of pre-populating your crontab — though I
+ *will* mention that this is pretty cool, in that (a) it's a standard
+ Unix mechanism that everyone understands, (b) the user can control it
+ from the command line without going through a control panel, and (c)
+ WebFaction throws in staggered start times so that simultaneous
+ restarts don't hammer their server if it goes down.  These are all
+ features that many production environments I have known would benefit
+ from!
+
+ But the more interesting idea here is letting each user have, for
+ ``mod_wsgi`` powered applications, their own little Apache setup and
+ their own small instance of Apache running.  This lets each WebFaction
+ user have exactly the Apache configuration that their particular web
+ app needs.
+
+**Upsides and Downsides** (4 minutes)
+ In conclusion, I will try to outline how the above features work
+ together to make WebFaction so popular, but also re-iterate the
+ shortcomings that I have encountered, and point out some areas where
+ WebFaction could be better.  I will finish by offering these
+ observations not as something WebFaction-specific, but as general Unix
+ web hosting done pretty well, that we can learn from whether our
+ account is with WebFaction, another service, or on a box that we run
+ ourselves.
+
+**Questions** (5 minutes)
+ As usual, let the audience dictate how the last few minutes are spent.

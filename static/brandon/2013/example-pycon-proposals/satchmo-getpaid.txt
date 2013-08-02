@@ -1,0 +1,121 @@
+===================
+PyCon Talk Proposal
+===================
+
+:Title: Satchmo and GetPaid: sharing code between Django and Plone
+:Duration: 45 min
+:Level: Intermediate
+:Categories: api "application development" business design django
+    forms plone "software development" web zope
+
+Summary
+=======
+
+The “Satchmo” project for Django and the “GetPaid” e-commerce solution for Plone share a common need for plug-in modules that support different payment processors like Authorize.net, PayPal, and Google Checkout.  How easy is it to take a payment module written under one framework and plug it into the other framework?  What kinds of assumptions do authors under each framework make that makes it difficult to re-use their code elsewhere?  In the course of tackling these questions, we will look at how the very idea of extensibility is treated differently in the Django and in the Plone communities, how the simple and Pythonic extension mechanisms used in Django stack up against the Design-Patterns-based component framework used in Plone, and make recommendations for extension module writers who want to write code that is generally useful across a range of Python development frameworks.
+
+Description
+===========
+
+I have spent the last three months helping the GetPaid project, which
+provides an e-commerce solution for Plone, begin to re-factor their
+payment processor code to better support off-site payment services like
+Google Checkout.  The GetPaid project leader drew my attention to
+Satchmo, the Django e-commerce solution, because Satchmo has modules
+that connect to many of the same payment services as GetPaid — but there
+are also services for which an implementation only exists in one
+framework or the other, and we wondered if glue code could be written
+that would let each framework take advantage of payment processors
+offered only by the other.
+
+I am now preparing to prototype some code for doing such sharing in both
+directions.  I will take a GetPaid payment processor, powered by the
+Zope component framework, and drop it into Satchmo; and, conversely, get
+a Satchmo payment module and try calling it from GetPaid.  In both
+cases, payment modules offer a full range of web-enabled operations,
+including: mapping URLs to views; generating URLs; receiving shopping
+cart information from the framework and returning order status updates
+to it; and injecting back into the framework knowledge about which
+orders were processed and which were abandoned.  I will be doing this
+experiment as someone who has implemented web sites in both Plone and
+Django before.
+
+For this presentation (which will total 40 minutes talking time and 5
+minutes for questions), which I will write in late January as I reflect
+on three months (October-December) of experience with trying to achieve
+payment processor interoperability, I plan to cover several topics (but
+am leaving the outline loose, so that it can evolve with the lessons I
+learn):
+
+**Introduction to E-Commerce** (5 minutes)
+ Instead of starting the presentation with the idea of how integration
+ works between a component and the framework it runs under — a
+ discussion that can get *very* abstract very quickly if discussed
+ without an example — I will start with the practical problem that faces
+ both GetPaid payment processors and Satchmo payment modules: the
+ problem of check-out and credit-card payment.  I will introduce the
+ actors and moving pieces (like shopping carts, orders, and URLs) that
+ such a plug-in has to deal with regardless of what framework it lives
+ under, as a common vocabulary for looking at the ways to actually plug
+ in.
+
+**Payment modules under Satchmo** (5 minutes)
+ Since the Django concepts are simpler, involving simple URL mapping
+ with regular expressions and so forth, I will look first at how a
+ Satchmo payment module hooks into the rest of Satchmo.  Ignoring the
+ gritty details of how they interface with the actual payment service
+ like Authorize.net or PayPal, I will review several small enlightening
+ code snippets that tell the story of how Satchmo finds and uses the web
+ pages and payment routines provided by each payment module.  The two
+ themes that tie this discussion together will be *discovery* —how does
+ Satchmo find that the module is there? — and *use*: how does the user,
+ and Satchmo, call on the module to do its job?
+
+**Payment processors under GetPaid** (5 minutes)
+ Of course, GetPaid relies on a stack of Zope 3 components, complete
+ with configuration declarations, to tie the pieces of its stack
+ together.  This means that writing code to extend and configure GetPaid
+ looks quite different than the equivalent code for Django, and we will
+ look at how GetPaid payment processors accomplish the same basic tasks
+ of integration as their Satchmo counterparts.  Again, *discovery* and
+ *use* will drive the discussion, hopefully helping the audience begin
+ to draw similarities and differences between the two approaches, even
+ before I start tackling them myself.
+
+**The stumbling blocks: hidden knowledge and assumptions** (8 minutes)
+ When you design to an API, you have to think about two things.  First,
+ you ponder and use the core abstractions that you are dealing with,
+ like shopping and credit cards.  Second, you have to think about how
+ the particular framework you are using operates.  Looking at both
+ solutions outlined above, I will explore how "thinking in Django" and
+ "thinking in Plone" lead extension module authors to write, in some
+ cases, very different code for tackling the same problem.  This will
+ reveal that implicit design choices are often made for the author by
+ the framework, even if the author thinks, “But I'm doing something very
+ generic: I'm just writing code that knows how to talk to Google!”
+
+**Crossing the divide: using each other's modules** (10 minutes)
+ This is the real meat of the talk, since it is getting a module to
+ work in an environment that it was not expecting that is the real test
+ of re-use.  How easy is it to get Satchmo modules working in GetPaid,
+ and GetPaid processors working in Satchmo?  In each case, how much of
+ the other framework's environment needs to be mocked-up to get the code
+ to run comfortably and correctly?  What kinds of assumptions are made
+ that creates code that is difficult to run in the other environment?
+
+**Conclusion: which approach is better?** (7 minutes)
+ And, finally, the most interesting question:
+ what kind of code is easiest to re-use?  Code
+ written as components, or code written as Django views?  At this point,
+ having looked at both code bases but not having done the work yet, I
+ can see the result going either way.  It *could* be that the simplicity
+ of Django's toolbox creates simple modules that are easy to drop into
+ another environment.  Or, it could be that the component design pattern
+ used in Plone creates pieces that are easier to drag-and-drop into new
+ situations, so long as small components can be provided to represent
+ the services that Django will be providing that would normally be
+ offered by Plone.
+
+ My guess, at this point, is that the Django approach will win with
+ respect to the simplicity of its views, but that the Zope component
+ framework will make it easier to swap in a different persistence
+ back-end.  But, until early next year, that's just a guess. :-)

@@ -1,0 +1,89 @@
+* The Solar System in 5 Lines of Python
+** Category: Education
+** Audience level: Novice
+** Duration: 30 minutes
+** Outline
+
+Only a few lines of a powerful language like Python
+are necessary to start enjoying a tour of the universe.
+And by bringing friends or students along for the ride,
+you can intrigue them with the first rudiments of programming.
+Using the popular Matplotlib library and the PyEphem astronomy package,
+this talk will teach you to visualize spatial data
+using Python's industry-leading tools!
+
+** Abstract
+
+We often use abstract data
+when we teach graphing and visualization —
+we ask students to plot the daily traffic to a web site,
+or the fluctuating value of a stock index.
+But since manipulating and displaying data
+are proving to be important Python superpowers
+that result in real-world Python adoption,
+we should explore many more ways
+of teaching people to experiment with programming
+and learn new ways to think and see.
+
+This talk will take us on a beginner's tour
+of Python and Matplotlib through the use of a very concrete concept:
+we will ask the computer to draw our home — the Earth —
+and its place in the Solar System and Universe.
+
+Each sample program will be short.
+In fact, each program will fit legibly on a single slide.
+But, over the course of the talk,
+they will gradually introduce programming concepts
+until we have assembled a good idea of how solutions
+get put together in Python.
+Our focus will be on using general-purpose Python constructs
+as glue between a data source — the astronomy library —
+and the Matplotlib plot that is going to display it.
+While many specific features of both PyEphem and Matplotlib
+will necessarily be involved,
+the talk will avoid getting sidetracked
+into a laundry-list examination of library APIs,
+and instead invite listeners to go check out
+the library documentation later.
+
+Meanwhile, the talk will be taking us on a tour of the Universe,
+using 2D and 3D plots to help us picture
+something that very few people can visualize accurately on their own:
+the way that our planet is situated within space.
+We will start with its basic motion,
+then step further back to see the dance of the Solar System,
+and finally step very far back
+to learn our position within our galaxy —
+all of which are results
+that you can immediately carry into the back yard
+and use to explain what you see in the sky!
+
+At each step we will construct a pair of plots,
+one showing the real position of objects in space,
+and the other showing the apparent motion
+that results in the Earth's sky —
+and in the process we will learn about the seasons, about eclipses,
+about why the ancient Greek Ptolemy
+had to invent all of those epicycles
+to explain the motion of the planets across the sky,
+and why Copernicus needed epicycles
+even after he put the sun in the right place.
+
+To empower every member of the audience
+to take these examples to their friends and community,
+and so the audience can themselves experiment
+with these ideas later,
+the code samples will all be MIT-licensed
+and available in a repository on GitHub.
+
+** Additional notes
+
+Allow me to assure the committee that this talk will be entirely
+preprepared — the code samples carefully pre-formatted in a big visible
+font at the top of my slides, and the resulting plots rendered as
+foolproof PNG files. There will be no dangerous live coding, editing, or
+demonstrations involved! Also, it would easily be possible to expand
+this to a 45-minute slot by including more material, which would allow a
+few more Matplotlib features to fit within the talk; but the talk will
+be quite reasonable and complete at 30 minutes, so that is what I have
+selected as the default.
