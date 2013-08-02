@@ -14,8 +14,7 @@ should by now be piling up quickly.
 
 .. raw:: html
 
-   <blockquote class="twitter-tweet"><p>You can now view the Call For Proposals announcement on our blog at <a href="http://t.co/kt7P2PinIY">http://t.co/kt7P2PinIY</a></p>&mdash; pycon (@pycon) <a href="https://twitter.com/pycon/statuses/352174928126148610">July 2, 2013</a></blockquote>
-   <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+   <blockquote class="twitter-tweet"><p>You can now view the Call For Proposals announcement on our blog at <a href="http://t.co/kt7P2PinIY">http://t.co/kt7P2PinIY</a></p>&mdash; @pycon <a href="https://twitter.com/pycon/statuses/352174928126148610">July 2, 2013</a></blockquote>
 
 This year, several people have already asked me
 about what a real talk proposal for PyCon actually looks like —
@@ -43,6 +42,7 @@ and what fraction of talks that can be accepted overall.
 **“The Mighty Dictionary” (2010)** —
 `Accepted proposal
 <http://rhodesmill.org/brandon/2013/example-pycon-proposals/mighty-dictionary.txt>`__
+— `Video and slides </brandon/talks/#mighty-dictionary>`__
 
     By the time I finish a proposal,
     I feel about halfway done writing the talk.
@@ -194,6 +194,7 @@ and what fraction of talks that can be accepted overall.
 **“The Naming of Ducks: Where Dynamic Types Meet Smart Conventions” (2013)** —
 `Accepted proposal
 <http://rhodesmill.org/brandon/2013/example-pycon-proposals/naming-of-ducks.txt>`__
+— `Video and slides </brandon/talks/#naming-of-ducks>`__
 
     The program committee must simply have gotten a good vibe
     from this proposal,
