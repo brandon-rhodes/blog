@@ -1,6 +1,7 @@
 #!/bin/bash
 
 cd $(dirname "$0")/.. || exit
+make
 
 inotifywait -m -e close_write -r bin static templates texts \
 | while read line
