@@ -45,6 +45,15 @@ table {
 td {
     padding-right: 1em;
 }
+hr {
+    padding: 0 0 1em;
+    border: none;
+    text-align: center;
+}
+hr:after {
+    content: "❖";
+    display: inline-block;
+}
 .byline {
     width: 100%;
     text-align: right;
