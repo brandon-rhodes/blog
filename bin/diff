@@ -1,0 +1,3 @@
+#!/bin/bash
+
+exec colordiff -ur ~/Dropbox/rhodesmill.org/ output/ | grep -v 'Only in' | less
