@@ -1,4 +1,5 @@
 Options +MultiViews -ExecCGI
+AddCharset UTF-8 .txt
 
 <FilesMatch \.(cgi|py)$>
   SetHandler default-handler
