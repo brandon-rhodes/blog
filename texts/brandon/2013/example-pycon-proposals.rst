@@ -5,6 +5,8 @@
 Example PyCon talk proposals
 ============================
 
+:date: 2 August 2013
+
 It was exactly one month ago that the PyCon web site swung
 back into action for another exciting year,
 opening access to the app that accepts talk proposals!

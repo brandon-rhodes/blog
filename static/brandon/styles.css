@@ -57,6 +57,16 @@ td {
 .byline a:hover {
     text-decoration: underline;
 }
+.docinfo {
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 11pt;
+}
+.docinfo th {
+    color: #888;
+    padding-right: 0.5em;
+    font-weight: normal;
+}
 .note {
     max-width: 32em;
     margin: 2em auto;
