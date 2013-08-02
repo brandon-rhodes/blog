@@ -68,7 +68,7 @@ and what fraction of talks that can be accepted overall.
     Too often, speakers present dry step-by-step descriptions
     of a technique without first explaining why.
 
-**“Learning Hosting Best-Practices From WebFaction” (2010)** —
+**“Learning Hosting Best Practices From WebFaction” (2010)** —
 `Accepted proposal
 <http://rhodesmill.org/brandon/2013/example-pycon-proposals/webfaction.txt>`__
 — `Video and slides </brandon/talks/#webfaction>`__
