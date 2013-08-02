@@ -1,0 +1,22 @@
+#!/usr/bin/env python
+
+import os
+import sys
+from bottle import SimpleTemplate
+from docutils.core import publish_parts
+
+if __name__ == '__main__':
+    in_path, out_path = sys.argv[1:]
+    if in_path.endswith('.html'):
+        in_html = open(in_path).read().decode('utf-8')
+    elif in_path.endswith('.rst'):
+        in_rst = open(in_path).read().decode('utf-8')
+        info = publish_parts(in_rst, writer_name='html')
+        in_html = info['html_body']
+        in_html += u'\n%rebase layout title="{}"\n'.format(info['title'])
+    else:
+        sys.stderr.write('Cannot recognize input text by file suffix\n')
+        sys.exit(1)
+    tpl = SimpleTemplate(in_html, lookup=['templates'])
+    out_html = tpl.render()
+    open(out_path, 'w').write(out_html.encode('utf-8'))
