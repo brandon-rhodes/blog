@@ -7,39 +7,35 @@ Example PyCon talk proposals
 
 :date: 2 August 2013
 
-It was exactly one month ago that the PyCon web site swung
-back into action for another exciting year,
-opening access to the app that accepts talk proposals!
-Submissions for
+It was exactly one month ago that the PyCon site swung
+back into action for another exciting year.
+Talk submissions for
 `Montréal 2014 <http://us.pycon.org/2014/>`_
-should by now be piling up quickly.
+are by now piling up quickly.
 
 .. raw:: html
 
    <blockquote class="twitter-tweet"><p>You can now view the Call For Proposals announcement on our blog at <a href="http://t.co/kt7P2PinIY">http://t.co/kt7P2PinIY</a></p>&mdash; @pycon <a href="https://twitter.com/pycon/statuses/352174928126148610">July 2, 2013</a></blockquote>
 
-This year, several people have already asked me
-about what a real talk proposal for PyCon actually looks like —
+This year, several people have asked me
+what a real PyCon talk proposal actually looks like —
 including a few students at the
 `Hacker School <https://www.hackerschool.com/>`_ in New York,
 where I served as a resident last month.
 While the official PyCon
 `Proposal Advice <http://us.pycon.org/2014/speaking/proposal_advice/>`_
-page offers excellent advice,
+is excellent advice,
 some people learn better by example.
 
-So I am here making public all of my PyCon talk proposals
-from the last four years.
+So I am making public my PyCon talk proposals from several past years!
 
-I am including both the successes and failures,
+I include both 3 successes and 3 failures,
 along with a few thoughts about each.
-Remember that these only reflect how I myself tend to write proposals.
-Good talks get accepted
-based on proposals that look quite different from mine,
-and many factors important to your success will vary from year to year —
+Remember that these only reflect how I myself tend to write proposals,
+and that many factors vary from year to year —
 including the interests and skill levels of selection committee members,
-the number of talks competing in the same subject area,
-and what fraction of talks that can be accepted overall.
+the number of talks competing in a given subject area,
+and what fraction of talks can be accepted overall.
 
 **“The Mighty Dictionary” (2010)** —
 `Accepted proposal
@@ -48,27 +44,25 @@ and what fraction of talks that can be accepted overall.
 
     By the time I finish a proposal,
     I feel about halfway done writing the talk.
-    The feeling is always hilariously inaccurate,
-    but it does signal that a proposal has become detailed enough
-    to demonstrate, not only to the committee but also to myself,
-    that I have assembled enough material for a talk
-    and have some idea of how to fit it into a half-hour.
+    That feeling is always hilariously inaccurate,
+    but it hopefully signals the point at which
+    I have gotten enough detail into the proposal
+    for the committee to imagine what the talk will be like.
 
-    I tend to outline each talk as a series of 5-minute chunks
-    without worrying about more detailed minute-by-minute timing.
-    If each chunk of information can plausibly fill 5 minutes
-    without taking *more* than 5 minutes to cover,
+    I tend to outline each talk in 5-minute chunks,
+    without worrying about anything more detailed.
+    If each chunk can plausibly fill five minutes
+    without taking more than five minutes to cover,
     then five chunks are enough to fill a 30-minute slot
     while leaving 5 minutes for questions at the end.
 
-    I suspect that the Mighty Dictionary talk was selected
+    I consider the Mighty Dictionary to be an especially strong proposal
     because, at each step, it describes a problem
     that then becomes the motivation for the material that follows.
     List lookup is too slow? Then we will index by hash!
-    The dictionary will fill? Then we will reallocate it!
-    This keeps listeners engaged and helps them understand a design.
-    Too often, speakers present dry step-by-step descriptions
-    of a technique without first explaining why.
+    The dictionary will gradually fill? Then we will allocate more space!
+    This pattern keeps listeners engaged,
+    and helps them understand the emerging design.
 
 **“Learning Hosting Best Practices From WebFaction” (2010)** —
 `Accepted proposal
@@ -76,17 +70,14 @@ and what fraction of talks that can be accepted overall.
 — `Video and slides </brandon/talks/#webfaction>`__
 
     I cannot imagine this talk being accepted today,
-    now that containerized deployment solutions like Heroku
-    have taken the world by storm.
-    And the committee is more cautious every year
+    in the age of containerized deployment solutions like Heroku.
+    Also, the PyCon committee is more cautious every year
     about talks that mention a specific company or service.
     But in 2010, tips and techniques for deploying Python apps
-    to a plain old shell account on a shared server
-    still had enough currency that they earned me a PyCon slot.
+    to a plain old shell account earned me a PyCon slot.
 
-    Note that I at least had the sense
-    to suggest that each Webfaction feature
-    was really a general technique
+    I at least had the sense to suggest that each Webfaction feature
+    was really a general technique,
     that could be taken and used elsewhere.
     And, wow, does anyone else remember
     `mod_wsgi <https://code.google.com/p/modwsgi/>`_?
@@ -103,15 +94,15 @@ and what fraction of talks that can be accepted overall.
     Then please remember to thank the PyCon program committee!
 
     “I am now preparing to prototype some code.”
-    The whole thing rolls over and dies right there:
-    pure talk-proposal Kryptonite.
+    The proposal rolls over and dies right there:
+    this is pure talk-proposal Kryptonite.
     The committee knows immediately
     that the talk is not about something that I *have done*
     (note the perfect tense!),
-    but about something that *I believe I will learn*
+    but about something that *I believe that I will learn*
     between now and PyCon.
-    The talk is entirely contingent upon code
-    that has yet to be written.
+    Whether the talk will have any content or not
+    is entirely contingent upon code that has yet to be written.
 
     And, as the committee might have quietly been guessing,
     it turns out that the project never happened:
@@ -170,9 +161,9 @@ and what fraction of talks that can be accepted overall.
     This proposal seemed solidly technical but was declined,
     while my speculative, theoretical, hand-wavy
     Naming-of-Ducks talk was accepted (see below).
-    Neither proposal is detailed enough,
-    and neither includes any actual outline
-    showing how they will use 30 minutes effectively.
+    Neither proposal is detailed enough —
+    neither includes any actual outline
+    demonstrating that I was going to use 30 minutes effectively.
 
     Not only does the proposal fail to offer any source code
     showing what a 5-line orrery might look like,
@@ -188,10 +179,11 @@ and what fraction of talks that can be accepted overall.
 
     Finally, we must remember that no proposal is made in a vacuum:
     several other scientific Python talks were on the table in 2013,
-    most of them by actual scientists,
-    who in many cases were authors of the software in question.
+    most of them by scientists,
+    who in many cases were the actual authors
+    of the software in question.
     Fernando Perez, Travis Oliphant, and Titus Brown
-    were among the names that wound up somewhere on the schedule.
+    were among the names that wound up on the schedule.
     The committee had plenty of science-talk proposals to choose from.
 
 **“The Naming of Ducks: Where Dynamic Types Meet Smart Conventions” (2013)** —
@@ -216,8 +208,10 @@ and what fraction of talks that can be accepted overall.
     only a handful of days before the talk itself.
 
     Getting caught at the last minute without enough material
-    is, I suppose, always a danger of not going ahead
-    and writing a detailed outline into the proposal itself.
+    is always a danger when I do not go ahead
+    and write a detailed enough outline into the proposal itself!
+
+----
 
 So, there you have it!
 
