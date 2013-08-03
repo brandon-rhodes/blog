@@ -59,6 +59,7 @@ hr:after {
     display: inline-block;
 }
 .byline {
+    margin-top: 0;
     width: 100%;
     text-align: right;
 }
