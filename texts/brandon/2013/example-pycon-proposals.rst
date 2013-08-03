@@ -24,7 +24,7 @@ including a few students at the
 where I served as a resident last month.
 While the official PyCon
 `Proposal Advice <http://us.pycon.org/2014/speaking/proposal_advice/>`_
-is excellent advice,
+page is excellent,
 some people learn better by example.
 
 So I am making public my PyCon talk proposals from several past years!
