@@ -27,7 +27,7 @@ body {
     font-family: Prociono, serif;
     font-family: Andada, serif;
     /* font-family: Junction, serif; */
-    line-height: 1.4;
+    line-height: 1.44;
     /* font-family: "EB Garamond", serif; */
     /* font-family: "Libre Baskerville", serif; */
 }
@@ -44,6 +44,10 @@ table {
 }
 td {
     padding-right: 1em;
+}
+p {
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
 }
 hr {
     padding: 0 0 1em;
