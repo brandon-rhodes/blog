@@ -1,12 +1,17 @@
 #!/usr/bin/env python
 
+import datetime
 import os
 import re
 import sys
-import datetime
-from feedgen.feed import FeedGenerator
+import time
+from email.utils import formatdate
+
+import xml.etree.ElementTree as etree
 from pytz import timezone
 
+atom_ns = 'http://www.w3.org/2005/Atom'
+content_ns = 'http://purl.org/rss/1.0/modules/content/'
 eastern = timezone('US/Eastern')
 more_template = '<p><a href="{}">Read the full article...</a></p>'
 
@@ -25,46 +30,54 @@ def main():
     tag = sys.argv[2]
     outpath = sys.argv[3]
 
-    fg = FeedGenerator()
-    fg.id('http://rhodesmill.org/brandon/')
-    fg.title("Python posts by Brandon Rhodes")
-    fg.description("Blog posts about the Python programming language")
-    fg.author(name='Brandon Rhodes')
-    fg.link(href='http://rhodesmill.org/brandon/', rel='alternate')
-    fg.link(href='http://rhodesmill.org/brandon/category/python/feed/',
-            rel='self')
-    fg.language('en')
+    sub = etree.SubElement
+    now = datetime.datetime.now()
+
+    etree.register_namespace('atom', atom_ns)
+    etree.register_namespace('content', content_ns)
+
+    feed = etree.Element('rss', version='2.0')
+    channel = sub(feed, 'channel')
+    sub(channel, '{%s}link' % atom_ns, rel="self", type="application/rss+xml",
+        href="http://rhodesmill.org/brandon/category/python/feed/")
+    sub(channel, 'link').text = "http://rhodesmill.org/brandon/"
+    sub(channel, 'pubDate').text = formatdate()
+    sub(channel, 'title').text = "Python posts by Brandon Rhodes"
+    sub(channel, 'description').text = (
+        "Blog posts about the Python programming language")
 
     with open(tag_cache_path) as f:
-        for line in f:
-            if not line.startswith('#'):  # data we want is in the comments
-                continue
-            hash_sign, this_tag, post_cache_path = line.split()
-            if this_tag != tag:
-                continue
-            with open(post_cache_path) as ff:
-                info = eval(ff.read())
+        lines = f.readlines()
 
-            url = 'http://rhodesmill.org/brandon/2013/example-pycon-proposals/'
+    for line in lines:
+        if not line.startswith('#'):  # data we want is in the comments
+            continue
+        hash_sign, this_tag, post_cache_path = line.split()
+        if this_tag != tag:
+            continue
+        with open(post_cache_path) as ff:
+            info = eval(ff.read())
 
-            body = info['body']
-            body = truncate_at_more(body, url)
-            body = make_links_absolute(body)
+        url = 'http://rhodesmill.org/brandon/2013/example-pycon-proposals/'
 
-            fe = fg.add_entry()
-            fe.id(url)
-            fe.title(info['title'])
-            fe.description(info['title'])
-            fe.author(name='Brandon Rhodes')
-            fe.guid(url)
-            fe.link(href=url, rel='alternate')
-            fe.content(body)
-            fe.pubdate(datetime.datetime(2013, 8, 3, 23, 16, 0, 0, eastern))
+        body = info['body']
+        body = truncate_at_more(body, url)
+        body = make_links_absolute(body)
+
+        item = sub(channel, 'item')
+        sub(item, 'guid').text = url
+        sub(item, 'link').text = url
+        sub(item, 'title').text = info['title']
+        sub(item, 'pubDate').text = formatdate(time.mktime(
+                datetime.datetime(2013, 8, 3, 23, 16, 0, 0, eastern)
+                .timetuple()))
+        sub(item, '{%s}encoded' % content_ns).text = body
 
     outdir = os.path.dirname(outpath)
     if not os.path.isdir(outdir):
         os.makedirs(outdir)
-    fg.rss_file(outpath)
+    with open(outpath, 'w') as f:
+        f.write(etree.tostring(feed))
 
 if __name__ == '__main__':
     main()
