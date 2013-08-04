@@ -29,7 +29,15 @@ cache/tags: $(post_caches) bin/cache-tags
 
 include cache/tags
 
-#
+# Build feeds.
+
+rss := $(patsubst %, output/brandon/category/%/feed/index.xml, $(tags))
+all: $(rss)
+$(rss): output/brandon/category/%/feed/index.xml: bin/build-feed cache/tags
+	bin/build-feed cache/tags $* $@
+
+# How we build pages and copy static files.  (In the future, should we
+# re-use the cache of posts built above?)
 
 statics := $(addprefix output/, $(call find, static -type f))
 

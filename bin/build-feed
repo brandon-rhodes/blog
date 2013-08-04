@@ -1,0 +1,59 @@
+#!/usr/bin/env python
+
+import os
+import sys
+import datetime
+from feedgen.feed import FeedGenerator
+from pytz import timezone
+
+eastern = timezone('US/Eastern')
+
+def make_links_absolute(body):
+    body = body.replace('href="/', 'href="http://rhodesmill.org/')
+    return body
+
+def main():
+    tag_cache_path = sys.argv[1]
+    tag = sys.argv[2]
+    outpath = sys.argv[3]
+
+    fg = FeedGenerator()
+    fg.id('http://rhodesmill.org/brandon/')
+    fg.title("Python posts by Brandon Rhodes")
+    fg.description("Blog posts about the Python programming language")
+    fg.author(name='Brandon Rhodes')
+    fg.link(href='http://rhodesmill.org/brandon/', rel='alternate')
+    fg.link(href='http://rhodesmill.org/brandon/category/python/feed/',
+            rel='self')
+    fg.language('en')
+
+    with open(tag_cache_path) as f:
+        for line in f:
+            if not line.startswith('#'):  # data we want is in the comments
+                continue
+            hash_sign, this_tag, post_cache_path = line.split()
+            if this_tag != tag:
+                continue
+            with open(post_cache_path) as ff:
+                info = eval(ff.read())
+
+            body = make_links_absolute(info['body'])
+
+            url = 'http://rhodesmill.org/brandon/2013/example-pycon-proposals/'
+            fe = fg.add_entry()
+            fe.id(url)
+            fe.title(info['title'])
+            fe.description(info['title'])
+            fe.author(name='Brandon Rhodes')
+            fe.guid(url)
+            fe.link(href=url, rel='alternate')
+            fe.content(body)
+            fe.pubdate(datetime.datetime(2013, 8, 3, 23, 16, 0, 0, eastern))
+
+    outdir = os.path.dirname(outpath)
+    if not os.path.isdir(outdir):
+        os.makedirs(outdir)
+    fg.rss_file(outpath)
+
+if __name__ == '__main__':
+    main()
