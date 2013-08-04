@@ -1,7 +1,4 @@
 
-.. TODO
-   Add webfaction talk to my talks page!
-
 Example PyCon talk proposals
 ============================
 
@@ -64,6 +61,8 @@ and what fraction of talks can be accepted overall.
     The dictionary will gradually fill? Then we will allocate more space!
     This pattern keeps listeners engaged,
     and helps them understand the emerging design.
+
+.. more
 
 **“Learning Hosting Best Practices From WebFaction” (2010)** —
 `Accepted proposal

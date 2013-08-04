@@ -1,12 +1,20 @@
 #!/usr/bin/env python
 
 import os
+import re
 import sys
 import datetime
 from feedgen.feed import FeedGenerator
 from pytz import timezone
 
 eastern = timezone('US/Eastern')
+more_template = '<p><a href="{}">Read the full article...</a></p>'
+
+def truncate_at_more(body, url):
+    pieces = re.split(r'<!-- *more *-->', body)
+    if len(pieces) == 1:
+        return body
+    return pieces[0] + more_template.format(url)
 
 def make_links_absolute(body):
     body = body.replace('href="/', 'href="http://rhodesmill.org/')
@@ -37,9 +45,12 @@ def main():
             with open(post_cache_path) as ff:
                 info = eval(ff.read())
 
-            body = make_links_absolute(info['body'])
-
             url = 'http://rhodesmill.org/brandon/2013/example-pycon-proposals/'
+
+            body = info['body']
+            body = truncate_at_more(body, url)
+            body = make_links_absolute(body)
+
             fe = fg.add_entry()
             fe.id(url)
             fe.title(info['title'])
