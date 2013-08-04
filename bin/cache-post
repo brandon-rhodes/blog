@@ -15,9 +15,11 @@ def main():
     with open(input_path) as f:
         rst = f.read().decode('utf-8')
 
+    field_strings = re.findall(r'\n:([^:]+): +(.*)', rst)
+    fields = dict((name.lower(), value) for name, value in field_strings)
     info = publish_parts(rst, writer_name='html', settings_overrides=overrides)
     info['path'] = output_path
-    info['fields'] = fields = dict(re.findall(r'\n:([^:]+): +(.*)', rst))
+    info['fields'] = fields
     if 'date' in fields:
         info['date'] = datetime.strptime(fields['date'], '%d %B %Y').date()
     info['tags'] = set()

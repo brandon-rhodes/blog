@@ -2,8 +2,8 @@
 Example PyCon talk proposals
 ============================
 
-:date: 2 August 2013
-:tags: Python
+:Date: 2 August 2013
+:Tags: Python
 
 It was exactly one month ago that the PyCon site swung
 back into action for another exciting year.
