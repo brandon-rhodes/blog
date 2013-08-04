@@ -1,0 +1,40 @@
+#!/usr/bin/env python
+
+import os
+import re
+import sys
+from datetime import datetime
+from docutils.core import publish_parts
+from pprint import pformat
+
+overrides = {'initial_header_level': 2}
+
+def main():
+    input_path, output_path = sys.argv[1:]
+
+    with open(input_path) as f:
+        rst = f.read().decode('utf-8')
+
+    info = publish_parts(rst, writer_name='html', settings_overrides=overrides)
+    info['path'] = output_path
+    info['fields'] = fields = dict(re.findall(r'\n:([^:]+): +(.*)', rst))
+    if 'date' in fields:
+        info['date'] = datetime.strptime(fields['date'], '%d %B %Y').date()
+    info['tags'] = set()
+    if 'tags' in fields:
+        info['tags'].update('-'.join(tag.strip().lower().split())
+                            for tag in fields['tags'].split(','))
+
+    output_dir = os.path.dirname(output_path)
+    if not os.path.isdir(output_dir):
+        os.makedirs(output_dir)
+
+    with open(output_path, 'w') as f:
+        f.write(pformat(info))
+        f.write('\n')
+
+    # in_html = info['html_body']
+    # in_html += u'\n%rebase layout title="{}"\n'.format(info['title'])
+
+if __name__ == '__main__':
+    main()
