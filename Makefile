@@ -23,6 +23,13 @@ all: $(rst_caches)
 $(rst_caches): cache/%.dict: texts/%.rst bin/cache-text
 	bin/cache-text $< $@
 
+ipynb_inputs := $(call find, texts -name '*.ipynb')
+ipynb_caches := $(patsubst %.ipynb, cache/%.dict, $(ipynb_inputs))
+
+all: $(ipynb_caches)
+$(ipynb_caches): cache/%.dict: texts/%.ipynb bin/cache-text
+	bin/cache-text $< $@
+
 # Learn which tags were used in which texts.
 
 cache/tags: $(rst_caches) bin/cache-tags
@@ -62,5 +69,5 @@ $(statics): output/%: static/%
 
 # Pre-create output directories.
 
-directories := $(sort $(dir $(index_html) $(other_html) $(statics)))
+directories := $(sort $(dir $(html_indexes) $(html_others) $(statics)))
 ignored := $(shell mkdir -p $(directories))

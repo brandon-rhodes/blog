@@ -3,9 +3,14 @@
 import os
 import re
 import sys
+
 from datetime import datetime
 from docutils.core import publish_parts
 from pprint import pformat
+
+from IPython.config import Config
+from IPython.nbconvert import HTMLExporter
+from IPython.nbformat import current as nbformat
 
 overrides = {'initial_header_level': 2}
 
@@ -13,19 +18,16 @@ def main():
     input_path, output_path = sys.argv[1:]
 
     with open(input_path) as f:
-        rst = f.read().decode('utf-8')
+        text = f.read().decode('utf-8')
 
-    field_strings = re.findall(r'\n:([^:]+): +(.*)', rst)
-    fields = dict((name.lower(), value) for name, value in field_strings)
-    info = publish_parts(rst, writer_name='html', settings_overrides=overrides)
+    if input_path.endswith('.rst'):
+        info = parse_rst(text)
+    elif input_path.endswith('.ipynb'):
+        info = parse_ipynb(text)
+    else:
+        raise ValueError('unrecognized extension: %s' % input_path)
+
     info['path'] = output_path
-    info['fields'] = fields
-    if 'date' in fields:
-        info['date'] = datetime.strptime(fields['date'], '%d %B %Y').date()
-    info['tags'] = set()
-    if 'tags' in fields:
-        info['tags'].update('-'.join(tag.strip().lower().split())
-                            for tag in fields['tags'].split(','))
 
     output_dir = os.path.dirname(output_path)
     if not os.path.isdir(output_dir):
@@ -37,6 +39,43 @@ def main():
 
     # in_html = info['html_body']
     # in_html += u'\n%rebase layout title="{}"\n'.format(info['title'])
+
+def parse_rst(rst):
+    field_strings = re.findall(r'\n:([^:]+): +(.*)', rst)
+    fields = dict((name.lower(), value) for name, value in field_strings)
+    info = publish_parts(rst, writer_name='html', settings_overrides=overrides)
+    info['fields'] = fields
+    if 'date' in fields:
+        info['date'] = datetime.strptime(fields['date'], '%d %B %Y').date()
+    info['tags'] = set()
+    if 'tags' in fields:
+        info['tags'].update('-'.join(tag.strip().lower().split())
+                            for tag in fields['tags'].split(','))
+    return info
+
+def parse_ipynb(json_text):
+    notebook = nbformat.reads_json(json_text)
+
+    config = Config({'HTMLExporter': {'default_template': 'basic'}})
+    exporter = HTMLExporter(config=config)
+    body, resources = exporter.from_notebook_node(notebook)
+
+    # print resources['metadata']
+
+    fields = {}  # TODO
+
+    info = {}
+    info['html_body'] = body
+    info['title'] = 'PUT TITLE HERE'
+    info['fields'] = fields
+    if 'date' in fields:
+        info['date'] = datetime.strptime(fields['date'], '%d %B %Y').date()
+    info['tags'] = set()
+    if 'tags' in fields:
+        info['tags'].update('-'.join(tag.strip().lower().split())
+                            for tag in fields['tags'].split(','))
+
+    return info
 
 if __name__ == '__main__':
     main()
