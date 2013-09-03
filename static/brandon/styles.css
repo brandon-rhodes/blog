@@ -431,6 +431,10 @@ body {
     font-family: Andada, serif;
     line-height: 1.44;
 }
+span.math {
+    /* bugfix for Chrome, else MathJax is too small */
+    font-family: serif;
+}
 h1, h2 {
     font-family: Prociono, serif;
     font-weight: normal;
