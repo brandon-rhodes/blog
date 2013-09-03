@@ -569,6 +569,10 @@ hr:after {
     }
 }
 @media (min-width: 480pt) {
+    body {
+        padding-left: 2.5em;
+        padding-right: 2.5em;
+    }
     .talk img {
         float: left;
         max-width: 166pt;
