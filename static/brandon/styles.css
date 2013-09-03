@@ -28,7 +28,7 @@ body {
     font-family: Andada, serif;
     /* font-family: Junction, serif; */
     line-height: 1.44;
-    /* font-family: "EB Garamond", serif; */
+    /* font-family: "EB Garmaond", serif; */
     /* font-family: "Libre Baskerville", serif; */
 }
 h1, h2 {
@@ -48,6 +48,14 @@ td {
 p {
     margin-top: 1.5em;
     margin-bottom: 1.5em;
+}
+code, pre {
+    font-size: 0.8125em;
+}
+img {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100%;
 }
 hr {
     padding: 0 0 1em;
@@ -70,6 +78,16 @@ hr:after {
 }
 .byline a:hover {
     text-decoration: underline;
+}
+.cell .prompt {
+    float: left;
+    padding-left: -4em;
+    font-size: 0.82em;
+    font-family: monospace;
+}
+.cell .input_area, .cell .output_area {
+    background-color: white;
+    margin-left: 4em;
 }
 .docinfo {
     margin-left: auto;
