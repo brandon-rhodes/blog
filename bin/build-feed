@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import datetime
+import datetime  # must be imported at top level to eval() dictionary
 import os
 import re
 import sys
@@ -13,6 +13,7 @@ from pytz import timezone
 atom_ns = 'http://www.w3.org/2005/Atom'
 content_ns = 'http://purl.org/rss/1.0/modules/content/'
 eastern = timezone('US/Eastern')
+midnight = datetime.time(0, 0, 0)
 more_template = '<p><a href="{}">Read the full article...</a></p>'
 
 def truncate_at_more(body, url):
@@ -49,6 +50,8 @@ def main():
     with open(tag_cache_path) as f:
         lines = f.readlines()
 
+    items = []  # (date, element) tuples
+
     for line in lines:
         if not line.startswith('#'):  # data we want is in the comments
             continue
@@ -65,14 +68,21 @@ def main():
         body = truncate_at_more(body, url)
         body = make_links_absolute(body)
 
-        item = sub(channel, 'item')
+        item = etree.Element('item')
         sub(item, 'guid').text = url
         sub(item, 'link').text = url
         sub(item, 'title').text = info['title']
         sub(item, 'pubDate').text = formatdate(time.mktime(
-                datetime.datetime(2013, 8, 3, 23, 16, 0, 0, eastern)
+                datetime.datetime.combine(info['date'], midnight)
+                .replace(tzinfo=eastern)
                 .timetuple()))
         sub(item, '{%s}encoded' % content_ns).text = body
+
+        items.append((info['date'], item))
+
+    items.sort(reverse=True)
+    for date, element in items:
+        channel.append(element)
 
     outdir = os.path.dirname(outpath)
     if not os.path.isdir(outdir):
