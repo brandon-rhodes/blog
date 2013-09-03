@@ -40,17 +40,18 @@ include cache/tags
 # Build pages.
 
 cache_all := $(call find, cache -name '*.dict')
-cache_indexes = $(filter %/index.dict, $(cache_all))
-cache_others = $(filter-out %/index.dict, $(cache_all))
-html_indexes = $(patsubst %.dict, output/%.html, $(cache_indexes))
-html_others = $(patsubst %.dict, output/%/index.html, $(cache_others))
+cache_indexes := $(filter %/index.dict, $(cache_all))
+cache_others := $(filter-out %/index.dict, $(cache_all))
+html_indexes := $(patsubst %.dict, output/%.html, $(cache_indexes))
+html_others := $(patsubst %.dict, output/%/index.html, $(cache_others))
+templates := $(wildcard templates/*.html)
 
 all: $(html_indexes) $(html_others)
 
-$(html_indexes): output/%.html: cache/%.dict bin/format
+$(html_indexes): output/%.html: cache/%.dict bin/format $(templates)
 	bin/format $< $@
 
-$(html_others): output/%/index.html: cache/%.dict bin/format
+$(html_others): output/%/index.html: cache/%.dict bin/format $(templates)
 	bin/format $< $@
 
 # Build feeds.
@@ -76,3 +77,9 @@ $(notebooks): output/%: texts/%
 
 directories := $(sort $(dir $(html_indexes) $(html_others) $(statics)))
 ignored := $(shell mkdir -p $(directories))
+
+# Clean.
+
+.PHONY: clean
+clean:
+	rm -rf cache/* output/*
