@@ -27,6 +27,7 @@ def main():
     else:
         raise ValueError('unrecognized extension: %s' % input_path)
 
+    info['html_body'] = info['html_body'].replace('\n</pre>', '</pre>')
     info['path'] = output_path
 
     output_dir = os.path.dirname(output_path)
