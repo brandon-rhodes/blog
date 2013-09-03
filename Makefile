@@ -67,6 +67,11 @@ all: $(statics)
 $(statics): output/%: static/%
 	cp $< $@
 
+notebooks := $(addprefix output/, $(call find, texts -name '*.ipynb'))
+all: $(notebooks)
+$(notebooks): output/%: texts/%
+	cp $< $@
+
 # Pre-create output directories.
 
 directories := $(sort $(dir $(html_indexes) $(html_others) $(statics)))
