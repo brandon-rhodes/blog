@@ -61,13 +61,17 @@ def parse_ipynb(json_text):
     exporter = HTMLExporter(config=config)
     body, resources = exporter.from_notebook_node(notebook)
 
-    # print resources['metadata']
-
-    fields = {}  # TODO
-
     info = {}
     info['html_body'] = body
-    info['title'] = 'PUT TITLE HERE'
+    match = re.search(ur'<h1[^>]*>([^>]*)</h1>', body)
+    if match:
+        info['body'] = body[match.end(0):]
+        info['title'] = match.group(1)
+    else:
+        info['body'] = body
+        info['title'] = ''
+
+    fields = notebook['metadata']
     info['fields'] = fields
     if 'date' in fields:
         info['date'] = datetime.strptime(fields['date'], '%d %B %Y').date()

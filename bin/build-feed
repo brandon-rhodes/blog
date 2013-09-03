@@ -58,7 +58,8 @@ def main():
         with open(post_cache_path) as ff:
             info = eval(ff.read())
 
-        url = 'http://rhodesmill.org/brandon/2013/example-pycon-proposals/'
+        url = ('http://rhodesmill.org/'
+               + post_cache_path.split('/', 1)[1].replace('.dict', '/'))
 
         body = info['body']
         body = truncate_at_more(body, url)
