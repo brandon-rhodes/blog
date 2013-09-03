@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import datetime  # needed when running eval() on dictionary
+import datetime
 import sys
 from bottle import SimpleTemplate
 
@@ -12,9 +12,10 @@ if __name__ == '__main__':
     with open(in_path) as f:
         dict_text = f.read()
 
-    info = eval(dict_text)
+    info = eval(dict_text, {'datetime': datetime})
     in_html = info['html_body']
-    in_html += u'\n%rebase layout title="{}"\n'.format(info['title'])
+    in_html += u'\n% rebase layout title="{}", needs_mathjax={}\n'.format(
+        info['title'], info.get('needs_mathjax', False))
 
     tpl = SimpleTemplate(in_html, lookup=['templates'])
     out_html = tpl.render()

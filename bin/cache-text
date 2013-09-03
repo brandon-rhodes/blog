@@ -71,6 +71,8 @@ def parse_ipynb(json_text):
         info['body'] = body
         info['title'] = ''
 
+    info['needs_mathjax'] = r'\(' in body
+
     fields = notebook['metadata']
     info['fields'] = fields
     if 'date' in fields:
