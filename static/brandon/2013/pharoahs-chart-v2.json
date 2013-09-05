@@ -1,0 +1,56 @@
+[
+    ["Turkey", "supports", "Muslim Brotherhood"],
+    ["Turkey", "hates", "Sisi"],
+    ["Turkey", "hates", "Assad"],
+    ["Turkey", "supports", "Syria Rebels"],
+
+    ["Russia", "hates", "Syria Rebels"],
+    ["Russia", "supports", "Assad"],
+
+    ["Lebanon Sunnis", "supports", "Syria Rebels"],
+    ["Lebanon Sunnis", "hates", "Assad"],
+
+    ["Lebanon Shias", "supports", "Assad"],
+    ["Lebanon Shias", "hates", "Syria Rebels"],
+
+    ["Assad", "hates", "Muslim Brotherhood"],
+
+    ["USA", "hates", "Al Qaeda"],
+    ["USA", "supports", "Saudi & Gulf"],
+    ["USA", "hates", "Hamas"],
+    ["USA", "clueless", "Muslim Brotherhood"],
+    ["USA", "supports", "Israel"],
+    ["USA", "clueless", "Sisi"],
+    ["USA", "supports", "Syria Rebels"],
+    ["USA", "hates", "Iran"],
+    ["USA", "hates", "Assad"],
+
+    ["Sisi", "hates", "Muslim Brotherhood"],
+
+    ["Hamas", "hates", "Sisi"],
+    ["Hamas", "supports", "Syria Rebels"],
+
+    ["Qatar", "hates", "Assad"],
+    ["Qatar", "supports", "Syria Rebels"],
+    ["Qatar", "hates", "Sisi"],
+    ["Qatar", "supports", "Muslim Brotherhood"],
+    ["Qatar", "supports", "Hamas"],
+
+    ["Iran", "supports", "Assad"],
+    ["Iran", "supports", "Lebanon Shias"],
+    ["Iran", "supports", "Hamas"],
+    ["Iran", "hates", "Syria Rebels"],
+
+    ["Israel", "hates", "Assad"],
+    ["Israel", "hates", "Hamas"],
+    ["Israel", "supports", "Syria Rebels"],
+
+    ["Saudi & Gulf", "supports", "Sisi"],
+    ["Saudi & Gulf", "supports", "Syria Rebels"],
+    ["Saudi & Gulf", "supports", "Lebanon Sunnis"],
+    ["Saudi & Gulf", "hates", "Muslim Brotherhood"],
+
+    ["Al Qaeda", "hates", "Saudi & Gulf"],
+    ["Al Qaeda", "hates", "Assad"],
+    ["Al Qaeda", "supports", "Syria Rebels"]
+]
