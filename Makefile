@@ -23,6 +23,13 @@ all: $(rst_caches)
 $(rst_caches): cache/%.dict: texts/%.rst bin/cache-text
 	bin/cache-text $< $@
 
+html_inputs := $(call find, texts -name '*.html')
+html_caches := $(patsubst %.html, cache/%.dict, $(html_inputs))
+
+all: $(html_caches)
+$(html_caches): cache/%.dict: texts/%.html bin/cache-text
+	bin/cache-text $< $@
+
 ipynb_inputs := $(call find, texts -name '*.ipynb')
 ipynb_caches := $(patsubst %.ipynb, cache/%.dict, $(ipynb_inputs))
 
@@ -83,3 +90,7 @@ ignored := $(shell mkdir -p $(directories))
 .PHONY: clean
 clean:
 	rm -rf cache/* output/*
+
+.PHONY: clean-checkpoints
+clean-checkpoints:
+	rm -rf $$(find -name .ipynb_checkpoints)

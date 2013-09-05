@@ -475,6 +475,14 @@ div.figure a {
 div.figure img {
     display: block;
 }
+div.figure p {
+    margin-left: auto;
+    margin-right: auto;
+    width: 60%;
+    color: #2AA198;
+    text-align: center;
+    font-style: italic;
+}
 img {
     margin-left: auto;
     margin-right: auto;

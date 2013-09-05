@@ -5,11 +5,13 @@ permalink: http://rhodesmill.org/brandon/2009/google-earth-and-middle-earth/
 tags: ''
 title: Google Earth and Middle-earth
 ---
-<div class="caption">
+<div class="figure">
   <img src="http://rhodesmill.org/brandon/static/2009/google-middle-earth-distorted.jpg"
        alt="A Middle Earth overlay, too narrow at the top" />
+  <p>
   Importing a normal, rectangular map of Middle-earth
   as a Google Earth overlay is too narrow toward the north.
+  </p>
 </div>
 <p>
   I wanted to measure distances in Tolkien's Middle-earth.
@@ -114,7 +116,6 @@ title: Google Earth and Middle-earth
   given its <i>y</i>-coordinate:
 </p>
 <pre>
-#!python
 def mag(y):
     return 1. / cos(latitude(y))
 </pre>
@@ -142,11 +143,13 @@ def mag(y):
   Applying the appropriate stretch to each row of pixels
   yields an image like this:
 </p>
-<div class="caption">
+<div class="figure">
   <img src="http://rhodesmill.org/brandon/static/2009/middle-earth-projected.jpg"
        alt="A Middle Earth overlay, correctly projected" />
+  <p>
   A correct projection of the original rectangular map
   looks very distorted if viewed as a flat image.
+  </p>
 </div>
 <p>
   How does the Python Imaging Library
@@ -183,7 +186,6 @@ def mag(y):
   as you can see in the core of my script's loop:
 </p>
 <pre>
-#!python
 for y in range(0, ysize):
     m = mag(y)
     source_quad = (0, y-0.5, 0, y+0.5,
@@ -237,11 +239,13 @@ for y in range(0, ysize):
   is a map correctly projected against the curve of the globe.
   Time for me to go start measuring those distances!
 </p>
-<div class="caption">
+<div class="figure">
   <a href="http://rhodesmill.org/brandon/static/2009/google-middle-earth-corrected-big.jpg">
     <img src="http://rhodesmill.org/brandon/static/2009/google-middle-earth-corrected.jpg"
          alt="Google Earth showing Middle Earth correctly" />
   </a>
+  <p>
   When the re-projected map is imported as an overlay
   into Google Earth, the result is an attractive rendering.
+  </p>
 </div>

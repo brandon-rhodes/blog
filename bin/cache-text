@@ -12,6 +12,10 @@ from IPython.config import Config
 from IPython.nbconvert import HTMLExporter
 from IPython.nbformat import current as nbformat
 
+from pygments import highlight
+from pygments.lexers import guess_lexer
+from pygments.formatters import HtmlFormatter
+
 overrides = {'initial_header_level': 2}
 
 def main():
@@ -22,6 +26,8 @@ def main():
 
     if input_path.endswith('.rst'):
         info = parse_rst(text)
+    elif input_path.endswith('.html'):
+        info = parse_html(text)
     elif input_path.endswith('.ipynb'):
         info = parse_ipynb(text)
     else:
@@ -54,6 +60,28 @@ def parse_rst(rst):
                             for tag in fields['tags'].split(','))
     return info
 
+def parse_html(html):
+    info = {}
+    is_legacy_blogofile = html.startswith('---')
+
+    if is_legacy_blogofile:
+        empty_string, header, body = html.split('---')
+        header = header.strip()
+        body = pygmentize_pre_blocks(body)
+        fields = dict(line.strip().split(': ') for line in header.splitlines())
+
+        info['html_body'] = u'<h1>' + fields[u'title'] + u'</h1>' + body
+        info['body'] = body
+        info['title'] = fields[u'title']
+        info['date'] = datetime.strptime(fields[u'date'], '%Y/%m/%d %H:%M:%S'
+                                         ).date()
+    else:
+        info['html_body'] = html
+        info['body'] = html
+        info['title'] = 'PUT TITLE HERE'
+
+    return info
+
 def parse_ipynb(json_text):
     notebook = nbformat.reads_json(json_text)
 
@@ -83,6 +111,17 @@ def parse_ipynb(json_text):
                             for tag in fields['tags'].split(','))
 
     return info
+
+def pygmentize_pre_blocks(html):
+    formatter = HtmlFormatter()
+
+    def _highlight(match):
+        code = match.group(2)
+        lexer = guess_lexer(code)
+        return highlight(code, lexer, formatter)
+        # TODO: return u'<pre{}>{}</pre>'.format(match.group(1), h)?
+
+    return re.sub(ur'(?s)<pre([^>]*)>(.*?)</pre>', _highlight, html)
 
 if __name__ == '__main__':
     main()
