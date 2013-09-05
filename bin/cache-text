@@ -67,18 +67,20 @@ def parse_html(html):
     if is_legacy_blogofile:
         empty_string, header, body = html.split('---')
         header = header.strip()
-        body = pygmentize_pre_blocks(body)
-        fields = dict(line.strip().split(': ') for line in header.splitlines())
+        info = dict(line.strip().split(': ') for line in header.splitlines())
 
-        info['html_body'] = u'<h1>' + fields[u'title'] + u'</h1>' + body
+        body = pygmentize_pre_blocks(body)
+        body = prepend_blogofile_metadata(body, info)
+
+        info['html_body'] = body
         info['body'] = body
-        info['title'] = fields[u'title']
-        info['date'] = datetime.strptime(fields[u'date'], '%Y/%m/%d %H:%M:%S'
+        info['date'] = datetime.strptime(info[u'date'], '%Y/%m/%d %H:%M:%S'
                                          ).date()
     else:
         info['html_body'] = html
         info['body'] = html
-        info['title'] = 'PUT TITLE HERE'
+        h1_list = re.findall(ur'<h1>([^>]*)</h1>', html)
+        info['title'] = h1_list[0] if h1_list else 'Untitled'
 
     return info
 
@@ -99,7 +101,7 @@ def parse_ipynb(json_text):
         info['body'] = body
         info['title'] = ''
 
-    info['needs_mathjax'] = r'\(' in body
+    info['add_mathjax'] = r'\(' in body
 
     fields = notebook['metadata']
     info['fields'] = fields
@@ -122,6 +124,26 @@ def pygmentize_pre_blocks(html):
         # TODO: return u'<pre{}>{}</pre>'.format(match.group(1), h)?
 
     return re.sub(ur'(?s)<pre([^>]*)>(.*?)</pre>', _highlight, html)
+
+def prepend_blogofile_metadata(body, info):
+    header = blogofile_metadata_template.format(**info)
+    return header + body
+
+blogofile_metadata_template = """<h1>{title}</h1>
+  <table class="docinfo" frame="void" rules="none">
+    <col class="docinfo-name" />
+    <col class="docinfo-content" />
+    <tbody valign="top">
+      <tr>
+        <th class="docinfo-name">Date:</th>
+        <td>{date}</td></tr>
+      <tr class="field">
+        <th class="docinfo-name">Tags:</th>
+        <td class="field-body">{tags}</td>
+      </tr>
+    </tbody>
+  </table>
+"""
 
 if __name__ == '__main__':
     main()

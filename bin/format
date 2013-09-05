@@ -14,8 +14,14 @@ if __name__ == '__main__':
 
     info = eval(dict_text, {'datetime': datetime})
     in_html = info['html_body']
-    in_html += u'\n% rebase layout title="{}", needs_mathjax={}\n'.format(
-        info['title'], info.get('needs_mathjax', False))
+    in_html += u'\n% rebase layout {}\n'.format(', '.join(
+        '{}={}'.format(name, repr(value)) for name, value in dict(
+            add_disqus=info.get('add_disqus', False),
+            add_mathjax=info.get('add_mathjax', False),
+            date=info.get('info'),
+            tags=info.get('tags'),
+            title=info['title'],
+        ).items()))
 
     tpl = SimpleTemplate(in_html, lookup=['templates'])
     out_html = tpl.render()

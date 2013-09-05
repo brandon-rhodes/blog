@@ -1,20 +1,24 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ title or 'by Brandon Rhodes' }}</title>
   <link rel="stylesheet" type="text/css" href="/brandon/styles.css" />
-  % if needs_mathjax:
+  % if add_mathjax:
   <script type="text/javascript"
           src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
   % end
-</script>
 </head>
 <body>
   %if title:
   <p class="byline"><a href="/brandon/">by Brandon Rhodes</a></p>
   %end
   %include
+  %if add_disqus:
+  %include disqus.html
+  %end
   <p class="byline">©2013</p>
 </body>
 </html>

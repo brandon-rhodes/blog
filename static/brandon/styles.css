@@ -522,9 +522,9 @@ hr:after {
     color: #073642;
 }
 .docinfo {
-    margin-left: auto;
-    margin-right: auto;
+    margin: 1.8em auto;
     font-size: 11pt;
+    line-height: 1.2em;
 }
 .docinfo th {
     color: #888;
