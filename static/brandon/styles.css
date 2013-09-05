@@ -453,12 +453,17 @@ p {
     margin-top: 1.5em;
     margin-bottom: 1.5em;
 }
-code, pre {
+code, pre, tt {
     font-size: 0.875em;
-}
-code {
     background-color: #FDF6E3;
+}
+code, tt {
     padding: 0 0.25em;
+}
+pre {
+    border: 1px dashed #93A1A1;
+    padding: 0.5em 0.8em;
+    margin-left: 5em;
 }
 div.figure {
     width: 100%;
@@ -504,16 +509,9 @@ hr:after {
     font-size: 0.875em;
     font-family: monospace;
 }
-.cell .input_area pre {
-    background-color: #FDF6E3;
-}
 .cell .output_area pre {
+    background-color: #FFFFFF;
     color: #073642;
-}
-.cell pre {
-    border: 1px dashed #93A1A1;
-    padding: 0.5em 0.8em;
-    margin-left: 5em;
 }
 .docinfo {
     margin-left: auto;
