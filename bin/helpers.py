@@ -15,6 +15,7 @@ class Posts(object):
 
     def __init__(self, directory):
         self.posts = []
+        return
         filenames = sorted(os.listdir(directory))
         for filename in filenames:
             self.add(os.path.join(directory, filename))
