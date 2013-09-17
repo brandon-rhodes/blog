@@ -165,8 +165,8 @@ def parse_blogofile_yaml(info):
     if '<h1' not in info['body']:
         info['body'] = legacy_intro.format(
             info['title'],
-            info['date'].strftime('%d %B %Y'),
-            ', '.join(sorted(info['tags'])),
+            info['date'].strftime(u'%d %B %Y').lstrip(u'0'),
+            u', '.join(sorted(info['tags'])),
             info['body'],
             )
 
