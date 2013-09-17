@@ -16,7 +16,11 @@ def main():
     info_list = []
     for input_path in input_paths:
         with open(input_path) as f:
-            info_list.append(eval(f.read()))
+            info = eval(f.read())
+            if 'date' not in info:
+                sys.stderr.write('{}: missing date\n'.format(input_path))
+                sys.exit(1)
+            info_list.append(info)
     info_list.sort(key=lambda i: i['date'])
 
     pairs = [(tag, info['path']) for info in info_list for tag in info['tags']]

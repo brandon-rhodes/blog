@@ -38,7 +38,7 @@ probably, judging from the forecast, in my wet-weather gear!
 
 .. raw:: html
 
-   <iframe width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/maps/ms?msa=0&amp;msid=202077053206811834443.0004bb22a1b15ecd9f7e5&amp;ie=UTF8&amp;t=m&amp;ll=37.388448,-121.953469&amp;spn=0.037596,0.048357&amp;output=embed"></iframe><br /><small>View <a href="http://maps.google.com/maps/ms?msa=0&amp;msid=202077053206811834443.0004bb22a1b15ecd9f7e5&amp;ie=UTF8&amp;t=m&amp;ll=37.388448,-121.953469&amp;spn=0.037596,0.048357&amp;source=embed" style="color:#0000FF;text-align:left">Walking to PyCon in Santa Clara</a> in a larger map</small>
+   <div class="figure"><iframe width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/maps/ms?msa=0&amp;msid=202077053206811834443.0004bb22a1b15ecd9f7e5&amp;ie=UTF8&amp;t=m&amp;ll=37.388448,-121.953469&amp;spn=0.037596,0.048357&amp;output=embed"></iframe><p>View <a href="http://maps.google.com/maps/ms?msa=0&amp;msid=202077053206811834443.0004bb22a1b15ecd9f7e5&amp;ie=UTF8&amp;t=m&amp;ll=37.388448,-121.953469&amp;spn=0.037596,0.048357&amp;source=embed">Walking to PyCon in Santa Clara</a> in a larger map</p></div>
 
 * Exit the airport, walk across both lanes of Airport Boulevard,
   and you should find a bicycle trail that runs alongside it.
@@ -56,7 +56,7 @@ probably, judging from the forecast, in my wet-weather gear!
 
 .. raw:: html
 
-   <iframe width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/maps/ms?msa=0&amp;msid=202077053206811834443.0004bb22a1b15ecd9f7e5&amp;ie=UTF8&amp;t=m&amp;source=embed&amp;ll=37.388448,-121.953469&amp;spn=0.037596,0.048357&amp;layer=c&amp;cbll=37.372909,-121.932852&amp;panoid=nenoPhwA46NeRw114_FKlA&amp;cbp=12,4.01,,1,2.7&amp;output=svembed"></iframe><br /><small>The bridge that turns right off of Airport Drive, crosses the Guadalupe River, and connects to the Guadalupe River Trail. You can see the Trail running right to left beneath the bridge.</small>
+   <div class="figure"><iframe width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/maps/ms?msa=0&amp;msid=202077053206811834443.0004bb22a1b15ecd9f7e5&amp;ie=UTF8&amp;t=m&amp;source=embed&amp;ll=37.388448,-121.953469&amp;spn=0.037596,0.048357&amp;layer=c&amp;cbll=37.372909,-121.932852&amp;panoid=nenoPhwA46NeRw114_FKlA&amp;cbp=12,4.01,,1,2.7&amp;output=svembed"></iframe><p>The bridge that turns right off of Airport Drive, crosses the Guadalupe River, and connects to the Guadalupe River Trail. You can see the Trail running right to left beneath the bridge.</p></div>
 
 * The first stretch of the trail is a bit bleak —
   there is some green, but also many views of concrete.

@@ -45,7 +45,7 @@ is enough to see that this accusation cannot be true:
         (lineno, offset, line) = value[1][1:]
         ...
         print >> sys.stderr, 'could not compile %r:%d:' \
-            % (filename, lineno)
+            \% (filename, lineno)
         <b>print >> sys.stderr, line
         print >> sys.stderr, " " * (offset-2), "^"</b>
 </pre>

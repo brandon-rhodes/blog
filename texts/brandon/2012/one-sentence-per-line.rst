@@ -1,5 +1,5 @@
 ---
-categories: Python, Computing, Document processing
+categories: Python, Computing, Document-processing
 date: 2012/04/03 01:25:09
 permalink: http://rhodesmill.org/brandon/2012/one-sentence-per-line/
 tags: ''

@@ -18,8 +18,9 @@ that was published in 2004.
 The chapter is now available for free,
 right here on my web site:
 
-    | Read Chapter 10:
-    | `“Screen Scraping with BeautifulSoup and lxml” <http://rhodesmill.org/brandon/chapters/screen-scraping/>`_
+.. admonition:: Free chapter!
+
+   `“Screen Scraping with BeautifulSoup and lxml” <http://rhodesmill.org/brandon/chapters/screen-scraping/>`_
 
 I chose the screen-scraping chapter for release
 because the topic is so practical.

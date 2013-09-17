@@ -1,9 +1,12 @@
 #!/usr/bin/env python
+"""Convert a plain-text blog entry to HTML, saving it in a cache."""
 
+import cgi
 import os
 import re
 import sys
 
+from HTMLParser import HTMLParser
 from datetime import datetime
 from docutils.core import publish_parts
 from pprint import pformat
@@ -13,9 +16,10 @@ from IPython.nbconvert import HTMLExporter
 from IPython.nbformat import current as nbformat
 
 from pygments import highlight
-from pygments.lexers import guess_lexer
+from pygments.lexers import get_lexer_by_name, guess_lexer
 from pygments.formatters import HtmlFormatter
 
+html_parser = HTMLParser()
 overrides = {'initial_header_level': 2}
 
 def main():
@@ -24,17 +28,21 @@ def main():
     with open(input_path) as f:
         text = f.read().decode('utf-8')
 
+    info = {
+        'path': output_path,
+        'tags': set(),
+        }
+
     if input_path.endswith('.rst'):
-        info = parse_rst(text)
+        parse_rst(info, text)
     elif input_path.endswith('.html'):
-        info = parse_html(text)
+        parse_html(info, text)
     elif input_path.endswith('.ipynb'):
-        info = parse_ipynb(text)
+        parse_ipynb(info, text)
     else:
         raise ValueError('unrecognized extension: %s' % input_path)
 
-    info['html_body'] = info['html_body'].replace('\n</pre>', '</pre>')
-    info['path'] = output_path
+    info['body'] = info['body'].replace('\n</pre>', '</pre>')
 
     output_dir = os.path.dirname(output_path)
     if not os.path.isdir(output_dir):
@@ -47,55 +55,56 @@ def main():
     # in_html = info['html_body']
     # in_html += u'\n%rebase layout title="{}"\n'.format(info['title'])
 
-def parse_rst(rst):
+def parse_rst(info, rst):
+
+    # Going forward, my metadata will use standard reStructuredText
+    # fields beneath the title, like: :date: 1 January 1970
+
     field_strings = re.findall(r'\n:([^:]+): +(.*)', rst)
     fields = dict((name.lower(), value) for name, value in field_strings)
-    info = publish_parts(rst, writer_name='html', settings_overrides=overrides)
-    info['fields'] = fields
+
     if 'date' in fields:
         info['date'] = datetime.strptime(fields['date'], '%d %B %Y').date()
-    info['tags'] = set()
+
     if 'tags' in fields:
         info['tags'].update('-'.join(tag.strip().lower().split())
                             for tag in fields['tags'].split(','))
-    return info
 
-def parse_html(html):
-    info = {}
-    is_legacy_blogofile = html.startswith('---')
+    # Generate HTML from the reStructuredText.
 
-    if is_legacy_blogofile:
-        empty_string, header, body = html.split('---')
-        header = header.strip()
-        info = dict(line.strip().split(': ') for line in header.splitlines())
+    p = publish_parts(rst, writer_name='html', settings_overrides=overrides)
+    info['body'] = p['html_body']  # or 'body'?
+    info['title'] = p['title']
 
-        body = pygmentize_pre_blocks(body)
-        body = prepend_blogofile_metadata(body, info)
+    # My older blog posts included Blogofile metadata.
 
-        info['html_body'] = body
-        info['body'] = body
-        info['date'] = datetime.strptime(info[u'date'], '%Y/%m/%d %H:%M:%S'
-                                         ).date()
+    if is_legacy_blogofile(rst):
+        parse_blogofile_yaml(info)
+
+    info['body'] = pygmentize_pre_blocks(info['body'])
+
+def parse_html(info, html):
+
+    info['body'] = html
+
+    if is_legacy_blogofile(html):
+        parse_blogofile_yaml(info)
     else:
-        info['html_body'] = html
-        info['body'] = html
         h1_list = re.findall(ur'<h1>([^>]*)</h1>', html)
         info['title'] = h1_list[0] if h1_list else 'Untitled'
 
-    return info
+    info['body'] = pygmentize_pre_blocks(info['body'])
 
-def parse_ipynb(json_text):
+def parse_ipynb(info, json_text):
     notebook = nbformat.reads_json(json_text)
 
     config = Config({'HTMLExporter': {'default_template': 'basic'}})
     exporter = HTMLExporter(config=config)
     body, resources = exporter.from_notebook_node(notebook)
 
-    info = {}
-    info['html_body'] = body
     match = re.search(ur'<h1[^>]*>([^>]*)</h1>', body)
     if match:
-        info['body'] = body[match.end(0):]
+        info['body'] = body #[match.end(0):]
         info['title'] = match.group(1)
     else:
         info['body'] = body
@@ -112,24 +121,76 @@ def parse_ipynb(json_text):
         info['tags'].update('-'.join(tag.strip().lower().split())
                             for tag in fields['tags'].split(','))
 
-    return info
-
 def pygmentize_pre_blocks(html):
     formatter = HtmlFormatter()
 
     def _highlight(match):
-        code = match.group(2)
-        lexer = guess_lexer(code)
+        code = match.group(2).strip('\n')
+        already_marked_up = '<' in code
+        if already_marked_up:
+            return u'<pre{}>{}</pre>'.format(match.group(1), code)
+        code = html_parser.unescape(code)
+        if code.startswith('#!'):
+            lexer_name, code = code[2:].split('\n', 1)
+            lexer = get_lexer_by_name(lexer_name)
+        else:
+            lexer = guess_lexer(code)
         return highlight(code, lexer, formatter)
         # TODO: return u'<pre{}>{}</pre>'.format(match.group(1), h)?
 
     return re.sub(ur'(?s)<pre([^>]*)>(.*?)</pre>', _highlight, html)
 
+def is_legacy_blogofile(text):
+    return text.startswith('---')
+
+def parse_blogofile_yaml(info):
+    empty_string, yaml, rest = info['body'].split('---', 2)
+    info['body'] = rest
+
+    y = dict(line.strip().split(': ', 1) for line in yaml.strip().splitlines())
+
+    # body = pygmentize_pre_blocks(body)
+    # body = prepend_blogofile_metadata(body, info)
+
+    # info['html_body'] = body
+    # info['body'] = body
+
+    info['add_disqus'] = True
+    info['add_mathjax'] = y.get('add_mathjax', False)
+    info['date'] = datetime.strptime(y[u'date'], '%Y/%m/%d %H:%M:%S').date()
+    info['title'] = y[u'title'].strip("'")
+    if 'categories' in y:
+        info['tags'].update(y['categories'].split(', '))
+
+    if '<h1' not in info['body']:
+        info['body'] = legacy_intro.format(
+            info['title'],
+            info['date'].strftime('%d %B %Y'),
+            ', '.join(sorted(info['tags'])),
+            info['body'],
+            )
+
+legacy_intro = u"""\
+<h1>{}</h1>
+<table class="docinfo" frame="void" rules="none">
+<col class="docinfo-name" />
+<col class="docinfo-content" />
+<tbody valign="top">
+<tr><th class="docinfo-name">Date:</th>
+<td>{}</td></tr>
+<tr class="field"><th class="docinfo-name">Tags:</th>
+<td class="field-body">{}</td>
+</tr>
+</tbody>
+</table>
+{}
+"""
+
 def prepend_blogofile_metadata(body, info):
     header = blogofile_metadata_template.format(**info)
     return header + body
 
-blogofile_metadata_template = """<h1>{title}</h1>
+blogofile_metadata_template = u"""<h1>{title}</h1>
   <table class="docinfo" frame="void" rules="none">
     <col class="docinfo-name" />
     <col class="docinfo-content" />

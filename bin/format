@@ -13,12 +13,12 @@ if __name__ == '__main__':
         dict_text = f.read()
 
     info = eval(dict_text, {'datetime': datetime})
-    in_html = info['html_body']
+    in_html = info['body']
     in_html += u'\n% rebase layout {}\n'.format(', '.join(
         '{}={}'.format(name, repr(value)) for name, value in dict(
             add_disqus=info.get('add_disqus', False),
             add_mathjax=info.get('add_mathjax', False),
-            date=info.get('info'),
+            date=info.get('info'),  # huh?
             tags=info.get('tags'),
             title=info['title'],
         ).items()))
