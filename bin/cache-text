@@ -160,7 +160,8 @@ def parse_blogofile_yaml(info):
     info['date'] = datetime.strptime(y[u'date'], '%Y/%m/%d %H:%M:%S').date()
     info['title'] = y[u'title'].strip("'")
     if 'categories' in y:
-        info['tags'].update(y['categories'].split(', '))
+        info['tags'].update(word.strip() for word
+                            in y['categories'].lower().split(', '))
 
     if '<h1' not in info['body']:
         info['body'] = legacy_intro.format(
