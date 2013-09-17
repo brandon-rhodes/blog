@@ -25,14 +25,14 @@ The resulting watermark,
 after some margins had been added using a Python script,
 looked rather attractive:
 </p>
-<div class="caption">
+<div class="figure">
 <a href="http://rhodesmill.org/brandon/static/2009/wmark2.pdf"
 ><img src="http://rhodesmill.org/brandon/static/2009/wmark2.png"
 alt="Watermark with margins" />
-</a><strong>Watermarked page (click for PDF).</strong>
+</a><p><strong>Watermarked page (click for PDF).</strong>
 The light blue design is a PDF file
 that <tt>pdftk</tt> resizes and centers
-on the target document.
+on the target document.</p>
 </div>
 <p>
 My last challenge was that, on certain pages,
@@ -49,13 +49,13 @@ and then use the result as the watermark:
 $ pdftk arecibo2.pdf cat 1S output arecibo3.pdf
 $ pdftk in.pdf background arecibo3.pdf output wmark3.pdf
 </pre>
-<div class="caption">
+<div class="figure">
 <a href="http://rhodesmill.org/brandon/static/2009/wmark3.pdf"
 ><img src="http://rhodesmill.org/brandon/static/2009/wmark3.png"
 alt="Watermark with margins" />
-</a><strong>Upside-down watermark (click for PDF).</strong>
+</a><p><strong>Upside-down watermark (click for PDF).</strong>
 Whoops! After turning the watermark upside down,
-<tt>pdftk</tt> lost the ability to properly center it.
+<tt>pdftk</tt> lost the ability to properly center it.</p>
 </div>
 <!--more-->
 <p>
@@ -159,12 +159,13 @@ $ pdftk in.pdf cat 1S output in-u.pdf
 $ pdftk in-u.pdf background arecibo2.pdf output wmark4-u.pdf
 $ pdftk wmark4-u.pdf cat 1N output wmark4.pdf
 </pre>
-<div class="caption">
+<div class="figure">
 <a href="http://rhodesmill.org/brandon/static/2009/wmark4.pdf"
 ><img src="http://rhodesmill.org/brandon/static/2009/wmark4.png"
 alt="Watermark with margins" />
-</a><strong>Upside-down watermark (click for PDF).</strong>
+</a><p><strong>Upside-down watermark (click for PDF).</strong>
 Why turn your watermark over once,
 when you can turn your whole document over twice instead?
-The obvious solution always takes so long to discover.
+The obvious solution always takes so long to discover.</p>
 </div>
+<style> img { border: 1px dashed black } </style>

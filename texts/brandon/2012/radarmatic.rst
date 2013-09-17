@@ -7,7 +7,7 @@ title: Map Projection and Radarmatic
 
 Developers often use Twitter to point out exciting new libraries,
 or share mistakes that might also catch others.
-But sometimes we are less positive and simply use Twitter to complain,
+But sometimes we are less constructive and simply use Twitter to complain,
 as I did on Tuesday when I noticed that different weather radars on
 `Radarmatic <http://radarmatic.com/>`_
 were not consistent in how they positioned storms.
@@ -216,6 +216,27 @@ as you can see by mousing over this map
 to compare the two versions of the image:
 
 .. raw:: html
+
+  <style>
+  .mouseover-image-stack {
+      position: relative;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 500px;
+  }
+  .mouseover-image-stack img {
+      margin: 0;
+  }
+  .mouseover-image-stack img:last-child {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+  }
+  .mouseover-image-stack:hover img:last-child {
+      display: block;
+  }
+  </style>
 
   <div class="mouseover-image-stack">
     <img src="/brandon/2012/corrected-la-crosse.jpg">

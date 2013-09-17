@@ -419,6 +419,10 @@ table {
     font-weight: 400;
     src: url(/fonts/Prociono-Regular.woff) format('woff');
 }
+i {
+    /* Andada italics need a bit of space on their right */
+    margin-right: 0.15em;
+}
 body {
     margin-left: auto;
     margin-right: auto;
@@ -429,7 +433,7 @@ body {
     color: #473A2F;
     font-size: 13pt;
     font-family: Andada, serif;
-    line-height: 1.44;
+    line-height: 1.5;
 }
 span.math {
     /* bugfix for Chrome, else MathJax is too small */
@@ -449,9 +453,16 @@ table {
 td {
     padding-right: 1em;
 }
-p {
+p, li {
     margin-top: 1.5em;
     margin-bottom: 1.5em;
+}
+blockquote {
+    background-color: #FFFDC5;
+    border: 1px dashed #93A1A1;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0.5em 1.5em;
 }
 code, pre, tt {
     font-size: 0.875em;
@@ -463,10 +474,12 @@ code, tt {
 pre {
     border: 1px dashed #93A1A1;
     padding: 0.5em 0.8em;
-    margin-left: 5em;
 }
 div.figure {
     width: 100%;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+    text-align: center;
 }
 div.figure a {
     width: 100%;
@@ -480,7 +493,6 @@ div.figure p {
     margin-right: auto;
     width: 60%;
     color: #2AA198;
-    text-align: center;
     font-style: italic;
 }
 img, iframe {
@@ -488,6 +500,11 @@ img, iframe {
     margin-left: auto;
     margin-right: auto;
     max-width: 100%;
+}
+iframe.twitter-tweet {
+    /* Override margins in style="" attribute */
+    margin-left: auto !important;
+    margin-right: auto !important;
 }
 hr {
     padding: 0 0 1em;
@@ -511,6 +528,9 @@ hr:after {
 .byline a:hover {
     text-decoration: underline;
 }
+.cell pre {
+    margin-left: 5em;
+}
 .cell .prompt {
     float: left;
     margin-top: 0.5em;
@@ -521,6 +541,15 @@ hr:after {
 .cell .output_area pre {
     background-color: #FFFFFF;
     color: #073642;
+}
+#disqus_thread {
+    margin-top: 2.5em;
+}
+#disqus_thread:before {
+    display: block;
+    margin-bottom: 1.5em;
+    text-align: center;
+    content: "❖";
 }
 .docinfo {
     margin: 1.8em auto;

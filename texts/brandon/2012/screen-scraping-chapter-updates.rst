@@ -20,6 +20,9 @@ right here on my web site:
 
 .. admonition:: Free chapter!
 
+   Here is a link to Chapter 10 of my 2010 *Foundations of Python
+   Network Programming:*
+
    `“Screen Scraping with BeautifulSoup and lxml” <http://rhodesmill.org/brandon/chapters/screen-scraping/>`_
 
 I chose the screen-scraping chapter for release

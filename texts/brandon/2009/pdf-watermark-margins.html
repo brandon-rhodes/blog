@@ -32,7 +32,7 @@ and is a <a href="/brandon/static/2009/arecibo.png">tiny image</a>
 of only 23×73 pixels
 that looks like this when enlarged:
 </p>
-<div class="caption">
+<div class="figure">
 <img src="http://rhodesmill.org/brandon/static/2009/arecibo-big.png" alt="Arecibo message" />
 </div>
 <p>
@@ -62,13 +62,13 @@ for using a PNG image as a watermark:
 $ gm convert arecibo.png arecibo.pdf
 $ pdftk in.pdf background arecibo.pdf output wmark1.pdf
 </pre>
-<div class="caption">
+<div class="figure">
 <a href="http://rhodesmill.org/brandon/static/2009/wmark1.pdf"
 ><img src="http://rhodesmill.org/brandon/static/2009/wmark1.png"
 alt="Letter with basic watermark" />
-</a><strong>Hefty watermark (click for PDF).</strong>
+</a><p><strong>Hefty watermark (click for PDF).</strong>
 A first attempt at watermarking results in a huge watermark
-that reaches both to the top and bottom edges of the page.
+that reaches both to the top and bottom edges of the page.</p>
 </div>
 <p>
 As you can see,
@@ -160,14 +160,14 @@ $ vpython/bin/easy_install pyPdf
 $ vpython/bin/python wmargins.py
 $ pdftk in.pdf background arecibo2.pdf output wmark2.pdf
 </pre>
-<div class="caption">
+<div class="figure">
 <a href="http://rhodesmill.org/brandon/static/2009/wmark2.pdf"
 ><img src="http://rhodesmill.org/brandon/static/2009/wmark2.png"
 alt="Watermark with margins" />
-</a><strong>Watermark with margins (click for PDF).</strong>
+</a><p><strong>Watermark with margins (click for PDF).</strong>
 Margins prevent the watermark from reaching the page edges,
 which allows the blocks of text to assume the role
-of defining the visual shape of the page.
+of defining the visual shape of the page.</p>
 </div>
 <p>
 All pretty simple, right?
@@ -178,3 +178,4 @@ in order to understand what, exactly, was going wrong!
 But that will be the topic for <a href="http://rhodesmill.org/brandon/2009/pdf-watermarks-upside-down/">my last blog post in this series.</a>
 Stay tuned.
 </p>
+<style> img { border: 1px dashed black } </style>
