@@ -1,3 +1,5 @@
 bottle
 docutils
 pytz
+IPython>=1.0
+jinja2
