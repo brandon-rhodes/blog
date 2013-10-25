@@ -562,7 +562,6 @@ hr:after {
     font-weight: normal;
 }
 .admonition, .note {
-    max-width: 32em;
     margin: 2em auto;
     color: #820002;
 }
@@ -572,9 +571,12 @@ hr:after {
     margin-right: 0.1em;
     padding-left: 0.1em;
     padding-right: 0.1em;
-    background: #820002;
+    background-color: #820002;
     color: #F1EBD5;
     line-height: 1.0;
+}
+.admonition:after, .note:after {
+    content: " ❧";
 }
 .twitter-tweet {
     box-shadow: 0.1em 0.1em 0.3em #446;
