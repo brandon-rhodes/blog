@@ -17,9 +17,9 @@ def main():
     for input_path in input_paths:
         with open(input_path) as f:
             info = eval(f.read())
-            if 'date' not in info:
-                sys.stderr.write('{}: missing date\n'.format(input_path))
-                sys.exit(1)
+            is_blog_post = 'date' in info
+            if not is_blog_post:
+                continue
             info_list.append(info)
     info_list.sort(key=lambda i: i['date'])
 
