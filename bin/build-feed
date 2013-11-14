@@ -12,7 +12,7 @@ from pytz import timezone
 
 atom_ns = 'http://www.w3.org/2005/Atom'
 content_ns = 'http://purl.org/rss/1.0/modules/content/'
-eastern = timezone('US/Eastern')
+utc = timezone('GMT')
 midnight = datetime.time(0, 0, 0)
 more_template = '<p><a href="{}">Read the full article...</a></p>'
 
@@ -80,10 +80,8 @@ def main():
         sub(item, 'guid').text = url
         sub(item, 'link').text = url
         sub(item, 'title').text = info['title']
-        sub(item, 'pubDate').text = formatdate(time.mktime(
-                datetime.datetime.combine(info['date'], midnight)
-                .replace(tzinfo=eastern)
-                .timetuple()))
+        sub(item, 'pubDate').text = info['date'].strftime(
+            '%a, %d %b %Y %H:%M:%S %Z')
         sub(item, '{%s}encoded' % content_ns).text = body
 
         items.append((info['date'], item))
