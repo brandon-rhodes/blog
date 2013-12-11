@@ -481,7 +481,7 @@ div.figure {
     margin-bottom: 1.5em;
     text-align: center;
 }
-div.figure a {
+div.figure > a {
     width: 100%;
     display: block;
 }
