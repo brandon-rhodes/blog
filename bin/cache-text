@@ -173,17 +173,19 @@ def parse_blogofile_yaml(info):
 
 legacy_intro = u"""\
 <h1>{}</h1>
-<table class="docinfo" frame="void" rules="none">
-<col class="docinfo-name" />
-<col class="docinfo-content" />
-<tbody valign="top">
-<tr><th class="docinfo-name">Date:</th>
-<td>{}</td></tr>
-<tr class="field"><th class="docinfo-name">Tags:</th>
-<td class="field-body">{}</td>
-</tr>
-</tbody>
-</table>
+  <table class="docinfo" frame="void" rules="none">
+    <col class="docinfo-name" />
+    <col class="docinfo-content" />
+    <tbody valign="top">
+      <tr>
+        <th class="docinfo-name">Date:</th>
+        <td>{}</td></tr>
+      <tr class="field">
+        <th class="docinfo-name">Tags:</th>
+        <td class="field-body">{}</td>
+      </tr>
+    </tbody>
+  </table>
 {}
 """
 
