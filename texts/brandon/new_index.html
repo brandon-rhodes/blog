@@ -1,10 +1,10 @@
-%import helpers
-%posts = helpers.Posts('texts/brandon/2013')
+% import helpers
+% posts, tags = helpers.read_posts()
 
 <h2>Recent Posts</h2>
 
 <table>
-  %for post in reversed(posts.posts[-7:]):
+  %for post in reversed(posts[-7:]):
   <tr>
     <td><i>{{ post['date'].strftime('%Y %B %d').replace(' 0', ' ') }}</i></td>
     <td><a href="{{ post['permalink'] }}">{{ post['title'] }}</a></td>
@@ -17,8 +17,8 @@
 </p>
 <p>
   Tags:
-  %for tag, postlist in sorted(posts.tags().items()):
-  <a href="/brandon/category/{{ tag }}/">{{ tag }} ({{ len(postlist) }})</a>
+  %for tag in sorted(tags):
+  <a href="/brandon/category/{{ tag }}/">{{ tag }} ({{ len(tags) }})</a>
   %end
 </p>
 
