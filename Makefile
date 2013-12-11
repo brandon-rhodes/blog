@@ -10,27 +10,27 @@ ignored := $(shell mkdir -p cache)
 # Custom "find" that returns filenames without the directory name
 # prepended, so that we can "addprefix" instead of "patsubst" them.
 
-find = $(shell find $(1) -printf '%P\n')
+find = $(shell find $(1) -name .ipynb_checkpoints -prune -o $(2) -printf '%P\n')
 
 # Compile source texts into an intermediate data structure in the
 # "cache" directory, so that parsing only needs to occur once, and both
 # pages and feeds can incorporate the resulting HTML.
 
-rst_inputs := $(call find, texts -name '*.rst')
+rst_inputs := $(call find, texts, -name '*.rst')
 rst_caches := $(patsubst %.rst, cache/%.dict, $(rst_inputs))
 
 all: $(rst_caches)
 $(rst_caches): cache/%.dict: texts/%.rst bin/cache-text
 	bin/cache-text $< $@
 
-html_inputs := $(call find, texts -name '*.html')
+html_inputs := $(call find, texts, -name '*.html')
 html_caches := $(patsubst %.html, cache/%.dict, $(html_inputs))
 
 all: $(html_caches)
 $(html_caches): cache/%.dict: texts/%.html bin/cache-text
 	bin/cache-text $< $@
 
-ipynb_inputs := $(call find, texts -name '*.ipynb')
+ipynb_inputs := $(call find, texts, -name '*.ipynb')
 ipynb_caches := $(patsubst %.ipynb, cache/%.dict, $(ipynb_inputs))
 
 all: $(ipynb_caches)
@@ -46,7 +46,7 @@ include cache/tags
 
 # Build pages.
 
-cache_all := $(call find, cache -name '*.dict')
+cache_all := $(call find, cache, -name '*.dict')
 cache_indexes := $(filter %/index.dict, $(cache_all))
 cache_others := $(filter-out %/index.dict, $(cache_all))
 html_indexes := $(patsubst %.dict, output/%.html, $(cache_indexes))
@@ -55,10 +55,12 @@ templates := $(wildcard templates/*.html)
 
 all: $(html_indexes) $(html_others)
 
-$(html_indexes): output/%.html: cache/%.dict bin/format $(templates)
+$(html_indexes) $(html_others): bin/format bin/helpers.py $(templates)
+
+$(html_indexes): output/%.html: cache/%.dict
 	bin/format $< $@
 
-$(html_others): output/%/index.html: cache/%.dict bin/format $(templates)
+$(html_others): output/%/index.html: cache/%.dict
 	bin/format $< $@
 
 # Build feeds.
@@ -70,12 +72,12 @@ $(rss): output/brandon/category/%/feed/index.xml: bin/build-feed cache/tags
 
 # Static files are simply copied into the output directory.
 
-statics := $(addprefix output/, $(call find, static -type f))
+statics := $(addprefix output/, $(call find, static, -type f))
 all: $(statics)
 $(statics): output/%: static/%
 	cp $< $@
 
-notebooks := $(addprefix output/, $(call find, texts -name '*.ipynb'))
+notebooks := $(addprefix output/, $(call find, texts, -name '*.ipynb'))
 all: $(notebooks)
 $(notebooks): output/%: texts/%
 	cp $< $@
