@@ -39,8 +39,8 @@ $(ipynb_caches): cache/%.dict: texts/%.ipynb bin/cache-text
 
 # Learn which tags were used in which texts.
 
-cache/tags: $(rst_caches) $(ipynb_caches) bin/cache-tags
-	bin/cache-tags $(rst_caches) $(ipynb_caches) cache/tags
+cache/tags: $(rst_caches) $(html_caches) $(ipynb_caches) bin/cache-tags
+	bin/cache-tags $(rst_caches) $(html_caches) $(ipynb_caches) cache/tags
 
 include cache/tags
 
