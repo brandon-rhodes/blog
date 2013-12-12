@@ -7,7 +7,7 @@
   %for post in reversed(posts[-7:]):
   <tr>
     <td><i>{{ post['date'].strftime('%Y %B %d').replace(' 0', ' ') }}</i></td>
-    <td><a href="{{ post['rpath'] }}">{{ post['title'] }}</a></td>
+    <td><a href="{{ post['http-path'] }}">{{ post['title'] }}</a></td>
   </tr>
   %end
 </table>

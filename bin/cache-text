@@ -29,7 +29,8 @@ def main():
         text = f.read().decode('utf-8')
 
     info = {
-        'path': output_path,
+        'dict-path': output_path,
+        'http-path': output_path[len('cache'):-len('.dict')] + '/',
         'tags': set(),
         }
 

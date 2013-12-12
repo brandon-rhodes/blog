@@ -21,8 +21,6 @@ def read_posts():
     for path in paths:
         source = open(path).read()
         post = eval(source, global_dict)
-        post['rpath'] = '/{}/'.format(
-            post['path'].split('/', 1)[1].rsplit('.', 1)[0])
         posts.append(post)
     posts.sort(key=lambda d: d['date'])
     tags = set(tag for post in posts for tag in post['tags'])

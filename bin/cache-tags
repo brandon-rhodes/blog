@@ -23,7 +23,10 @@ def main():
             info_list.append(info)
     info_list.sort(key=lambda i: i['date'])
 
-    pairs = [(tag, info['path']) for info in info_list for tag in info['tags']]
+    pairs = [(tag, info['dict-path'])
+             for info in info_list
+             for tag in info['tags']]
+
     tags = set(tag for tag, path in pairs)
 
     with open(output_path, 'w') as f:
