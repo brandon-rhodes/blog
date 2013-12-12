@@ -19,6 +19,8 @@ if __name__ == '__main__':
             add_disqus=info.get('add_disqus', False),
             add_mathjax=info.get('add_mathjax', False),
             date=info.get('info'),  # huh?
+            previous_link=False,
+            next_link=False,
             tags=info.get('tags'),
             title=info['title'],
         ).items()))
