@@ -16,11 +16,4 @@
   %end
 </table>
 
-<p>
-  Tags:
-  %for tag in sorted(tags):
-  <a href="/brandon/category/{{ tag }}/">{{ tag }} ({{ len(tags) }})</a>
-  %end
-</p>
-
 %rebase layout title=None
