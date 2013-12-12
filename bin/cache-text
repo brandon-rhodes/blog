@@ -121,6 +121,13 @@ def parse_ipynb(info, json_text):
         info['tags'].update('-'.join(tag.strip().lower().split())
                             for tag in fields['tags'].split(','))
 
+    if 'date' in info and 'tags' in info:
+        table = metadata_table.format(
+            date=info['date'].strftime(u'%d %B %Y').lstrip(u'0'),
+            tags=u', '.join(sorted(info['tags'])),
+            )
+        info['body'] = info['body'].replace('</h1>', '</h1>\n' + table)
+
 def pygmentize_pre_blocks(html):
     formatter = HtmlFormatter()
 
@@ -164,35 +171,17 @@ def parse_blogofile_yaml(info):
                             in y['categories'].lower().split(', '))
 
     if '<h1' not in info['body']:
-        info['body'] = legacy_intro.format(
-            info['title'],
-            info['date'].strftime(u'%d %B %Y').lstrip(u'0'),
-            u', '.join(sorted(info['tags'])),
-            info['body'],
-            )
-
-legacy_intro = u"""\
-<h1>{}</h1>
-  <table class="docinfo" frame="void" rules="none">
-    <col class="docinfo-name" />
-    <col class="docinfo-content" />
-    <tbody valign="top">
-      <tr>
-        <th class="docinfo-name">Date:</th>
-        <td>{}</td></tr>
-      <tr class="field">
-        <th class="docinfo-name">Tags:</th>
-        <td class="field-body">{}</td>
-      </tr>
-    </tbody>
-  </table>
-{}"""
+        info['body'] = h1_and_metadata_table.format(
+            title=info['title'],
+            date=info['date'].strftime(u'%d %B %Y').lstrip(u'0'),
+            tags=u', '.join(sorted(info['tags'])),
+            ) + info['body']
 
 def prepend_blogofile_metadata(body, info):
     header = blogofile_metadata_template.format(**info)
     return header + body
 
-blogofile_metadata_template = u"""<h1>{title}</h1>
+metadata_table = u"""\
   <table class="docinfo" frame="void" rules="none">
     <col class="docinfo-name" />
     <col class="docinfo-content" />
@@ -207,6 +196,13 @@ blogofile_metadata_template = u"""<h1>{title}</h1>
     </tbody>
   </table>
 """
+
+h1_and_metadata_table = u"""<h1>{title}</h1>
+""" + metadata_table
+
+def prepend_blogofile_metadata(body, info):
+    header = h1_and_metadata_table.format(**info)
+    return header + body
 
 if __name__ == '__main__':
     main()
