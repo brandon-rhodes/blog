@@ -82,7 +82,7 @@ def main():
         items.append((info['date'], item))
 
     items.sort(reverse=True)
-    for date, element in items:
+    for date, element in items[:10]:
         channel.append(element)
 
     outdir = os.path.dirname(outpath)
