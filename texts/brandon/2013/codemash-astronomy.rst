@@ -2,7 +2,7 @@
 categories: Computing, Emacs, Python, PyEphem
 date: 2013/01/12 23:58:04
 permalink: http://rhodesmill.org/brandon/2013/codemash-astronomy/
-title: iPython Notebook and Astronomy at CodeMash
+title: IPython Notebook and Astronomy at CodeMash
 ---
 
 Another CodeMash is over!
@@ -35,7 +35,7 @@ It was not recorded, but here are the slides and source code:
 It was great fun to tout a genuine Python superpower
 in front of an attentive crowd yesterday,
 and to explain my excitement about how
-`iPython Notebook
+`IPython Notebook
 <http://ipython.org/ipython-doc/dev/interactive/htmlnotebook.html>`_
 and the scientific libraries behind it
 can impact education, research, and collaboration.
@@ -51,7 +51,7 @@ that the planets revolve around the sun —
 so I could jump right in to the visualizations
 without having to explain what an “orbit” is.
 Over the course of my talk I switched between my slides
-and a browser running a live iPython Notebook server
+and a browser running a live IPython Notebook server
 with a series of notebooks (available at the GitHub link above)
 that illustrate 2D plotting, 3D visualization, and numeric processing.
 
@@ -60,7 +60,7 @@ as the Python community was first mourning
 `John Hunter <http://numfocus.org/johnhunter/>`_.
 I thought it would be fitting if this were the year
 that CodeMash featured John's work,
-and iPython Notebook had caught my attention at PyCon 2012.
+and IPython Notebook had caught my attention at PyCon 2012.
 But what *really* gave my talk its momentum
 was seeing `Fernando Perez <http://fperez.org/>`_
 bring down the house
@@ -68,8 +68,8 @@ with his concluding keynote at `PyCon Canada <http://2012.pycon.ca/>`_
 in November —
 I have never seen a live demo generate
 such sustained eruptions of applause!
-In fact, the “iPython Examples” notebook with which I closed my talk
-is essentially a list of iPython features
+In fact, the “IPython Examples” notebook with which I closed my talk
+is essentially a list of IPython features
 that I did not even know existed until I saw Fernando speak.
 
 Here is Fernando's talk from November:
@@ -87,3 +87,4 @@ and the results are not pretty.
 Watch for notable improvement in the coming months
 as I practice “Notebook-driven” development
 and begin making things simpler!
+
