@@ -1,6 +1,15 @@
 """Routines to help render my web site."""
 
 import datetime
+import re
+
+more_template = '<p><a href="{}">Read the full article...</a></p>'
+
+def truncate_at_more(body, url):
+    pieces = re.split(r'<!-- *more *-->', body)
+    if len(pieces) == 1:
+        return body
+    return pieces[0] + more_template.format(url)
 
 def read_posts():
     global_dict = {'datetime': datetime}

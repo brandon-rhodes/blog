@@ -10,11 +10,12 @@ from email.utils import formatdate
 import xml.etree.ElementTree as etree
 from pytz import timezone
 
+from helpers import truncate_at_more
+
 atom_ns = 'http://www.w3.org/2005/Atom'
 content_ns = 'http://purl.org/rss/1.0/modules/content/'
 utc = timezone('GMT')
 midnight = datetime.time(0, 0, 0)
-more_template = '<p><a href="{}">Read the full article...</a></p>'
 
 def cut_off_h1(body):
     if '<h1' in body:
@@ -22,12 +23,6 @@ def cut_off_h1(body):
     if '<table class="docinfo" ' in body:
         body = body.split(u'</table>', 1)[1]
     return body
-
-def truncate_at_more(body, url):
-    pieces = re.split(r'<!-- *more *-->', body)
-    if len(pieces) == 1:
-        return body
-    return pieces[0] + more_template.format(url)
 
 def make_links_absolute(body):
     body = body.replace('href="/', 'href="http://rhodesmill.org/')
