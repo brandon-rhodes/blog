@@ -1,0 +1,26 @@
+% import helpers
+% posts, tags = helpers.read_posts()
+<h1>All Posts Ever</h1>
+
+<table>
+  %for post in reversed(posts):
+  <tr>
+    <td><i>{{ post['date'].strftime('%Y %B %d').replace(' 0', ' ') }}</i></td>
+    <td>
+      <a href="{{ post['http-path'] }}">{{ post['title'] }}</a>
+      <p>
+        {{! helpers.simple_preview(post['body']) }}
+      </p>
+    </td>
+  </tr>
+  %end
+</table>
+
+<p>
+  Tags:
+  %for tag in sorted(tags):
+  <a href="/brandon/category/{{ tag }}/">{{ tag }} ({{ len(tags) }})</a>
+  %end
+</p>
+
+%rebase layout title=None

@@ -452,6 +452,7 @@ table {
 }
 td {
     padding-right: 1em;
+    vertical-align: top;
 }
 p, li {
     margin-top: 1.5em;
