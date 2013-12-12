@@ -524,10 +524,6 @@ hr:after {
 .byline a {
     display: inline-block;
     color: #820002;
-    text-decoration: none;
-}
-.byline a:hover {
-    text-decoration: underline;
 }
 .cell pre {
     margin-left: 5em;
