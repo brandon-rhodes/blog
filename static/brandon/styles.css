@@ -508,6 +508,7 @@ iframe.twitter-tweet {
     margin-right: auto !important;
 }
 hr {
+    clear: both;
     padding: 0 0 1em;
     border: none;
     text-align: center;
@@ -516,7 +517,11 @@ hr:after {
     content: "❖";
     display: inline-block;
 }
+p a, p img {
+    display: inline-block;
+}
 .byline {
+    clear: both;
     margin-top: 0;
     width: 100%;
     text-align: right;
@@ -557,6 +562,37 @@ hr:after {
     color: #888;
     padding-right: 0.5em;
     font-weight: normal;
+}
+.image-aside {
+    float: right;
+    margin-left: 1em;
+    margin-bottom: 0.6em;
+}
+.gallery {
+    text-align: center;
+}
+.gallery a {
+    margin: 0.4em;
+}
+.gallery img {
+    box-shadow: 2px 2px 7px #5b511b;
+}
+.media-buttons {
+    text-align: center;
+}
+.media-buttons a {
+    display: inline-block;
+    border-radius: 10px;
+    min-height: 36px;
+    background: #f7f4e4 1px 1px url(/brandon/twitter.png) no-repeat;
+    text-decoration: none;
+    padding: 14px 10px 0 56px;
+}
+.media-buttons .button-stack-overflow {
+    background-image: url(/brandon/stackoverflow.png);
+}
+.media-buttons .button-flickr {
+    background-image: url(/brandon/flickr.png);
 }
 .admonition, .note {
     margin: 2em auto;

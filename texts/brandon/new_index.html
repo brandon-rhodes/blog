@@ -1,9 +1,35 @@
 % import helpers
 % posts, tags = helpers.read_posts()
 
+<p class="gallery">
+  <a href="http://www.flickr.com/photos/brandonrhodes/4439207389/">
+    <img src="http://farm5.staticflickr.com/4047/4439207389_44b4cd4d11_q.jpg"
+         alt="Brandon and his wife Jackie in Napa, California">
+  </a>
+  <a href="http://www.flickr.com/photos/romanlily/5083723/">
+    <img src="http://farm1.staticflickr.com/3/5083723_e31a17f2af_q.jpg"
+         alt="Brandon and his cat Persephone">
+  </a>
+  <a href="http://www.flickr.com/photos/jackiewyse/8315809616/">
+    <img src="http://farm9.staticflickr.com/8211/8315809616_3a31d057f2_q.jpg"
+         alt="Brandon at a diner for breakfast">
+  </a>
+</p>
+
+<h1>Brandon Rhodes</h1>
+
+<p class="figure media-buttons">
+  <a href="https://twitter.com/brandon_rhodes"
+     class="button-twitter">Twitter</a>
+  <a href="http://stackoverflow.com/users/85360/brandon-rhodes"
+     class="button-stack-overflow">Stack Overflow</a>
+  <a href="http://www.flickr.com/photos/brandonrhodes/"
+     class="button-flickr">Flickr</a>
+</p>
+
 <h2>Recent Posts</h2>
 
-<table>
+<table summary="Recent blog post dates and titles">
   %for post in reversed(posts[-7:]):
   <tr>
     <td><i>{{ post['date'].strftime('%Y %B %d').replace(' 0', ' ') }}</i></td>
@@ -13,13 +39,51 @@
 </table>
 
 <p>
-  <a href="/brandon/all/">All Posts Ever</a>
-</p>
-<p>
-  Tags:
-  %for tag in sorted(tags):
-  <a href="/brandon/category/{{ tag }}/">{{ tag }} ({{ len(tags) }})</a>
-  %end
+  <a href="/brandon/all/">Complete list of posts</a>
+  •
+  <a href="http://feeds.feedburner.com/LetsDiscussTheMatterFurther">
+    <img src="http://rhodesmill.org/brandon/feed24.png"
+         alt="RSS symbol"> RSS Feed
+  </a>
 </p>
 
-%rebase layout title=None
+<h2>Foundations of Python Network Programming</h2>
+
+<a class="image-aside image-reference" href="http://www.amazon.com/gp/product/1430230037/ref=as_li_ss_il?ie=UTF8&amp;tag=letsdisthemat-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=1430230037"><img alt="book cover" border="0" src="http://ws.assoc-amazon.com/widgets/q?_encoding=UTF8&amp;Format=_SL160_&amp;ASIN=1430230037&amp;MarketPlace=US&amp;ID=AsinImage&amp;WS=1&amp;tag=letsdisthemat-20&amp;ServiceVersion=20070822" ></a>
+
+<p>
+  I recently revised the popular book
+  <i>Foundations of Python Network Programming</i>
+  for Apress Media,
+  adding several chapters and updating all of its 2004 source code
+  to use modern Python libraries and techniques.
+  I replaced its guides to obsolete technologies
+  (like the old <tt>HTMLParser</tt> and <tt>mod_python</tt> modules)
+  with more modern libraries
+  including <tt>lxml</tt> <tt>wsgiref</tt> and <tt>json</tt>.
+</p>
+
+<p>
+  While the code in the printed book uses Python 2 syntax,
+  the public source code repository contains Python 3 versions
+  of all of the examples as well
+  (unless a library has not been ported yet).
+  Here are links to the source code and a free sample chapter:
+</p>
+
+<p>
+  <a href="https://github.com/brandon-rhodes/fopnp"
+     ><b>Public source code</b> — includes every listing in the book</a>
+  <br>
+  <a href="http://rhodesmill.org/brandon/chapters/screen-scraping/"
+     ><b>Free sample</b> — Chapter 10, “Screen Scraping”</a>
+</p>
+
+<p>
+  I am now revising the book again
+  to produce a third edition featuring Python 3
+  plus a whole list of new technologies
+  including <tt>requests</tt> and <tt>scapy</tt>!
+</p>
+
+<hr>
