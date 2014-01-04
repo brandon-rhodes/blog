@@ -409,6 +409,8 @@
     <a href="http://www.youtube.com/watch?v=UF77e2TeeQo">video</a>
     •
     <a href="http://rhodesmill.org/brandon/static/2008/grok-walk-duck.pdf">slides</a>
+    •
+    <a href="http://rhodesmill.org/brandon/static/2008/messagetree.tar.gz">messagetree.tar.gz</a>
   </p>
   <p>
     Web development often involves bringing together
@@ -420,7 +422,15 @@
     and how a declarative web framework like Grok
     lets you use the “Adapter” gang-of-four design pattern
     to link components together into a cleanly functioning site.
+    To extract and run the example in
+    <a href="http://rhodesmill.org/brandon/static/2008/messagetree.tar.gz">messagetree.tar.gz</a>,
+    type:
   </p>
+  <pre>tar xzf messagetree.tar.gz
+cd messagetree
+python bootstrap.py
+bin/buildout
+bin/run</pre>
 </div>
 
 %rebase layout title="Talks"
