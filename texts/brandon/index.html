@@ -1,5 +1,6 @@
 % import helpers
 % posts, tags = helpers.read_posts()
+% talks = helpers.read_talks()
 
 <p class="gallery">
   <a href="http://www.flickr.com/photos/brandonrhodes/4439207389/">
@@ -30,35 +31,15 @@
      class="button-flickr">Flickr</a>
 </p>
 
-<h2>Recent Talks</h2>
+<h2>Talks</h2>
 
 <table summary="Recent blog post dates and titles">
+  % for date, target, title in talks:
   <tr>
-    <td><i>2013 October 13</i></td>
-    <td><a href="talks/#clean-architecture-python"
-           >The Clean Architecture in Python</a></td>
+    <td><i>{{ date.replace(u' ', u' ') }}</i></td>
+    <td><a href="talks/#{{ target }}">{{ title }}</a></td>
   </tr>
-  <tr>
-    <td><i>2013 August 10</i></td>
-    <td><a href="talks/#skyfield-api"
-           >Skyfield and 15 Years of Bad APIs</a></td>
-  </tr>
-  <tr>
-    <td><i>2013 July 27</i></td>
-    <td><a href="talks/#sine-qua-nons"
-           >Keynote: Sine Qua Nons</a></td>
-  </tr>
-  <tr>
-    <td><i>2013 May 15</i></td>
-    <td><a href="talks/#copernican-keynote"
-           >Keynote: Copernican Refactoring</a></td>
-  </tr>
-  <tr>
-    <td><i>2013 March 15</i></td>
-    <td><a href="talks/#naming-of-ducks"
-           >The Naming of Ducks: Where Dynamic Types Meet Smart Conventions</a>
-    </td>
-  </tr>
+  % end
 </table>
 
 <p>

@@ -45,3 +45,18 @@ def read_posts():
     posts.sort(key=lambda d: d['date'])
     tags = set(tag for post in posts for tag in post['tags'])
     return posts, tags
+
+def read_talks():
+    body = open('texts/brandon/talks.html').read().decode('utf-8')
+    for line in body.splitlines():
+        line = line.strip()
+        if line.startswith('<a name='):
+            target = line.split('"')[1]
+            continue
+        if line.startswith('<h2>'):
+            title = line.split('<h2>')[1].split('</h2>')[0]
+            continue
+        if line.startswith('20'):
+            date = line.split('<')[0].replace(u' ', u'\xa0')
+            yield date, target, title
+            continue
