@@ -47,7 +47,7 @@ def read_posts():
     return posts, tags
 
 def read_talks():
-    body = open('texts/brandon/talks.html').read().decode('utf-8')
+    body = open('texts/brandon/talks.html', 'rb').read().decode('utf-8')
     for line in body.splitlines():
         line = line.strip()
         if line.startswith('<a name='):

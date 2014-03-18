@@ -83,7 +83,7 @@ def main():
 
         items.append((info['date'], item))
 
-    items.sort(reverse=True)
+    items.sort(reverse=True, key=lambda item: item[0])
     for date, element in items[:10]:
         channel.append(element)
 
@@ -93,7 +93,7 @@ def main():
     outdir = os.path.dirname(outpath)
     if not os.path.isdir(outdir):
         os.makedirs(outdir)
-    with open(outpath, 'w') as f:
+    with open(outpath, 'wb') as f:
         f.write(etree.tostring(feed))
 
 if __name__ == '__main__':

@@ -27,4 +27,4 @@ if __name__ == '__main__':
 
     tpl = SimpleTemplate(in_html, lookup=['templates'])
     out_html = tpl.render()
-    open(out_path, 'w').write(out_html.encode('utf-8'))
+    open(out_path, 'wb').write(out_html.encode('utf-8'))
