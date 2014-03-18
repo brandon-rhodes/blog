@@ -16,7 +16,7 @@ atom_ns = 'http://www.w3.org/2005/Atom'
 content_ns = 'http://purl.org/rss/1.0/modules/content/'
 utc = timezone('GMT')
 midnight = datetime.time(0, 0, 0)
-time_format = '%a, %d %b %Y %H:%M:%S %Z'
+time_format = '%a, %d %b %Y %H:%M:%S GMT'
 
 def cut_off_h1(body):
     if '<h1' in body:
@@ -67,8 +67,7 @@ def main():
     items = []  # (date, element) tuples
 
     for info in info_list:
-        url = ('http://rhodesmill.org/'
-               + post_cache_path.split('/', 1)[1].replace('.dict', '/'))
+        url = 'http://rhodesmill.org' + info['http-path']
 
         body = info['body']
         body = cut_off_h1(body)
