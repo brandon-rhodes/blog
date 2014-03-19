@@ -1,9 +1,8 @@
 """Build process powered by `contingent`."""
 
 import os
-#import parse_utils
 import re
-import sys
+import yaml
 from blog_project import Base, compute
 from bottle import SimpleTemplate
 from builderlib import Builder
@@ -11,6 +10,7 @@ from datetime import datetime
 from docutils.core import publish_parts
 from glob import glob
 from html.parser import HTMLParser
+from io import StringIO
 from operator import attrgetter
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name, guess_lexer
@@ -52,9 +52,39 @@ class Post(Base):
 
     def parse(self):
         self.report('parsing')
+        if self.source_path.endswith('.html'):
+            self._parse_html()
+        elif self.source_path.endswith('.rst'):
+            self._parse_rst()
+
+    def _parse_html(self):
         source = self.source
         if detect_blogofile(source):
-            source, flags = convert_blogofile(source)
+            heading, flags, other_html = convert_blogofile(source)
+            parts = parse_rst(heading)
+            body_html = parts['docinfo'] + other_html
+            title = html_parser.unescape(parts['title'])
+            self.add_disqus = True
+        else:
+            body_html = source
+            h1_list = re.findall(r'<h1>([^<]*)</h1>', body_html)
+            title = h1_list[0] if h1_list else 'Untitled'
+            self.add_disqus = True
+
+        body_html = pygmentize_pre_blocks(body_html)
+        body_html = body_html.replace('\n</pre>', '</pre>')
+
+        self.add_mathjax = False
+        self.body_html = body_html
+        self.next_link = None
+        self.previous_link = None
+        self.title = html_parser.unescape(title)
+
+    def _parse_rst(self):
+        source = self.source
+        if detect_blogofile(source):
+            heading, flags, body = convert_blogofile(source)
+            source = heading + body
             self.add_disqus = True
             self.add_mathjax = flags['add_mathjax']
         else:
@@ -68,8 +98,7 @@ class Post(Base):
         self.tags = ['-'.join(phrase.strip().lower().split())
                      for phrase in fields['tags'].split(',')]
 
-        parts = publish_parts(source, writer_name='html',
-                              settings_overrides={'initial_header_level': 2})
+        parts = parse_rst(source)
         body_html = parts['docinfo'] + parts['fragment']
         body_html = pygmentize_pre_blocks(body_html)
         body_html = body_html.replace('\n</pre>', '</pre>')
@@ -86,6 +115,11 @@ class Post(Base):
         html = template.render(self.__dict__)
         with open(self.output_path, 'w', encoding='utf-8') as f:
             f.write(html)
+
+
+def parse_rst(source):
+    return publish_parts(source, writer_name='html',
+                         settings_overrides={'initial_header_level': 2})
 
 
 def pygmentize_pre_blocks(html):
@@ -115,9 +149,10 @@ def detect_blogofile(source):
 def convert_blogofile(source):
     """Replace an old blogofile header with a modern RST title and fields."""
 
-    empty_string, yaml, body = source.split('---', 2)
-    yaml_lines = yaml.strip().splitlines()
-    yams = dict(line.strip().split(': ', 1) for line in yaml_lines)
+    empty_string, yaml_text, body = source.split('---', 2)
+    # yaml_lines = yaml.strip().splitlines()
+    # yams = dict(line.strip().split(': ', 1) for line in yaml_lines)
+    yams = yaml.load(StringIO(yaml_text))
 
     title = yams.pop('title')
     date = datetime.strptime(yams.pop('date'), '%Y/%m/%d %H:%M:%S').date()
@@ -130,6 +165,7 @@ def convert_blogofile(source):
         fields.append(('Tags', tags))
 
     flags = {
+        'add_disqus': yams.pop('add_disqus', False),
         'add_mathjax': yams.pop('add_mathjax', False),
         }
 
@@ -143,20 +179,26 @@ def convert_blogofile(source):
     rule = '=' * len(title)
     lines = ['', rule, title, rule, '', '']
     lines.extend(':{}: {}'.format(name, value) for name, value in fields)
-    lines.append(body)
-    return '\n'.join(lines), flags
+    return '\n'.join(lines), flags, body
 
 
 def main():
     builder = Builder(compute)
     source_directory = 'texts/brandon'
     output_directory = 'output/brandon'
-    sources = glob(source_directory + '/2*/*.rst')
+    sources = (glob(source_directory + '/*/*.html') +
+               #glob(source_directory + '/*/*.ipynb') +
+               glob(source_directory + '/*/*.rst'))
 
     posts = []
     for source_path in sources:
-        output_path = (source_path.replace(source_directory, output_directory)
-                       .replace('.rst', '/index.html'))
+        dirname, filename = os.path.split(source_path)
+        dirname = dirname.replace(source_directory, output_directory)
+        base, ext = filename.rsplit('.', 1)
+        if filename == 'index':
+            raise RuntimeError('todo')
+        else:
+            output_path = os.path.join(dirname, base, 'index.html')
         post = Post(builder, source_path, output_path)
         post.render()
         posts.append(post)
