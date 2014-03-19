@@ -53,9 +53,13 @@ class Post(Base):
     def parse(self):
         self.report('parsing')
         source = self.source
-        is_blogofile = detect_blogofile(source)
-        if is_blogofile:
-            source = convert_blogofile(source)
+        if detect_blogofile(source):
+            source, flags = convert_blogofile(source)
+            self.add_disqus = True
+            self.add_mathjax = flags['add_mathjax']
+        else:
+            self.add_disqus = False
+            self.add_mathjax = False
 
         field_matches = re.findall(r'\n:([^:]+): +(.*)', source)
         fields = {name.lower(): value for name, value in field_matches}
@@ -70,12 +74,10 @@ class Post(Base):
         body_html = pygmentize_pre_blocks(body_html)
         body_html = body_html.replace('\n</pre>', '</pre>')
 
-        self.add_disqus = is_blogofile
-        self.add_mathjax = False
         self.body_html = body_html
         self.next_link = None
         self.previous_link = None
-        self.title = parts['title']
+        self.title = html_parser.unescape(parts['title'])
 
     def render(self):
         self.parse()
@@ -115,34 +117,41 @@ def convert_blogofile(source):
 
     empty_string, yaml, body = source.split('---', 2)
     yaml_lines = yaml.strip().splitlines()
-    fields = dict(line.strip().split(': ', 1) for line in yaml_lines)
+    yams = dict(line.strip().split(': ', 1) for line in yaml_lines)
 
-    title = fields.pop('title')
-    date = datetime.strptime(fields.pop('date'), '%Y/%m/%d %H:%M:%S').date()
-    datestr = date.strftime('%d %B %Y').replace(' 0', ' ')
-    tags = fields.pop('categories').lower()
-    del fields['permalink']
+    title = yams.pop('title')
+    date = datetime.strptime(yams.pop('date'), '%Y/%m/%d %H:%M:%S').date()
+    tags = yams.pop('categories', '').lower()
 
-    if fields:
+    fields = [
+        ('Date', date.strftime('%d %B %Y').lstrip('0')),
+        ]
+    if tags:
+        fields.append(('Tags', tags))
+
+    flags = {
+        'add_mathjax': yams.pop('add_mathjax', False),
+        }
+
+    del yams['permalink']
+    if yams:
         print('Unrecognized YAML fields:')
-        for name in sorted(fields):
-            print(name, fields[name])
+        for name in sorted(yams):
+            print(name, yams[name])
         exit(2)
 
     rule = '=' * len(title)
     lines = ['', rule, title, rule, '', '']
-    lines.append(':Date: {}'.format(datestr))
-    lines.append(':Tags: {}'.format(tags))
+    lines.extend(':{}: {}'.format(name, value) for name, value in fields)
     lines.append(body)
-    return '\n'.join(lines)
+    return '\n'.join(lines), flags
 
 
 def main():
     builder = Builder(compute)
-    source_directory = 'texts/brandon/2013'
-    output_directory = 'output/brandon/2013'
-
-    sources = glob(source_directory + '/*.rst')
+    source_directory = 'texts/brandon'
+    output_directory = 'output/brandon'
+    sources = glob(source_directory + '/2*/*.rst')
 
     posts = []
     for source_path in sources:

@@ -12,23 +12,25 @@
   %end
 </head>
 <body>
-  %if title != 'Brandon Rhodes':
-  <p class="byline">
-    by Brandon Rhodes
-    %if previous_link:
-    • <a title="Home Page" href="/brandon/">Previous</a>
-    %end
-    % if next_link:
-    • <a title="Home Page" href="/brandon/">Next</a>
-    %end
-    • <a title="Home Page" href="/brandon/">Home</a>
-  </p>
+
+%if title != 'Brandon Rhodes':
+<p class="byline">
+  by Brandon Rhodes
+  %if previous_link:
+  • <a title="Home Page" href="/brandon/">Previous</a>
   %end
-  <h1>{{ title }}</h1>
+  % if next_link:
+  • <a title="Home Page" href="/brandon/">Next</a>
+  %end
+  • <a title="Home Page" href="/brandon/">Home</a>
+</p>
+%end
+<h1>{{ title }}</h1>
 {{! body_html }}
-  %if add_disqus:
-  %include disqus.html
-  %end
-  <p class="byline">©2014</p>
+%if add_disqus:
+%include disqus.html
+%end
+<p class="byline">©2014</p>
+
 </body>
 </html>
