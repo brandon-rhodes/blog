@@ -2,7 +2,6 @@
 categories: Python, Computing
 date: 2012/04/06 03:02:10
 permalink: http://rhodesmill.org/brandon/2012/adventure/
-tags: ''
 title: Adventure in Python 3
 ---
 

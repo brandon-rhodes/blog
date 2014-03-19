@@ -2,7 +2,6 @@
 categories: Computing
 date: 2011/05/13 10:09:46
 permalink: http://rhodesmill.org/brandon/2011/adding-compass/
-tags: ''
 title: Adding Compass to your project
 ---
 

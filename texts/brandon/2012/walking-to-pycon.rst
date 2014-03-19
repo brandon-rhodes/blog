@@ -2,7 +2,6 @@
 categories: Python
 date: 2012/03/13 02:59:10
 permalink: http://rhodesmill.org/brandon/2012/walking-to-pycon/
-tags: ''
 title: Walking to PyCon on your own two feet
 ---
 

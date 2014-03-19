@@ -2,7 +2,6 @@
 categories: Computing, Python
 date: 2012/01/10 22:40:55
 permalink: http://rhodesmill.org/brandon/2012/codemash/
-tags: ''
 title: Why am I going to CodeMash?
 ---
 

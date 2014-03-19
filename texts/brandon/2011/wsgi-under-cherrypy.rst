@@ -2,7 +2,6 @@
 categories: Computing, Python
 date: 2011/05/04 23:00:28
 permalink: http://rhodesmill.org/brandon/2011/wsgi-under-cherrypy/
-tags: ''
 title: Mounting WSGI Applications Under CherryPy
 ---
 

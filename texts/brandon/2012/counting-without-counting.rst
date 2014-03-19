@@ -2,7 +2,6 @@
 categories: Python, Computing
 date: 2012/03/30 23:34:38
 permalink: http://rhodesmill.org/brandon/2012/counting-without-counting/
-tags: ''
 title: Counting, without counting, in Python
 ---
 

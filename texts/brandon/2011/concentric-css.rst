@@ -2,7 +2,6 @@
 categories: Computing
 date: 2011/09/10 02:22:46
 permalink: http://rhodesmill.org/brandon/2011/concentric-css/
-tags: ''
 title: Concentric CSS
 ---
 
