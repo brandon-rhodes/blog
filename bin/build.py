@@ -3,6 +3,7 @@
 import os
 import re
 import yaml
+
 from blog_project import Base, compute
 from bottle import SimpleTemplate
 from builderlib import Builder
@@ -12,6 +13,11 @@ from glob import glob
 from html.parser import HTMLParser
 from io import StringIO
 from operator import attrgetter
+
+from IPython.config import Config
+from IPython.nbconvert import HTMLExporter
+from IPython.nbformat import current as nbformat
+
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name, guess_lexer
 from pygments.formatters import HtmlFormatter
@@ -52,10 +58,9 @@ class Post(Base):
 
     def parse(self):
         self.report('parsing')
-        if self.source_path.endswith('.html'):
-            self._parse_html()
-        elif self.source_path.endswith('.rst'):
-            self._parse_rst()
+        ext = self.source_path.rsplit('.', 1)[1]
+        _parse_method = getattr(self, '_parse_' + ext)
+        _parse_method()
 
     def _parse_html(self):
         source = self.source
@@ -79,6 +84,48 @@ class Post(Base):
         self.next_link = None
         self.previous_link = None
         self.title = html_parser.unescape(title)
+
+    def _parse_ipynb(self):
+        notebook = nbformat.reads_json(self.source)
+
+        config = Config({'HTMLExporter': {'default_template': 'basic'}})
+        exporter = HTMLExporter(config=config)
+        body, resources = exporter.from_notebook_node(notebook)
+
+        self.add_mathjax = r'\(' in body
+
+        fields = notebook['metadata']
+
+        if 'date' in fields:
+            self.date = datetime.strptime(fields['date'], '%d %B %Y').date()
+        else:
+            self.date = datetime.now().date()
+        self.tags = set()
+        if 'tags' in fields:
+            self.tags.update('-'.join(tag.strip().lower().split())
+                             for tag in fields['tags'].split(','))
+
+        if self.date and self.tags:
+            heading = ':Date: {}\n:Tags: {}\n'.format(
+                self.date.strftime('%d %B %Y').lstrip('0'),
+                ', '.join(sorted(self.tags)),
+                )
+            parts = parse_rst(heading)
+            body = body.replace(
+                '</h1>\n', '</h1>\n' + parts['docinfo'])
+
+        pieces = re.split(r'<h1[^>]*>([^>]*)</h1>', body)
+        if len(pieces) == 3:
+            before, self.title, after = pieces
+            body = before + after
+        else:
+            self.title = ''
+
+        self.body_html = body.replace('\n</pre>', '</pre>')
+
+        self.add_disqus = False
+        self.next_link = None
+        self.previous_link = None
 
     def _parse_rst(self):
         source = self.source
@@ -150,8 +197,6 @@ def convert_blogofile(source):
     """Replace an old blogofile header with a modern RST title and fields."""
 
     empty_string, yaml_text, body = source.split('---', 2)
-    # yaml_lines = yaml.strip().splitlines()
-    # yams = dict(line.strip().split(': ', 1) for line in yaml_lines)
     yams = yaml.load(StringIO(yaml_text))
 
     title = yams.pop('title')
@@ -187,7 +232,7 @@ def main():
     source_directory = 'texts/brandon'
     output_directory = 'output/brandon'
     sources = (glob(source_directory + '/*/*.html') +
-               #glob(source_directory + '/*/*.ipynb') +
+               glob(source_directory + '/*/*.ipynb') +
                glob(source_directory + '/*/*.rst'))
 
     posts = []
