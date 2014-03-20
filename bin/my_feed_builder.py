@@ -1,13 +1,7 @@
 #!/usr/bin/env python
 
-import datetime  # must be imported at top level to eval() dictionary
-import os
-import re
-import sys
-import time
-from email.utils import formatdate
-
 import xml.etree.ElementTree as etree
+from datetime import time
 from pytz import timezone
 
 from helpers import truncate_at_more
@@ -15,7 +9,7 @@ from helpers import truncate_at_more
 atom_ns = 'http://www.w3.org/2005/Atom'
 content_ns = 'http://purl.org/rss/1.0/modules/content/'
 utc = timezone('GMT')
-midnight = datetime.time(0, 0, 0)
+midnight = time(0, 0, 0)
 time_format = '%a, %d %b %Y %H:%M:%S GMT'
 
 def cut_off_h1(body):
