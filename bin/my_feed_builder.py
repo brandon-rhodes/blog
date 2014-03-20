@@ -45,10 +45,8 @@ def render_feed(tag, posts):
         href="http://rhodesmill.org/brandon/category/python/feed/")
     sub(channel, 'link').text = "http://rhodesmill.org/brandon/"
     pubDate = sub(channel, 'pubDate')
-    #sub(channel, 'title').text = "{} posts by Brandon Rhodes".format(ttag)
-    sub(channel, 'title').text = "Python posts by Brandon Rhodes".format(ttag)
-    #sub(channel, 'description').text = "Blog posts about {}".format(ttag)
-    sub(channel, 'description').text = "Blog posts about the Python programming language"
+    sub(channel, 'title').text = "{} posts by Brandon Rhodes".format(ttag)
+    sub(channel, 'description').text = "Blog posts about {}".format(ttag)
 
     items = []  # (date, element) tuples
 
