@@ -29,11 +29,11 @@ def make_links_absolute(body):
     body = body.replace('href="/', 'href="http://rhodesmill.org/')
     return body
 
-def main():
-    tag_cache_path = sys.argv[1]
-    tag = sys.argv[2]
-    outpath = sys.argv[3]
+def render_feed(tag, posts):
+    if not posts:
+        return b''
 
+    ttag = tag.title()
     sub = etree.SubElement
 
     etree.register_namespace('atom', atom_ns)
@@ -45,31 +45,17 @@ def main():
         href="http://rhodesmill.org/brandon/category/python/feed/")
     sub(channel, 'link').text = "http://rhodesmill.org/brandon/"
     pubDate = sub(channel, 'pubDate')
-    sub(channel, 'title').text = "Python posts by Brandon Rhodes"
-    sub(channel, 'description').text = (
-        "Blog posts about the Python programming language")
-
-    with open(tag_cache_path) as f:
-        lines = f.readlines()
-
-    info_list = []
-
-    for line in lines:
-        if not line.startswith('#'):  # data we want is in the comments
-            continue
-        hash_sign, this_tag, post_cache_path = line.split()
-        if this_tag != tag:
-            continue
-        with open(post_cache_path) as ff:
-            info = eval(ff.read())
-        info_list.append(info)
+    #sub(channel, 'title').text = "{} posts by Brandon Rhodes".format(ttag)
+    sub(channel, 'title').text = "Python posts by Brandon Rhodes".format(ttag)
+    #sub(channel, 'description').text = "Blog posts about {}".format(ttag)
+    sub(channel, 'description').text = "Blog posts about the Python programming language"
 
     items = []  # (date, element) tuples
 
-    for info in info_list:
-        url = 'http://rhodesmill.org' + info['http-path']
+    for post in posts:
+        url = 'http://rhodesmill.org' + post.url_path
 
-        body = info['body']
+        body = post.body_html
         body = cut_off_h1(body)
         body = truncate_at_more(body, url)
         body = make_links_absolute(body)
@@ -77,24 +63,17 @@ def main():
         item = etree.Element('item')
         sub(item, 'guid').text = url
         sub(item, 'link').text = url
-        sub(item, 'title').text = info['title']
-        sub(item, 'pubDate').text = info['date'].strftime(time_format)
+        sub(item, 'title').text = post.title
+        sub(item, 'pubDate').text = post.date.strftime(time_format)
         sub(item, '{%s}encoded' % content_ns).text = body
 
-        items.append((info['date'], item))
+        items.append((post.date, item))
 
     items.sort(reverse=True, key=lambda item: item[0])
     for date, element in items[:10]:
         channel.append(element)
 
-    most_recent_date = max(info['date'] for info in info_list)
+    most_recent_date = max(post.date for post in posts)
     pubDate.text = most_recent_date.strftime(time_format)
 
-    outdir = os.path.dirname(outpath)
-    if not os.path.isdir(outdir):
-        os.makedirs(outdir)
-    with open(outpath, 'wb') as f:
-        f.write(etree.tostring(feed))
-
-if __name__ == '__main__':
-    main()
+    return etree.tostring(feed)

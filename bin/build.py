@@ -2,17 +2,20 @@
 
 import os
 import re
+import sys
 import yaml
 
 from blog_project import Base, compute
 from bottle import SimpleTemplate
 from builderlib import Builder
+from collections import defaultdict
 from datetime import datetime
 from docutils.core import publish_parts
 from glob import glob
 from html.parser import HTMLParser
 from io import StringIO
 from operator import attrgetter
+from pprint import pprint
 
 from IPython.config import Config
 from IPython.nbconvert import HTMLExporter
@@ -22,7 +25,10 @@ from pygments import highlight
 from pygments.lexers import get_lexer_by_name, guess_lexer
 from pygments.formatters import HtmlFormatter
 
+import my_feed_builder
+
 html_parser = HTMLParser()
+
 
 class Blog(Base):
     def __init__(self, builder):
@@ -32,10 +38,34 @@ class Blog(Base):
     def __repr__(self):
         return '<Blog>'
 
-    @property
     def sorted_posts(self):
         print('Re-sorting posts')
-        return sorted(self.posts, key=attrgetter('date'))
+        posts = (post for post in self.posts
+                 if (post.date is not None) and post.tags)
+        return sorted(posts, key=attrgetter('date'))
+
+    def posts_by_tag(self):
+        groups = defaultdict(list)
+        for post in self.sorted_posts():
+            for tag in post.tags:
+                groups[tag].append(post)
+        return groups
+
+    def tags(self):
+        return set(self.posts_by_tag())
+
+    def posts_for_tag(self, tag):
+        return self.posts_by_tag()[tag]
+
+    def render_feed(self, tag):
+        output_path = 'output/brandon/category/{}/feed/index.xml'.format(tag)
+        print('Rendering', output_path)
+        html = my_feed_builder.render_feed(tag, self.posts_for_tag(tag))
+        outdir = os.path.dirname(output_path)
+        if not os.path.isdir(outdir):
+            os.makedirs(outdir)
+        with create_file(output_path, binary=True) as f:
+            f.write(html)
 
 
 class Post(Base):
@@ -44,20 +74,23 @@ class Post(Base):
         self._builder = builder
         self.source_path = source_path
         self.output_path = output_path
+        self.url_path = (output_path.replace('output', '')
+                                    .replace('index.html', ''))
         self._load()
 
     def __repr__(self):
         return '<Post {!r}>'.format(self.source_path.split('/')[-1])
 
-    def report(self, verb):
+    def _report(self, verb):
         print(verb.title(), self.source_path)
 
     def _load(self):
+        #self._report('loading')
         with open(self.source_path, encoding='utf-8') as f:
             self.source = f.read()
 
     def parse(self):
-        self.report('parsing')
+        self._report('parsing')
         ext = self.source_path.rsplit('.', 1)[1]
         _parse_method = getattr(self, '_parse_' + ext)
         _parse_method()
@@ -65,16 +98,20 @@ class Post(Base):
     def _parse_html(self):
         source = self.source
         if detect_blogofile(source):
-            heading, flags, other_html = convert_blogofile(source)
+            heading, info, other_html = convert_blogofile(source)
             parts = parse_rst(heading)
             body_html = parts['docinfo'] + other_html
             title = html_parser.unescape(parts['title'])
             self.add_disqus = True
+            self.date = info['date']
+            self.tags = info['tags']
         else:
             body_html = source
             h1_list = re.findall(r'<h1>([^<]*)</h1>', body_html)
             title = h1_list[0] if h1_list else 'Untitled'
             self.add_disqus = True
+            self.date = None
+            self.tags = ()
 
         body_html = pygmentize_pre_blocks(body_html)
         body_html = body_html.replace('\n</pre>', '</pre>')
@@ -130,10 +167,10 @@ class Post(Base):
     def _parse_rst(self):
         source = self.source
         if detect_blogofile(source):
-            heading, flags, body = convert_blogofile(source)
+            heading, info, body = convert_blogofile(source)
             source = heading + body
             self.add_disqus = True
-            self.add_mathjax = flags['add_mathjax']
+            self.add_mathjax = info['add_mathjax']
         else:
             self.add_disqus = False
             self.add_mathjax = False
@@ -156,13 +193,19 @@ class Post(Base):
         self.title = html_parser.unescape(parts['title'])
 
     def render(self):
-        self.parse()
-        self.report('rendering')
+        self._report('rendering')
         template = SimpleTemplate(name='layout.html', lookup=['templates'])
-        html = template.render(self.__dict__)
-        with open(self.output_path, 'w', encoding='utf-8') as f:
+        html = template.render(post=self)
+        with create_file(self.output_path) as f:
             f.write(html)
 
+
+def create_file(path, binary=False):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    if binary:
+        return open(path, 'wb')
+    else:
+        return open(path, 'w', encoding='utf-8')
 
 def parse_rst(source):
     return publish_parts(source, writer_name='html',
@@ -209,9 +252,11 @@ def convert_blogofile(source):
     if tags:
         fields.append(('Tags', tags))
 
-    flags = {
+    info = {
         'add_disqus': yams.pop('add_disqus', False),
         'add_mathjax': yams.pop('add_mathjax', False),
+        'date': date,
+        'tags': [s.strip().replace(' ', '-') for s in tags.split(',')]
         }
 
     del yams['permalink']
@@ -224,19 +269,23 @@ def convert_blogofile(source):
     rule = '=' * len(title)
     lines = ['', rule, title, rule, '', '']
     lines.extend(':{}: {}'.format(name, value) for name, value in fields)
-    return '\n'.join(lines), flags, body
+    return '\n'.join(lines), info, body
 
 
 def main():
     builder = Builder(compute)
     source_directory = 'texts/brandon'
     output_directory = 'output/brandon'
-    sources = (glob(source_directory + '/*/*.html') +
-               glob(source_directory + '/*/*.ipynb') +
-               glob(source_directory + '/*/*.rst'))
+    base_pattern = source_directory + '/*'
+    base_pattern = source_directory + '/2013'
+    sources = (glob(base_pattern + '/*.html') +
+               glob(base_pattern + '/*.ipynb') +
+               glob(base_pattern + '/*.rst'))
 
     posts = []
     for source_path in sources:
+        if 'os9' not in source_path:
+            continue
         dirname, filename = os.path.split(source_path)
         dirname = dirname.replace(source_directory, output_directory)
         base, ext = filename.rsplit('.', 1)
@@ -245,14 +294,29 @@ def main():
         else:
             output_path = os.path.join(dirname, base, 'index.html')
         post = Post(builder, source_path, output_path)
-        post.render()
         posts.append(post)
 
-    return
+    blog = Blog(builder)
+    blog.posts = posts
+
+    for post in posts:
+        post.parse()
+        post.render()
+
+    for tag in blog.tags():
+        blog.render_feed(tag)
+
+    # with open('test.dot', 'w') as f:
+    #     pprint(builder.graph._targets)
+    #     f.write(builder.graph.as_graphviz())
+
+    if len(sys.argv) == 1:
+        return
+
     import time
     while True:
         print('-')
-        time.sleep(30.0)
+        time.sleep(1.0)
         for post in posts:
             post._load()
         builder.rebuild()

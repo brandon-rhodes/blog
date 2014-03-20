@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ title or 'by Brandon Rhodes' }}</title>
+  <title>{{ post.title or 'by Brandon Rhodes' }}</title>
   <link rel="stylesheet" type="text/css" href="/brandon/styles.css" />
-  %if add_mathjax:
+  %if post.add_mathjax:
   <script type="text/javascript"
           src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
   </script>
@@ -13,21 +13,21 @@
 </head>
 <body>
 
-%if title != 'Brandon Rhodes':
+%if post.title != 'Brandon Rhodes':
 <p class="byline">
   by Brandon Rhodes
-  %if previous_link:
+  %if post.previous_link:
   • <a title="Home Page" href="/brandon/">Previous</a>
   %end
-  % if next_link:
+  % if post.next_link:
   • <a title="Home Page" href="/brandon/">Next</a>
   %end
   • <a title="Home Page" href="/brandon/">Home</a>
 </p>
 %end
-<h1>{{ title }}</h1>
-{{! body_html }}
-%if add_disqus:
+<h1>{{ post.title }}</h1>
+{{! post.body_html }}
+%if post.add_disqus:
 %include disqus.html
 %end
 <p class="byline">©2014</p>
