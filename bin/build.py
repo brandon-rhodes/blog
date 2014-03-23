@@ -5,7 +5,6 @@ import re
 import sys
 import yaml
 
-from blog_project import Base, compute
 from bottle import SimpleTemplate
 from builderlib import Builder
 from collections import defaultdict
@@ -25,12 +24,13 @@ from pygments import highlight
 from pygments.lexers import get_lexer_by_name, guess_lexer
 from pygments.formatters import HtmlFormatter
 
+import magic
 import my_feed_builder
 
 html_parser = HTMLParser()
 
 
-class Blog(Base):
+class Blog(magic.Base):
     def __init__(self, builder):
         self._builder = builder
         self.posts = []
@@ -68,15 +68,15 @@ class Blog(Base):
             f.write(html)
 
 
-class Post(Base):
+class Post(magic.Base):
 
-    def __init__(self, builder, source_path, output_path):
+    def __init__(self, builder, fs, source_path, output_path):
         self._builder = builder
+        self.fs = fs
         self.source_path = source_path
         self.output_path = output_path
         self.url_path = (output_path.replace('output', '')
                                     .replace('index.html', ''))
-        self._load()
 
     def __repr__(self):
         return '<Post {!r}>'.format(self.source_path.split('/')[-1])
@@ -84,13 +84,14 @@ class Post(Base):
     def _report(self, verb):
         print(verb.title(), self.source_path)
 
-    def _load(self):
-        #self._report('loading')
-        with open(self.source_path, encoding='utf-8') as f:
-            self.source = f.read()
+    # def _load(self):
+    #     #self._report('loading')
+    #     with open(self.source_path, encoding='utf-8') as f:
+    #         self.source = f.read()
 
     def parse(self):
         self._report('parsing')
+        self.source = self.fs.read(self.source_path)
         ext = self.source_path.rsplit('.', 1)[1]
         _parse_method = getattr(self, '_parse_' + ext)
         _parse_method()
@@ -273,7 +274,10 @@ def convert_blogofile(source):
 
 
 def main():
-    builder = Builder(compute)
+    builder = Builder(magic.compute)
+    fs = magic.Filesystem()
+    fs._builder = builder
+
     source_directory = 'texts/brandon'
     output_directory = 'output/brandon'
     base_pattern = source_directory + '/*'
@@ -291,7 +295,7 @@ def main():
             raise RuntimeError('todo')
         else:
             output_path = os.path.join(dirname, base, 'index.html')
-        post = Post(builder, source_path, output_path)
+        post = Post(builder, fs, source_path, output_path)
         posts.append(post)
 
     blog = Blog(builder)
@@ -304,12 +308,18 @@ def main():
     for tag in blog.tags():
         blog.render_feed(tag)
 
-    # with open('test.dot', 'w') as f:
-    #     pprint(builder.graph._targets)
-    #     f.write(builder.graph.as_graphviz())
+    with open('test.dot', 'w') as f:
+        #pprint(builder.graph._targets)
+        f.write(builder.graph.as_graphviz())
 
     if len(sys.argv) == 1:
         return
+
+    while True:
+        fs.wait()
+        builder.rebuild()
+
+    return
 
     import time
     while True:
