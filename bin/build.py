@@ -45,6 +45,7 @@ class Blog(magic.Base):
         return sorted(posts, key=attrgetter('date'))
 
     def posts_by_tag(self):
+        print('PBT')
         groups = defaultdict(list)
         for post in self.sorted_posts():
             for tag in post.tags:
@@ -56,6 +57,10 @@ class Blog(magic.Base):
 
     def posts_for_tag(self, tag):
         return self.posts_by_tag()[tag]
+
+    def render_feeds(self):
+        for tag in self.tags():
+            self.render_feed(tag)
 
     def render_feed(self, tag):
         output_path = 'output/brandon/category/{}/feed/index.xml'.format(tag)
@@ -281,13 +286,15 @@ def main():
     source_directory = 'texts/brandon'
     output_directory = 'output/brandon'
     base_pattern = source_directory + '/*'
-    # base_pattern = source_directory + '/2013'
+    base_pattern = source_directory + '/2013'
     sources = (glob(base_pattern + '/*.html') +
                glob(base_pattern + '/*.ipynb') +
                glob(base_pattern + '/*.rst'))
 
     posts = []
     for source_path in sources:
+        if 'os9' not in source_path:
+            continue
         dirname, filename = os.path.split(source_path)
         dirname = dirname.replace(source_directory, output_directory)
         base, ext = filename.rsplit('.', 1)
@@ -305,8 +312,7 @@ def main():
         post.parse()
         post.render()
 
-    for tag in blog.tags():
-        blog.render_feed(tag)
+    blog.render_feeds()
 
     with open('test.dot', 'w') as f:
         #pprint(builder.graph._targets)
