@@ -286,15 +286,13 @@ def main():
     source_directory = 'texts/brandon'
     output_directory = 'output/brandon'
     base_pattern = source_directory + '/*'
-    base_pattern = source_directory + '/2013'
+    #base_pattern = source_directory + '/2013'
     sources = (glob(base_pattern + '/*.html') +
                glob(base_pattern + '/*.ipynb') +
                glob(base_pattern + '/*.rst'))
 
     posts = []
     for source_path in sources:
-        if 'os9' not in source_path:
-            continue
         dirname, filename = os.path.split(source_path)
         dirname = dirname.replace(source_directory, output_directory)
         base, ext = filename.rsplit('.', 1)
