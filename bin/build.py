@@ -316,7 +316,7 @@ def main():
         return
 
     while True:
-        fs.wait()
+        fs._wait()
         builder.rebuild()
 
     return
