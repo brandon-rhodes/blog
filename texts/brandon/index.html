@@ -1,5 +1,4 @@
 % import helpers
-% posts, tags = helpers.read_posts()
 % talks = helpers.read_talks()
 
 <p class="gallery">
@@ -33,7 +32,7 @@
 
 <h2>Talks</h2>
 
-<table summary="Recent blog post dates and titles">
+<table summary="List of all my talks">
   % for date, target, title in talks:
   <tr>
     <td><i>{{ date.replace(u' ', u' ') }}</i></td>
@@ -44,11 +43,11 @@
 
 <h2>Recent Writing</h2>
 
-<table summary="Recent blog post dates and titles">
-  %for post in reversed(posts[-7:]):
+<table summary="My recent blog post dates and titles">
+  %for post in blog.most_recent_posts(7):
   <tr>
-    <td><i>{{ post['date'].strftime('%Y %B %d').replace(' 0', ' ') }}</i></td>
-    <td><a href="{{ post['http-path'] }}">{{ post['title'] }}</a></td>
+    <td><i>{{ post.date.strftime('%Y %B %d').replace(' 0', ' ') }}</i></td>
+    <td><a href="{{ post.url_path }}">{{ post.title }}</a></td>
   </tr>
   %end
 </table>

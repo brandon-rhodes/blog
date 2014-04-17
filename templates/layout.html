@@ -25,7 +25,9 @@
   • <a title="Home Page" href="/brandon/">Home</a>
 </p>
 %end
+%if post.add_title:
 <h1>{{ post.title }}</h1>
+%end
 {{! post.body_html }}
 %if post.add_disqus:
 %include disqus.html

@@ -31,18 +31,39 @@ html_parser = HTMLParser()
 
 
 class Blog(magic.Base):
-    def __init__(self, builder):
+    def __init__(self, builder, fs):
         self._builder = builder
-        self.posts = []
+        self._fs = fs
+        self.documents = []
 
     def __repr__(self):
         return '<Blog>'
 
+    def copy_statics(self):
+        for path in self.statics:
+            self.copy_static(path)
+
+    def copy_static(self, path):
+        assert path.startswith('static/')
+        output_path = 'output' + path[6:]
+        print('Copying', output_path)
+        data = self._fs.read(path, 'rb')
+        outdir = os.path.dirname(output_path)
+        if not os.path.isdir(outdir):
+            os.makedirs(outdir)
+        with open(output_path, 'wb') as f:
+            f.write(data)
+
     def sorted_posts(self):
         print('Re-sorting posts')
-        posts = (post for post in self.posts
-                 if (post.date is not None) and post.tags)
-        return sorted(posts, key=attrgetter('date'))
+        posts = (document for document in self.documents
+                 if (document.date is not None) and document.tags)
+        return sorted(posts, key=attrgetter('date', 'title'))
+
+    def most_recent_posts(self, n=7):
+        sorted_posts = self.sorted_posts()
+        sorted_posts.reverse()
+        return sorted_posts[:n]
 
     def posts_by_tag(self):
         print('PBT')
@@ -73,18 +94,20 @@ class Blog(magic.Base):
             f.write(html)
 
 
-class Post(magic.Base):
+class Document(magic.Base):
 
-    def __init__(self, builder, fs, source_path, output_path):
+    def __init__(self, builder, fs, blog, source_path, output_path):
         self._builder = builder
-        self.fs = fs
+        self._fs = fs
+        self.blog = blog
+        self.date = None
         self.source_path = source_path
         self.output_path = output_path
         self.url_path = (output_path.replace('output', '')
                                     .replace('index.html', ''))
 
     def __repr__(self):
-        return '<Post {!r}>'.format(self.source_path.split('/')[-1])
+        return '<Document {!r}>'.format(self.source_path.split('/')[-1])
 
     def _report(self, verb):
         print(verb.title(), self.source_path)
@@ -96,7 +119,7 @@ class Post(magic.Base):
 
     def parse(self):
         self._report('parsing')
-        self.source = self.fs.read(self.source_path)
+        self.source = self._fs.read(self.source_path)
         ext = self.source_path.rsplit('.', 1)[1]
         _parse_method = getattr(self, '_parse_' + ext)
         _parse_method()
@@ -107,17 +130,19 @@ class Post(magic.Base):
             heading, info, other_html = convert_blogofile(source)
             parts = parse_rst(heading)
             body_html = parts['docinfo'] + other_html
-            title = html_parser.unescape(parts['title'])
+            self.add_title = True
+            self.title = html_parser.unescape(parts['title'])
             self.add_disqus = True
             self.date = info['date']
             self.tags = info['tags']
         else:
-            body_html = source
-            h1_list = re.findall(r'<h1>([^<]*)</h1>', body_html)
-            title = h1_list[0] if h1_list else 'Untitled'
-            self.add_disqus = True
+            self.title = self._find_title_in_html(source)
+            template = SimpleTemplate(source)
+            body_html = template.render(blog=self.blog)
+            self.add_disqus = False
             self.date = None
             self.tags = ()
+            self.add_title = False
 
         body_html = pygmentize_pre_blocks(body_html)
         body_html = body_html.replace('\n</pre>', '</pre>')
@@ -126,7 +151,6 @@ class Post(magic.Base):
         self.body_html = body_html
         self.next_link = None
         self.previous_link = None
-        self.title = html_parser.unescape(title)
 
     def _parse_ipynb(self):
         notebook = nbformat.reads_json(self.source)
@@ -157,18 +181,13 @@ class Post(magic.Base):
             body = body.replace(
                 '</h1>\n', '</h1>\n' + parts['docinfo'])
 
-        pieces = re.split(r'<h1[^>]*>([^>]*)</h1>', body)
-        if len(pieces) == 3:
-            before, self.title, after = pieces
-            body = before + after
-        else:
-            self.title = ''
-
+        body = self._decapitate(body)
         self.body_html = body.replace('\n</pre>', '</pre>')
 
         self.add_disqus = False
         self.next_link = None
         self.previous_link = None
+        self.add_title = True
 
     def _parse_rst(self):
         source = self.source
@@ -184,9 +203,13 @@ class Post(magic.Base):
         field_matches = re.findall(r'\n:([^:]+): +(.*)', source)
         fields = {name.lower(): value for name, value in field_matches}
 
-        self.date = datetime.strptime(fields['date'], '%d %B %Y').date()
-        self.tags = ['-'.join(phrase.strip().lower().split())
-                     for phrase in fields['tags'].split(',')]
+        if 'date' in fields:
+            self.date = datetime.strptime(fields['date'], '%d %B %Y').date()
+            self.tags = ['-'.join(phrase.strip().lower().split())
+                         for phrase in fields['tags'].split(',')]
+        else:
+            self.date = None
+            self.tags = []
 
         parts = parse_rst(source)
         body_html = parts['docinfo'] + parts['fragment']
@@ -197,6 +220,25 @@ class Post(magic.Base):
         self.next_link = None
         self.previous_link = None
         self.title = html_parser.unescape(parts['title'])
+        self.add_title = True
+
+    def _decapitate(self, body):
+        pieces = re.split(r'<h1[^>]*>([^>]*)</h1>', body)
+        if len(pieces) == 3:
+            before, title, after = pieces
+            body = before + after
+            self.title = html_parser.unescape(title)
+        else:
+            self.title = ''
+        return body
+
+    def _find_title_in_html(self, html):
+        pieces = re.split(r'<h1[^>]*>([^>]*)</h1>', html)
+        if len(pieces) == 3:
+            before, title, after = pieces
+            return html_parser.unescape(title)
+        else:
+            return None
 
     def render(self):
         self._report('rendering')
@@ -283,34 +325,51 @@ def main():
     fs = magic.Filesystem()
     fs._builder = builder
 
-    source_directory = 'texts/brandon'
-    output_directory = 'output/brandon'
-    base_pattern = source_directory + '/*'
-    #base_pattern = source_directory + '/2013'
-    sources = (glob(base_pattern + '/*.html') +
-               glob(base_pattern + '/*.ipynb') +
-               glob(base_pattern + '/*.rst'))
+    source_directory = 'texts'
+    output_directory = 'output'
+    sources = []
+    for dirpath, dirnames, filenames in os.walk(source_directory):
+        if '.ipynb_checkpoints' in dirnames:
+            dirnames.remove('.ipynb_checkpoints')
+        for filename in filenames:
+            if '.' not in filename:
+                continue
+            base, ext = filename.rsplit('.', 1)
+            if ext not in ('html', 'ipynb', 'rst'):
+                continue
+            sources.append(os.path.join(dirpath, filename))
 
-    posts = []
+    static_directory = 'static'
+    statics = []
+    for dirpath, dirnames, filenames in os.walk(static_directory):
+        if '.ipynb_checkpoints' in dirnames:
+            dirnames.remove('.ipynb_checkpoints')
+        for filename in filenames:
+            statics.append(os.path.join(dirpath, filename))
+
+    blog = Blog(builder, fs)
+
+    documents = []
     for source_path in sources:
         dirname, filename = os.path.split(source_path)
         dirname = dirname.replace(source_directory, output_directory)
         base, ext = filename.rsplit('.', 1)
-        if filename == 'index':
-            raise RuntimeError('todo')
+        if base == 'index':
+            output_path = os.path.join(dirname, 'index.html')
         else:
             output_path = os.path.join(dirname, base, 'index.html')
-        post = Post(builder, fs, source_path, output_path)
-        posts.append(post)
+        post = Document(builder, fs, blog, source_path, output_path)
+        documents.append(post)
 
-    blog = Blog(builder)
-    blog.posts = posts
+    blog.documents = documents
+    blog.statics = statics
 
-    for post in posts:
-        post.parse()
-        post.render()
+    for document in documents:
+        document.parse()
+        document.render()
 
     blog.render_feeds()
+    blog.copy_statics()
 
     with open('test.dot', 'w') as f:
         #pprint(builder.graph._targets)
@@ -335,4 +394,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print('Exiting')

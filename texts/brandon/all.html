@@ -1,19 +1,17 @@
 % import helpers
-% posts, tags = helpers.read_posts()
 <h1>All Posts Ever</h1>
 
 <table>
-  %for post in reversed(posts):
+
+  %for post in blog.sorted_posts():
   <tr>
-    <td><i>{{ post['date'].strftime('%Y %B %d').replace(' 0', ' ') }}</i></td>
+    <td><i>{{ post.date.strftime('%Y %B %d').replace(' 0', ' ') }}</i></td>
     <td>
-      <a href="{{ post['http-path'] }}">{{ post['title'] }}</a>
+      <a href="{{ post.url_path }}">{{ post.title }}</a>
       <p>
-        {{! helpers.simple_preview(post['body']) }}
+        {{! helpers.simple_preview(post.body_html) }}
       </p>
     </td>
   </tr>
   %end
 </table>
-
-%rebase layout title=None
