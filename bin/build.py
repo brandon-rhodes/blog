@@ -159,6 +159,10 @@ class Document(magic.Base):
         exporter = HTMLExporter(config=config)
         body, resources = exporter.from_notebook_node(notebook)
 
+        body = body[body.index('\n<div class="cell'):-36]  # excise template
+        body = self._decapitate(body)
+        body = body.replace('\n</pre>', '</pre>')
+
         self.add_mathjax = r'\(' in body
 
         fields = notebook['metadata']
@@ -178,13 +182,10 @@ class Document(magic.Base):
                 ', '.join(sorted(self.tags)),
                 )
             parts = parse_rst(heading)
-            body = body.replace(
-                '</h1>\n', '</h1>\n' + parts['docinfo'])
-
-        body = self._decapitate(body)
-        self.body_html = body.replace('\n</pre>', '</pre>')
+            body = parts['docinfo'] + body
 
         self.add_disqus = False
+        self.body_html = body
         self.next_link = None
         self.previous_link = None
         self.add_title = True
@@ -351,6 +352,8 @@ def main():
 
     documents = []
     for source_path in sources:
+        if 'trivia' not in source_path and 'payroll' not in source_path:
+            continue
         dirname, filename = os.path.split(source_path)
         dirname = dirname.replace(source_directory, output_directory)
         base, ext = filename.rsplit('.', 1)
