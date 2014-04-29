@@ -184,7 +184,7 @@ class Document(magic.Base):
             parts = parse_rst(heading)
             body = parts['docinfo'] + body
 
-        self.add_disqus = False
+        self.add_disqus = fields.get('add_disqus', False)
         self.body_html = body
         self.next_link = None
         self.previous_link = None
@@ -352,8 +352,8 @@ def main():
 
     documents = []
     for source_path in sources:
-        if 'trivia' not in source_path and 'payroll' not in source_path:
-            continue
+        # if 'trivia' not in source_path and 'payroll' not in source_path:
+        #     continue
         dirname, filename = os.path.split(source_path)
         dirname = dirname.replace(source_directory, output_directory)
         base, ext = filename.rsplit('.', 1)
