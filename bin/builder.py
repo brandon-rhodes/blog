@@ -2,6 +2,7 @@
 
 import os
 import re
+import routines
 from IPython.nbconvert import HTMLExporter
 from IPython.nbformat import current as nbformat
 from docutils.core import publish_doctree, publish_parts
@@ -34,8 +35,10 @@ def parse(call, path):
         docinfos = doctree.traverse(nodes.docinfo)
         docinfo = {c.tagname: str(c.children[0])
                    for i in docinfos for c in i.children}
-        parts = publish_parts(source, writer_name='html')
-        return {'body': parts['body'],
+        parts = publish_parts(source, writer_name='html',
+                              settings_overrides={'initial_header_level': 2})
+        body = routines.pygmentize_pre_blocks(parts['body'])
+        return {'body': body,
                 'date': docinfo.get('date'),
                 'title': parts['title']}
     elif path.endswith('.ipynb'):
