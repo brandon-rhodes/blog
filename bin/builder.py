@@ -83,6 +83,10 @@ def render(call, paths, path):
     print(text)
     return text
 
+def save(call, paths, path, outpath):
+    text = call(render, paths, path)
+    with open(outpath, 'w') as f:
+        f.write(text)
 
 class BlogBuilder:
     def __init__(self):
@@ -109,18 +113,27 @@ class BlogBuilder:
 
 def main():
     thisdir = os.path.dirname(__file__)
-    indir = os.path.normpath(os.path.join(thisdir, '..', 'posts'))
+    # indir = os.path.normpath(os.path.join(thisdir, '..', 'texts'))
     outdir = os.path.normpath(os.path.join(thisdir, '..', 'output'))
     if not os.path.exists(outdir):
         os.mkdir(outdir)
 
     builder = BlogBuilder()
 
-    paths = tuple(glob(os.path.join(indir, '*.rst')) +
-                  glob(os.path.join(indir, '*.ipynb')))
+    paths = (
+        'texts/brandon/2011/wsgi-under-cherrypy.rst',
+        )
+
+    # paths = tuple(glob(os.path.join(indir, '*.rst')) +
+    #               glob(os.path.join(indir, '*.ipynb')))
 
     for path in builder.get(sorted_posts, paths):
-        builder.get(render, paths, path)
+        outpath = os.path.join(outdir, path.split('/', 1)[1])
+        outpath = os.path.splitext(outpath)[0] + '/index.html'
+        outdir = os.path.dirname(outpath)
+        if not os.path.isdir(outdir):
+            os.makedirs(outdir)
+        builder.get(save, paths, path, outpath)
 
     builder.verbose = True
     while True:
