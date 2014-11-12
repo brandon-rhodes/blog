@@ -3,7 +3,6 @@ categories: Computing, Python
 date: 2012/01/15 02:59:10
 permalink: http://rhodesmill.org/brandon/2012/js/
 title: JavaScript Breaks Math
-add_mathjax: True
 ---
 
 Why do we Python programmers
