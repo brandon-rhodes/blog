@@ -1,6 +1,7 @@
 import re
 import yaml
 from datetime import datetime
+from docutils.core import publish_parts
 from html.parser import HTMLParser
 from io import StringIO
 from pygments import highlight
@@ -49,6 +50,18 @@ def convert_blogofile(source):
     lines = ['', rule, title, rule, '', '']
     lines.extend(':{}: {}'.format(name, value) for name, value in fields)
     return '\n'.join(lines), info, body
+
+def find_title_in_html(self, html):
+    pieces = re.split(r'<h1[^>]*>([^>]*)</h1>', html)
+    if len(pieces) == 3:
+        before, title, after = pieces
+        return html_parser.unescape(title)
+    else:
+        return None
+
+def parse_rst(source):
+    return publish_parts(source, writer_name='html',
+                         settings_overrides={'initial_header_level': 2})
 
 def pygmentize_pre_blocks(html):
     formatter = HtmlFormatter()

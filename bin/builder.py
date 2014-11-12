@@ -7,7 +7,7 @@ import utils
 from IPython.nbconvert import HTMLExporter
 from IPython.nbformat import current as nbformat
 from bottle import SimpleTemplate
-from docutils.core import publish_doctree, publish_parts, publish_from_doctree
+from docutils.core import publish_doctree
 from docutils import nodes
 from glob import glob
 from jinja2 import DictLoader
@@ -32,8 +32,35 @@ def read_text_file(call, path):
 
 def parse(call, path):
     source = call(read_text_file, path)
-    if path.endswith('.rst'):
-        result = {}
+    result = {}
+    if path.endswith('.html'):
+        if utils.detect_blogofile(source):
+            heading, info, other_html = utils.convert_blogofile(source)
+            parts = utils.parse_rst(heading)
+            body_html = parts['docinfo'] + other_html
+            result['add_title'] = True
+            result['title'] = utils.html_parser.unescape(parts['title'])
+            result['needs_disqus'] = True
+            result['date'] = info['date']
+            result['tags'] = info['tags']
+        else:
+            result['title'] = utils.find_title_in_html(source)
+            template = SimpleTemplate(source)
+            body_html = template.render(blog=result['blog'])
+            result['needs_disqus'] = False
+            result['date'] = None
+            result['tags'] = ()
+            result['add_title'] = False
+
+        body_html = utils.pygmentize_pre_blocks(body_html)
+        body_html = body_html.replace('\n</pre>', '</pre>')
+
+        result['needs_mathjax'] = False
+        result['body'] = body_html
+        result['next_link'] = None
+        result['previous_link'] = None
+
+    elif path.endswith('.rst'):
         if utils.detect_blogofile(source):
             heading, info, body = utils.convert_blogofile(source)
             source = heading + body
@@ -49,8 +76,7 @@ def parse(call, path):
         docinfo = {c.tagname: str(c.children[0])
                    for i in docinfos for c in i.children}
         print(docinfo)
-        parts = publish_parts(source, writer_name='html',
-                              settings_overrides={'initial_header_level': 2})
+        parts = utils.parse_rst(source)
         # parts = publish_from_doctree(source, writer_name='html',
         #                       settings_overrides={'initial_header_level': 2})
         body = parts['docinfo'] + utils.pygmentize_pre_blocks(parts['fragment'])
@@ -58,15 +84,17 @@ def parse(call, path):
         result['date'] = docinfo.get('date')
         if 'title' not in result:
             result['title'] = parts['title']
-        return result
+
     elif path.endswith('.ipynb'):
         notebook = nbformat.reads_json(source)
         exporter = HTMLExporter(config=None, extra_loaders=[dl])
         body, resources = exporter.from_notebook_node(notebook)
-        return {'body': body,
-                'date': notebook['metadata']['date'],
-                'needs_disqus': False,
-                'title': notebook['metadata']['name']}
+        result['body'] = body
+        result['date'] = notebook['metadata']['date']
+        result['needs_disqus'] = False
+        result['title'] = notebook['metadata']['name']
+
+    return result
 
 def title_of(call, path):
     info = call(parse, path)
@@ -157,7 +185,8 @@ def main():
     builder = BlogBuilder() #verbose=True)
 
     paths = tuple(glob(
-        'texts/brandon/*/*.rst',
+        #'texts/brandon/*/*.rst',
+        'texts/brandon/2007/*.html',
         ))
 
     # paths = tuple(glob(os.path.join(indir, '*.rst')) +
