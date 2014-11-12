@@ -33,12 +33,16 @@ def read_text_file(call, path):
 def parse(call, path):
     source = call(read_text_file, path)
     if path.endswith('.rst'):
+        result = {}
         if utils.detect_blogofile(source):
             heading, info, body = utils.convert_blogofile(source)
             source = heading + body
             print(source[:200])
             print(info)
             del heading, info, body
+            result['needs_disqus'] = True
+        else:
+            result['needs_disqus'] = False
         doctree = publish_doctree(source)
         docinfos = doctree.traverse(nodes.docinfo)
         docinfo = {c.tagname: str(c.children[0])
@@ -49,15 +53,17 @@ def parse(call, path):
         # parts = publish_from_doctree(source, writer_name='html',
         #                       settings_overrides={'initial_header_level': 2})
         body = parts['docinfo'] + utils.pygmentize_pre_blocks(parts['fragment'])
-        return {'body': body,
-                'date': docinfo.get('date'),
-                'title': parts['title']}
+        result['body'] = body
+        result['date'] = docinfo.get('date')
+        result['title'] = parts['title']
+        return result
     elif path.endswith('.ipynb'):
         notebook = nbformat.reads_json(source)
         exporter = HTMLExporter(config=None, extra_loaders=[dl])
         body, resources = exporter.from_notebook_node(notebook)
         return {'body': body,
                 'date': notebook['metadata']['date'],
+                'needs_disqus': False,
                 'title': notebook['metadata']['name']}
 
 def title_of(call, path):
@@ -67,6 +73,10 @@ def title_of(call, path):
 def date_of(call, path):
     info = call(parse, path)
     return info['date']
+
+def needs_disqus(call, path):
+    info = call(parse, path)
+    return info['needs_disqus']
 
 def body_of(call, path):
     info = call(parse, path)
@@ -97,8 +107,8 @@ def render(call, paths, path):
         previous_link=None,
         next_link=None,
         body_html=call(body_of, path),
-        add_disqus=True,
-        add_mathjax=False,
+        needs_disqus=call(needs_disqus, path),
+        needs_mathjax=False, #call(needs_mathjax, path),
         )
     # text = '<h1>{}</h1>\n<p>Date: {}</p>\n<p>Previous post: {}</p>\n{}'.format(
     #     call(title_of, path), call(date_of, path),
@@ -145,7 +155,7 @@ def main():
     builder = BlogBuilder(verbose=True)
 
     paths = tuple(glob(
-        'texts/brandon/2011/*.rst',
+        'texts/brandon/*/*.rst',
         ))
 
     # paths = tuple(glob(os.path.join(indir, '*.rst')) +
