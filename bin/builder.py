@@ -7,6 +7,7 @@ import utils
 from IPython.nbconvert import HTMLExporter
 from IPython.nbformat import current as nbformat
 from bottle import SimpleTemplate
+from datetime import datetime
 from docutils.core import publish_doctree
 from docutils import nodes
 from glob import glob
@@ -64,8 +65,7 @@ def parse(call, path):
         if utils.detect_blogofile(source):
             heading, info, body = utils.convert_blogofile(source)
             source = heading + body
-            # print(source[:200])
-            # print(info)
+
             result['title'] = info['title']
             del heading, info, body
             result['needs_disqus'] = True
@@ -75,13 +75,14 @@ def parse(call, path):
         docinfos = doctree.traverse(nodes.docinfo)
         docinfo = {c.tagname: str(c.children[0])
                    for i in docinfos for c in i.children}
-        print(docinfo)
+
         parts = utils.parse_rst(source)
         # parts = publish_from_doctree(source, writer_name='html',
         #                       settings_overrides={'initial_header_level': 2})
         body = parts['docinfo'] + utils.pygmentize_pre_blocks(parts['fragment'])
         result['body'] = body
-        result['date'] = docinfo.get('date')
+        result['date'] = datetime.strptime(
+            docinfo.get('date'), '%d %B %Y').date()
         if 'title' not in result:
             result['title'] = parts['title']
 
@@ -184,13 +185,11 @@ def main():
 
     builder = BlogBuilder() #verbose=True)
 
-    paths = tuple(glob(
-        #'texts/brandon/*/*.rst',
-        'texts/brandon/2007/*.html',
-        ))
-
-    # paths = tuple(glob(os.path.join(indir, '*.rst')) +
-    #               glob(os.path.join(indir, '*.ipynb')))
+    paths = tuple(
+        []
+        + glob('texts/brandon/*/*.rst')
+        + glob('texts/brandon/*/*.html')
+        )
 
     for path in builder.get(sorted_posts, paths):
         outpath = os.path.join(outdir, path.split('/', 1)[1])
