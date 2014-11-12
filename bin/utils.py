@@ -34,6 +34,7 @@ def convert_blogofile(source):
         'add_disqus': yams.pop('add_disqus', False),
         'add_mathjax': yams.pop('add_mathjax', False),
         'date': date,
+        'title': title,
         'tags': [s.strip().replace(' ', '-') for s in tags.split(',')]
         }
 

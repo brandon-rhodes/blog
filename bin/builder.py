@@ -37,8 +37,9 @@ def parse(call, path):
         if utils.detect_blogofile(source):
             heading, info, body = utils.convert_blogofile(source)
             source = heading + body
-            print(source[:200])
-            print(info)
+            # print(source[:200])
+            # print(info)
+            result['title'] = info['title']
             del heading, info, body
             result['needs_disqus'] = True
         else:
@@ -55,7 +56,8 @@ def parse(call, path):
         body = parts['docinfo'] + utils.pygmentize_pre_blocks(parts['fragment'])
         result['body'] = body
         result['date'] = docinfo.get('date')
-        result['title'] = parts['title']
+        if 'title' not in result:
+            result['title'] = parts['title']
         return result
     elif path.endswith('.ipynb'):
         notebook = nbformat.reads_json(source)
@@ -152,7 +154,7 @@ def main():
     if not os.path.exists(outdir):
         os.mkdir(outdir)
 
-    builder = BlogBuilder(verbose=True)
+    builder = BlogBuilder() #verbose=True)
 
     paths = tuple(glob(
         'texts/brandon/*/*.rst',
