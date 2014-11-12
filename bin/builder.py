@@ -144,9 +144,9 @@ def main():
 
     builder = BlogBuilder(verbose=True)
 
-    paths = (
-        'texts/brandon/2011/wsgi-under-cherrypy.rst',
-        )
+    paths = tuple(glob(
+        'texts/brandon/2011/*.rst',
+        ))
 
     # paths = tuple(glob(os.path.join(indir, '*.rst')) +
     #               glob(os.path.join(indir, '*.ipynb')))
@@ -154,9 +154,7 @@ def main():
     for path in builder.get(sorted_posts, paths):
         outpath = os.path.join(outdir, path.split('/', 1)[1])
         outpath = os.path.splitext(outpath)[0] + '/index.html'
-        outdir = os.path.dirname(outpath)
-        if not os.path.isdir(outdir):
-            os.makedirs(outdir)
+        os.makedirs(os.path.dirname(outpath), exist_ok=True)
         builder.get(save, paths, path, outpath)
 
     return
