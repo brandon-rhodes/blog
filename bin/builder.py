@@ -3,10 +3,11 @@
 
 import os
 import re
-import routines
+import utils
 from IPython.nbconvert import HTMLExporter
 from IPython.nbformat import current as nbformat
-from docutils.core import publish_doctree, publish_parts
+from bottle import SimpleTemplate
+from docutils.core import publish_doctree, publish_parts, publish_from_doctree
 from docutils import nodes
 from glob import glob
 from jinja2 import DictLoader
@@ -32,13 +33,22 @@ def read_text_file(call, path):
 def parse(call, path):
     source = call(read_text_file, path)
     if path.endswith('.rst'):
+        if utils.detect_blogofile(source):
+            heading, info, body = utils.convert_blogofile(source)
+            source = heading + body
+            print(source[:200])
+            print(info)
+            del heading, info, body
         doctree = publish_doctree(source)
         docinfos = doctree.traverse(nodes.docinfo)
         docinfo = {c.tagname: str(c.children[0])
                    for i in docinfos for c in i.children}
+        print(docinfo)
         parts = publish_parts(source, writer_name='html',
                               settings_overrides={'initial_header_level': 2})
-        body = routines.pygmentize_pre_blocks(parts['body'])
+        # parts = publish_from_doctree(source, writer_name='html',
+        #                       settings_overrides={'initial_header_level': 2})
+        body = parts['docinfo'] + utils.pygmentize_pre_blocks(parts['fragment'])
         return {'body': body,
                 'date': docinfo.get('date'),
                 'title': parts['title']}
@@ -78,14 +88,24 @@ def previous_post(call, paths, path):
     return paths[i - 1] if i else None
 
 def render(call, paths, path):
-    previous = call(previous_post, paths, path)
-    previous_title = 'NONE' if previous is None else call(title_of, previous)
-    text = '<h1>{}</h1>\n<p>Date: {}</p>\n<p>Previous post: {}</p>\n{}'.format(
-        call(title_of, path), call(date_of, path),
-        previous_title, call(body_of, path))
-    print('-' * 72)
-    print(text)
-    return text
+    #previous = call(previous_post, paths, path)
+    #previous_title = 'NONE' if previous is None else call(title_of, previous)
+    template = SimpleTemplate(name='layout.html', lookup=['templates'])
+    html = template.render(
+        add_title=True,
+        title=call(title_of, path),
+        previous_link=None,
+        next_link=None,
+        body_html=call(body_of, path),
+        add_disqus=True,
+        add_mathjax=False,
+        )
+    # text = '<h1>{}</h1>\n<p>Date: {}</p>\n<p>Previous post: {}</p>\n{}'.format(
+    #     call(title_of, path), call(date_of, path),
+    #     previous_title, call(body_of, path))
+    # print('-' * 72)
+    # print(text)
+    return html
 
 def save(call, paths, path, outpath):
     text = call(render, paths, path)
@@ -93,9 +113,9 @@ def save(call, paths, path, outpath):
         f.write(text)
 
 class BlogBuilder:
-    def __init__(self):
+    def __init__(self, verbose=False):
         self.builder = Builder(self.compute)
-        self.verbose = False
+        self.verbose = verbose
 
     def get(self, fn, *args):
         return self.builder.get((fn, args))
@@ -122,7 +142,7 @@ def main():
     if not os.path.exists(outdir):
         os.mkdir(outdir)
 
-    builder = BlogBuilder()
+    builder = BlogBuilder(verbose=True)
 
     paths = (
         'texts/brandon/2011/wsgi-under-cherrypy.rst',
@@ -138,6 +158,8 @@ def main():
         if not os.path.isdir(outdir):
             os.makedirs(outdir)
         builder.get(save, paths, path, outpath)
+
+    return
 
     builder.verbose = True
     while True:
