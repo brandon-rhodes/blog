@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """Render a directory of blog posts as HTML."""
 
 import os
