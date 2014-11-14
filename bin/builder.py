@@ -231,6 +231,7 @@ def main():
         []
         + glob('texts/brandon/*/*.rst')
         + glob('texts/brandon/*/*.html')
+        + glob('texts/brandon/*/*.ipynb')
         + glob('texts/brandon/talks.html')
         )
 
