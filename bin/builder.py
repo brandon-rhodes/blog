@@ -110,6 +110,7 @@ def parse(call, path):
         notebook = nbformat.reads_json(source)
         exporter = HTMLExporter(config=None, extra_loaders=[dl])
         body, resources = exporter.from_notebook_node(notebook)
+        body = body.replace('\n</pre>', '</pre>')
         result['body'] = body
         result['date'] = notebook['metadata']['date']
         result['needs_disqus'] = False
