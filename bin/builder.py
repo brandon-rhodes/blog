@@ -85,7 +85,6 @@ def parse(call, path):
         body_html = utils.pygmentize_pre_blocks(body_html)
         body_html = body_html.replace('\n</pre>', '</pre>')
 
-        result['needs_mathjax'] = False
         result['body'] = body_html
         result['next_link'] = None
         result['previous_link'] = None
@@ -172,7 +171,7 @@ def render(call, paths, path):
         next_link=None,
         body_html=body_html,
         needs_disqus=call(needs_disqus, path),
-        needs_mathjax=False, #call(needs_mathjax, path),
+        needs_mathjax=r'\(' in body_html,
         )
     # text = '<h1>{}</h1>\n<p>Date: {}</p>\n<p>Previous post: {}</p>\n{}'.format(
     #     call(title_of, path), call(date_of, path),
