@@ -47,7 +47,7 @@ def parse(call, path):
         else:
             result['title'] = utils.find_title_in_html(source)
             template = SimpleTemplate(source)
-            body_html = template.render(blog=result['blog'])
+            body_html = template.render() #blog=result['blog'])
             result['needs_disqus'] = False
             result['date'] = None
             result['tags'] = ()
@@ -121,7 +121,9 @@ def body_of(call, path):
     return body
 
 def sorted_posts(call, paths):
-    return sorted(paths, key=lambda path: call(date_of, path))
+    dates = {path: call(date_of, path) for path in paths}
+    dated_paths = [path for path in paths if dates[path]]
+    return sorted(dated_paths, key=dates.get)
 
 def previous_post(call, paths, path):
     paths = call(sorted_posts, paths)
@@ -131,13 +133,14 @@ def previous_post(call, paths, path):
 def render(call, paths, path):
     #previous = call(previous_post, paths, path)
     #previous_title = 'NONE' if previous is None else call(title_of, previous)
+    body_html = call(body_of, path)
     template = SimpleTemplate(name='layout.html', lookup=['templates'])
     html = template.render(
-        add_title=True,
+        add_title='<h1' not in body_html,
         title=call(title_of, path),
         previous_link=None,
         next_link=None,
-        body_html=call(body_of, path),
+        body_html=body_html,
         needs_disqus=call(needs_disqus, path),
         needs_mathjax=False, #call(needs_mathjax, path),
         )
@@ -189,9 +192,10 @@ def main():
         []
         + glob('texts/brandon/*/*.rst')
         + glob('texts/brandon/*/*.html')
+        + glob('texts/brandon/talks.html')
         )
 
-    for path in builder.get(sorted_posts, paths):
+    for path in paths:
         outpath = os.path.join(outdir, path.split('/', 1)[1])
         outpath = os.path.splitext(outpath)[0] + '/index.html'
         os.makedirs(os.path.dirname(outpath), exist_ok=True)

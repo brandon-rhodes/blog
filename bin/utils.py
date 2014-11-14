@@ -51,7 +51,7 @@ def convert_blogofile(source):
     lines.extend(':{}: {}'.format(name, value) for name, value in fields)
     return '\n'.join(lines), info, body
 
-def find_title_in_html(self, html):
+def find_title_in_html(html):
     pieces = re.split(r'<h1[^>]*>([^>]*)</h1>', html)
     if len(pieces) == 3:
         before, title, after = pieces
