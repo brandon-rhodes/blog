@@ -116,9 +116,11 @@ def parse(call, path):
 
     elif path.endswith('.ipynb'):
         notebook = nbformat.reads_json(source)
+        docinfo = utils.build_docinfo_block_for_notebook(notebook)
         exporter = HTMLExporter(config=None, extra_loaders=[dl])
         body, resources = exporter.from_notebook_node(notebook)
         body = body.replace('\n</pre>', '</pre>')
+        body = body.replace('</h1>', '</h1>\n' + docinfo.rstrip())
         result['body'] = body
         result['date'] = notebook['metadata']['date']
         result['needs_disqus'] = notebook['metadata'].get('needs_disqus')

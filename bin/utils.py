@@ -51,6 +51,28 @@ def convert_blogofile(source):
     lines.extend(':{}: {}'.format(name, value) for name, value in fields)
     return '\n'.join(lines), info, body
 
+def build_docinfo_block_for_notebook(notebook):
+    metadata = notebook['metadata']
+
+    if 'date' in metadata:
+        date = datetime.strptime(metadata['date'], '%d %B %Y').date()
+    else:
+        date = datetime.now().date()
+    tags = set()
+    if 'tags' in metadata:
+        tags.update('-'.join(tag.strip().lower().split())
+                    for tag in metadata['tags'].split(','))
+
+    if date and tags:
+        heading = ':Date: {}\n:Tags: {}\n'.format(
+            date.strftime('%d %B %Y').lstrip('0'),
+            ', '.join(sorted(tags)),
+            )
+        parts = parse_rst(heading)
+        return parts['docinfo']
+    else:
+        return ''
+
 def find_title_in_html(html):
     pieces = re.split(r'<h1[^>]*>([^>]*)</h1>', html)
     if len(pieces) == 3:
