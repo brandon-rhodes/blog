@@ -31,6 +31,10 @@ def read_text_file(call, path):
     with open(path) as f:
         return f.read()
 
+def read_binary_file(call, path):
+    with open(path, 'rb') as f:
+        return f.read()
+
 def parse(call, path):
     source = call(read_text_file, path)
     result = {}
@@ -149,10 +153,15 @@ def render(call, paths, path):
     # print(text)
     return html
 
-def save(call, paths, path, outpath):
+def save_text(call, paths, path, outpath):
     text = call(render, paths, path)
     with open(outpath, 'w') as f:
         f.write(text)
+
+def save_static(call, path, outpath):
+    data = call(read_binary_file, path)
+    with open(outpath, 'wb') as f:
+        f.write(data)
 
 class BlogBuilder:
     def __init__(self, verbose=False):
@@ -176,6 +185,10 @@ class BlogBuilder:
         fn, args = task
         return fn(self.get, *args)
 
+def find(base):
+    for dirpath, dirnames, filenames in os.walk(base):
+        for filename in filenames:
+            yield os.path.join(dirpath, filename)
 
 def main():
     thisdir = os.path.dirname(__file__)
@@ -186,18 +199,25 @@ def main():
 
     builder = BlogBuilder() #verbose=True)
 
-    paths = tuple(
+    text_paths = tuple(
         []
         + glob('texts/brandon/*/*.rst')
         + glob('texts/brandon/*/*.html')
         + glob('texts/brandon/talks.html')
         )
 
-    for path in paths:
+    for path in text_paths:
         outpath = os.path.join(outdir, path.split('/', 1)[1])
         outpath = os.path.splitext(outpath)[0] + '/index.html'
         os.makedirs(os.path.dirname(outpath), exist_ok=True)
-        builder.get(save, paths, path, outpath)
+        builder.get(save_text, text_paths, path, outpath)
+
+    static_paths = tuple(find('static'))
+
+    for path in static_paths:
+        outpath = os.path.join(outdir, path.split('/', 1)[1])
+        os.makedirs(os.path.dirname(outpath), exist_ok=True)
+        builder.get(save_static, path, outpath)
 
     return
 
@@ -205,7 +225,7 @@ def main():
     while True:
         print('=' * 72)
         print('Watching for files to change')
-        changed_paths = looping_wait_on(paths)
+        changed_paths = looping_wait_on(all_paths)
         print('=' * 72)
         print('Reloading:', ' '.join(changed_paths))
         for path in changed_paths:
