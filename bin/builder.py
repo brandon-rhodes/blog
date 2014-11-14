@@ -21,13 +21,22 @@ dl = DictLoader({'full.tpl': """\
 {%- extends 'display_priority.tpl' -%}
 {% block input scoped %}{{ cell.input | highlight2html(language=resources.get('language'), metadata=cell.metadata) }}
 {% endblock %}
-{% block pyout scoped %}<pre>{{ output.text | ansi2html }}</pre>
+{% block pyout scoped %}
+<pre>
+{{ output.text | ansi2html }}
+</pre>
 {% endblock %}
 {% block markdowncell scoped %}{{ cell.source  | markdown2html }}
 {% endblock %}
-{% block stream_stdout -%}<pre>{{ output.text | ansi2html }}</pre>
+{% block stream_stdout -%}
+<pre>
+{{ output.text | ansi2html }}
+</pre>
 {% endblock stream_stdout %}
-{% block stream_stderr -%}<pre>{{ output.text | ansi2html }}</pre>
+{% block stream_stderr -%}
+<pre>
+{{ output.text | ansi2html }}
+</pre>
 {% endblock stream_stderr %}
 {% block data_png scoped %}
 {%- if output.png_filename %}
