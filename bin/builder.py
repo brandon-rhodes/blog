@@ -19,7 +19,7 @@ from contingent.utils import looping_wait_on
 
 dl = DictLoader({'full.tpl': """\
 {%- extends 'display_priority.tpl' -%}
-{% block input scoped %}<pre>{{ cell.input }}</pre>
+{% block input scoped %}{{ cell.input | highlight2html(language=resources.get('language'), metadata=cell.metadata) }}
 {% endblock %}
 {% block pyout scoped %}<pre>{{ output.text | ansi2html }}</pre>
 {% endblock %}
