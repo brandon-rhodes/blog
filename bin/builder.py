@@ -25,6 +25,10 @@ dl = DictLoader({'full.tpl': """\
 {% endblock %}
 {% block markdowncell scoped %}{{ cell.source  | markdown2html }}
 {% endblock %}
+{% block stream_stdout -%}<pre>{{ output.text | ansi2html }}</pre>
+{%- endblock stream_stdout %}
+{% block stream_stderr -%}<pre>{{ output.text | ansi2html }}</pre>
+{%- endblock stream_stderr %}
 """})
 
 def read_text_file(call, path):
