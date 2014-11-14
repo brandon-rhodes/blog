@@ -39,7 +39,6 @@ def parse(call, path):
             heading, info, other_html = utils.convert_blogofile(source)
             parts = utils.parse_rst(heading)
             body_html = parts['docinfo'] + other_html
-            result['add_title'] = True
             result['title'] = utils.html_parser.unescape(parts['title'])
             result['needs_disqus'] = True
             result['date'] = info['date']
@@ -51,7 +50,6 @@ def parse(call, path):
             result['needs_disqus'] = False
             result['date'] = None
             result['tags'] = ()
-            result['add_title'] = False
 
         body_html = utils.pygmentize_pre_blocks(body_html)
         body_html = body_html.replace('\n</pre>', '</pre>')
