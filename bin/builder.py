@@ -26,9 +26,9 @@ dl = DictLoader({'full.tpl': """\
 {% block markdowncell scoped %}{{ cell.source  | markdown2html }}
 {% endblock %}
 {% block stream_stdout -%}<pre>{{ output.text | ansi2html }}</pre>
-{%- endblock stream_stdout %}
+{% endblock stream_stdout %}
 {% block stream_stderr -%}<pre>{{ output.text | ansi2html }}</pre>
-{%- endblock stream_stderr %}
+{% endblock stream_stderr %}
 {% block data_png scoped %}
 {%- if output.png_filename %}
 <img src="{{output.png_filename | posix_path}}"
@@ -40,7 +40,7 @@ width={{output.metadata['png']['width']}}
 {%- endif %}
 {%- if 'metadata' in output and 'height' in output.metadata.get('png', {}) %}
 height={{output.metadata['png']['height']}}
-{%- endif %}
+{%- endif -%}
 >
 {% endblock data_png %}
 """})
