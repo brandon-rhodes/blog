@@ -122,7 +122,8 @@ def parse(call, path):
         result['body'] = body
         result['date'] = notebook['metadata']['date']
         result['needs_disqus'] = notebook['metadata'].get('needs_disqus')
-        result['title'] = notebook['metadata']['name']
+        result['title'] = (notebook['metadata']['name']
+                           or utils.find_title_in_html(body))
 
     return result
 
