@@ -122,7 +122,7 @@ def parse(call, path):
         body = body.replace('\n</pre>', '</pre>')
         result['body'] = body
         result['date'] = notebook['metadata']['date']
-        result['needs_disqus'] = False
+        result['needs_disqus'] = notebook['metadata'].get('needs_disqus')
         result['title'] = notebook['metadata']['name']
 
     return result
