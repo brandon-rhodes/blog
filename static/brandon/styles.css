@@ -530,18 +530,8 @@ p a, p img {
     display: inline-block;
     color: #820002;
 }
-.cell pre {
-    margin-left: 5em;
-}
-.cell .prompt {
-    float: left;
-    margin-top: 0.5em;
-    padding: -5em;
-    font-size: 0.875em;
-    font-family: monospace;
-}
-.cell .output_area pre {
-    background-color: #FFFFFF;
+pre.output {
+    background-color: #f8f8f8;
     color: #073642;
 }
 #disqus_thread {

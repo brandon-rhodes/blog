@@ -22,19 +22,19 @@ dl = DictLoader({'full.tpl': """\
 {% block input scoped %}{{ cell.input | highlight2html(language=resources.get('language'), metadata=cell.metadata) }}
 {% endblock %}
 {% block pyout scoped %}
-<pre>
+<pre class="output">
 {{ output.text | ansi2html }}
 </pre>
 {% endblock %}
 {% block markdowncell scoped %}{{ cell.source  | markdown2html }}
 {% endblock %}
 {% block stream_stdout -%}
-<pre>
+<pre class="output">
 {{ output.text | ansi2html }}
 </pre>
 {% endblock stream_stdout %}
 {% block stream_stderr -%}
-<pre>
+<pre class="output">
 {{ output.text | ansi2html }}
 </pre>
 {% endblock stream_stderr %}
