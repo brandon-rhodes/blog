@@ -29,6 +29,20 @@ dl = DictLoader({'full.tpl': """\
 {%- endblock stream_stdout %}
 {% block stream_stderr -%}<pre>{{ output.text | ansi2html }}</pre>
 {%- endblock stream_stderr %}
+{% block data_png scoped %}
+{%- if output.png_filename %}
+<img src="{{output.png_filename | posix_path}}"
+{%- else %}
+<img src="data:image/png;base64,{{ output.png }}"
+{%- endif %}
+{%- if 'metadata' in output and 'width' in output.metadata.get('png', {}) %}
+width={{output.metadata['png']['width']}}
+{%- endif %}
+{%- if 'metadata' in output and 'height' in output.metadata.get('png', {}) %}
+height={{output.metadata['png']['height']}}
+{%- endif %}
+>
+{% endblock data_png %}
 """})
 
 def read_text_file(call, path):
