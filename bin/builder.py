@@ -19,6 +19,19 @@ from contingent.io import looping_wait_on
 
 project = Project()
 
+def fixdollars(string):
+    while '$$' in string:
+        string = string.replace('$$', r'\[', 1)
+        string = string.replace('$$', r'\]', 1)
+    string = string.replace(r'\$', 'PUT A REAL DOLLAR SIGN HERE')
+    while '$' in string:
+        string = string.replace('$', r'\(', 1)
+        string = string.replace('$', r'\)', 1)
+    string = string.replace('PUT A REAL DOLLAR SIGN HERE', '$')
+    return string
+
+filters = {'fixdollars': fixdollars}
+
 dl = DictLoader({'full.tpl': """\
 {%- extends 'display_priority.tpl' -%}
 {% block input scoped %}{{ cell.input | highlight2html(language=resources.get('language'), metadata=cell.metadata) }}
@@ -28,7 +41,7 @@ dl = DictLoader({'full.tpl': """\
 {{ output.text | ansi2html }}
 </pre>
 {% endblock %}
-{% block markdowncell scoped %}{{ cell.source  | markdown2html }}
+{% block markdowncell scoped %}{{ cell.source  | markdown2html | fixdollars }}
 {% endblock %}
 {% block stream_stdout -%}
 <pre class="output">
@@ -122,7 +135,8 @@ def parse(path):
     elif path.endswith('.ipynb'):
         notebook = nbformat.reads_json(source)
         docinfo = utils.build_docinfo_block_for_notebook(notebook)
-        exporter = HTMLExporter(config=None, extra_loaders=[dl])
+        exporter = HTMLExporter(config=None, extra_loaders=[dl],
+                                filters=filters)
         body, resources = exporter.from_notebook_node(notebook)
         body = body.replace('\n</pre>', '</pre>')
         body = body.replace('</h1>', '</h1>\n' + docinfo.rstrip())
@@ -186,7 +200,7 @@ def render(paths, path):
         next_link=None,
         body_html=body_html,
         needs_disqus=needs_disqus(path),
-        needs_mathjax=r'\(' in body_html,
+        needs_mathjax=r'\(' in body_html or r'\[' in body_html,
         )
     # text = '<h1>{}</h1>\n<p>Date: {}</p>\n<p>Previous post: {}</p>\n{}'.format(
     #     call(title_of, path), call(date_of, path),
@@ -243,10 +257,10 @@ def main():
 
     text_paths = tuple(
         []
-        + glob('texts/brandon/*/*.rst')
-        + glob('texts/brandon/*/*.html')
+        #+ glob('texts/brandon/*/*.rst')
+        #+ glob('texts/brandon/*/*.html')
         + glob('texts/brandon/*/*.ipynb')
-        + glob('texts/brandon/talks.html')
+        #+ glob('texts/brandon/talks.html')
         )
 
     for path in text_paths:
