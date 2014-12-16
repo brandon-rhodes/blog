@@ -124,7 +124,7 @@ causes something to happen and then returns a message
 that Python displays to show us the result. ::
 
  #!python
- >>> c
+ >>> jump
  [advancing the game state]
  There is a shiny brass lamp nearby.
 
