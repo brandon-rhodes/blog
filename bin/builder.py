@@ -138,8 +138,13 @@ def parse(path):
         body, resources = exporter.from_notebook_node(notebook)
         body = body.replace('\n</pre>', '</pre>')
         body = body.replace('</h1>', '</h1>\n' + docinfo.rstrip())
+
+        date = notebook['metadata']['date']
+        if date is not None:
+            date = datetime.strptime(date, '%d %B %Y').date()
+
         result['body'] = body
-        result['date'] = notebook['metadata']['date']
+        result['date'] = date
         result['needs_disqus'] = notebook['metadata'].get('needs_disqus')
         result['title'] = (notebook['metadata']['name']
                            or utils.find_title_in_html(body))
