@@ -21,14 +21,14 @@
 
 <h1>Brandon Rhodes</h1>
 
-<div class="figure media-buttons">
+<p class="figure media-buttons">
   <a href="https://twitter.com/brandon_rhodes"
      class="button-twitter">Twitter</a>
   <a href="http://stackoverflow.com/users/85360/brandon-rhodes"
      class="button-stack-overflow">Stack Overflow</a>
   <a href="http://www.flickr.com/photos/brandonrhodes/"
      class="button-flickr">Flickr</a>
-</div>
+</p>
 
 <h2>Talks</h2>
 
@@ -44,10 +44,10 @@
 <h2>Recent Writing</h2>
 
 <table summary="My recent blog post dates and titles">
-  %for post in blog.most_recent_posts(7):
+  %for path in most_recent_posts(text_paths, 7):
   <tr>
-    <td><i>{{ post.date.strftime('%Y %B %d').replace(' 0', ' ') }}</i></td>
-    <td><a href="{{ post.url_path }}">{{ post.title }}</a></td>
+    <td><i>{{ date_of(path).strftime('%Y %B %d').replace(' 0', ' ') }}</i></td>
+    <td><a href="{{ url_of(path) }}">{{ title_of(path) }}</a></td>
   </tr>
   %end
 </table>

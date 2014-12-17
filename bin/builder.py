@@ -152,6 +152,16 @@ def parse(path):
     return result
 
 @project.task
+def url_of(path):
+    if path.startswith('texts/'):
+        path = path[5:]
+    if path.endswith('index.html'):
+        path = path[:-10]
+    else:
+        path = path.rsplit('.', 1)[0] + '/'
+    return path
+
+@project.task
 def title_of(path):
     info = parse(path)
     return info['title']
@@ -191,6 +201,13 @@ def sorted_posts(paths):
     dates = {path: date_of(path) for path in paths}
     dated_paths = [path for path in paths if dates[path]]
     return sorted(dated_paths, key=dates.get)
+
+@project.task
+def most_recent_posts(paths, n):
+    paths = sorted_posts(paths)
+    i = len(paths) - n
+    paths = list(reversed(paths[i:]))
+    return paths
 
 @project.task
 def previous_post(paths, path):
@@ -274,12 +291,13 @@ def main():
         + glob('texts/brandon/*/*.html')
         + glob('texts/brandon/*/*.ipynb')
         + glob('texts/brandon/talks.html')
-        # + glob('texts/brandon/index.html')
+        + glob('texts/brandon/index.html')
         )
 
     for path in text_paths:
         outpath = os.path.join(outdir, path.split('/', 1)[1])
-        outpath = os.path.splitext(outpath)[0] + '/index.html'
+        if not path.endswith('/index.html'):
+            outpath = os.path.splitext(outpath)[0] + '/index.html'
         os.makedirs(os.path.dirname(outpath), exist_ok=True)
         save_text(text_paths, path, outpath)
 
