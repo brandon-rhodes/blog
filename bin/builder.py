@@ -88,20 +88,18 @@ def parse(path):
             heading, info, other_html = utils.convert_blogofile(source)
             parts = utils.parse_rst(heading)
             body_html = parts['docinfo'] + other_html
+            body_html = utils.pygmentize_pre_blocks(body_html)
+            body_html = body_html.replace('\n</pre>', '</pre>')
             result['title'] = utils.html_parser.unescape(parts['title'])
             result['needs_disqus'] = True
             result['date'] = info['date']
             result['tags'] = info['tags']
         else:
             result['title'] = utils.find_title_in_html(source)
-            template = SimpleTemplate(source)
-            body_html = template.render() #blog=result['blog'])
+            body_html = SimpleTemplate(source)
             result['needs_disqus'] = False
             result['date'] = None
             result['tags'] = ()
-
-        body_html = utils.pygmentize_pre_blocks(body_html)
-        body_html = body_html.replace('\n</pre>', '</pre>')
 
         result['body'] = body_html
         result['next_link'] = None
@@ -168,11 +166,19 @@ def body_of(path):
     info = parse(path)
     dirname = os.path.dirname(path)
     body = info['body']
+
+    if isinstance(body, SimpleTemplate):
+        body = body.render() #blog=result['blog'])
+        body = utils.pygmentize_pre_blocks(body)
+        body = body.replace('\n</pre>', '</pre>')
+
     def format_title_reference(match):
         filename = match.group(1)
         title = title_of(os.path.join(dirname, filename))
         return '<i>{}</i>'.format(title)
+
     body = re.sub(r'title_of\(([^)]+)\)', format_title_reference, body)
+
     return body
 
 @project.task
@@ -257,8 +263,8 @@ def main():
 
     text_paths = tuple(
         []
-        #+ glob('texts/brandon/*/*.rst')
-        #+ glob('texts/brandon/*/*.html')
+        + glob('texts/brandon/*/*.rst')
+        + glob('texts/brandon/*/*.html')
         + glob('texts/brandon/*/*.ipynb')
         #+ glob('texts/brandon/talks.html')
         )
