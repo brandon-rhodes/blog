@@ -168,7 +168,7 @@ def body_of(path):
     body = info['body']
 
     if isinstance(body, SimpleTemplate):
-        body = body.render() #blog=result['blog'])
+        body = body.render(**globals())
         body = utils.pygmentize_pre_blocks(body)
         body = body.replace('\n</pre>', '</pre>')
 
@@ -255,6 +255,8 @@ def find(base):
             yield os.path.join(dirpath, filename)
 
 def main():
+    global text_paths
+
     thisdir = os.path.dirname(__file__)
     # indir = os.path.normpath(os.path.join(thisdir, '..', 'texts'))
     outdir = os.path.normpath(os.path.join(thisdir, '..', 'output'))
@@ -266,7 +268,8 @@ def main():
         + glob('texts/brandon/*/*.rst')
         + glob('texts/brandon/*/*.html')
         + glob('texts/brandon/*/*.ipynb')
-        #+ glob('texts/brandon/talks.html')
+        + glob('texts/brandon/talks.html')
+        # + glob('texts/brandon/index.html')
         )
 
     for path in text_paths:
