@@ -6,15 +6,15 @@
   <title>{{ title or 'by Brandon Rhodes' }}</title>
   <link rel="stylesheet" type="text/css" href="/brandon/styles.css" />
   %if needs_mathjax:
-  <script type="text/javascript"
-          src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-  </script>
   <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
       "HTML-CSS": {matchFontHeight: false},
       NativeMML: {matchFontHeight: false},
       SVG: {matchFontHeight: false}
      });
+  </script>
+  <script type="text/javascript"
+          src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
   </script>
   %end
 </head>
