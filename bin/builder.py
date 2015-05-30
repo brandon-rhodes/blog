@@ -308,8 +308,9 @@ def main():
         os.makedirs(os.path.dirname(outpath), exist_ok=True)
         save_static(path, outpath)
 
-    return
+    #return
 
+    all_paths = text_paths + static_paths
     project.verbose = True
     while True:
         print('=' * 72)
@@ -318,7 +319,7 @@ def main():
         print('=' * 72)
         print('Reloading:', ' '.join(changed_paths))
         for path in changed_paths:
-            project.invalidate(read_text_file, path)
+            project.invalidate((read_text_file, (path,)))
         project.rebuild()
 
 if __name__ == '__main__':
