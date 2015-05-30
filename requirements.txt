@@ -1,7 +1,0 @@
-bottle==0.11.6
-docutils==0.11
-pytz==2014.9
-ipython>=1.0
-jinja2==2.7.3
-pygments==1.6
-pyyaml==3.10
