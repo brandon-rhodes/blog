@@ -46,8 +46,8 @@ def read_posts():
     tags = set(tag for post in posts for tag in post['tags'])
     return posts, tags
 
-def read_talks():
-    body = open('texts/brandon/talks.html', 'rb').read().decode('utf-8')
+def read_talks(read_text_file):
+    body = read_text_file('texts/brandon/talks.html')
     for line in body.splitlines():
         line = line.strip()
         if line.startswith('<a name='):
