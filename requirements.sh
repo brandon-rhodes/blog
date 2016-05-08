@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 conda install \
     'ipython-notebook<3' \
     docutils==0.11 \
