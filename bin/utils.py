@@ -7,6 +7,7 @@ from io import StringIO
 from pygments import highlight
 from pygments.formatters import HtmlFormatter
 from pygments.lexers import get_lexer_by_name, guess_lexer
+from pygments.util import ClassNotFound
 
 html_parser = HTMLParser()
 
@@ -98,7 +99,10 @@ def pygmentize_pre_blocks(html):
             lexer_name, code = code[2:].split('\n', 1)
             lexer = get_lexer_by_name(lexer_name)
         else:
-            lexer = guess_lexer(code)
+            try:
+                lexer = guess_lexer(code)
+            except ClassNotFound:
+                return code
         return highlight(code, lexer, formatter)
 
     body_html = re.sub(r'(?s)<pre([^>]*)>(.*?)</pre>', _highlight, html)
