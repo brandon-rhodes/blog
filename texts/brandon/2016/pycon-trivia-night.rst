@@ -1,6 +1,6 @@
 ---
 categories: Computing, Python
-date: 2016/06/08 22:01:40
+date: 2016/06/09 10:50:29
 permalink: http://rhodesmill.org/brandon/2016/pycon-trivia/
 title: PyCon Trivia Night, Third Edition
 ---
@@ -20,6 +20,15 @@ with a rousing set of punk startup tunes:
 
    <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Have a conference pass? Come by the Crystal Ballroom and see the Adventure Capitalists! <a href="https://t.co/sg0GxqiDpF">pic.twitter.com/sg0GxqiDpF</a></p>&mdash; PyCon (@pycon) <a href="https://twitter.com/pycon/status/737502417797799936">May 31, 2016</a></blockquote>
    <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+Last year’s trivia night questions
+focused on such exciting topics as PEP-8 and Python 3,
+but it turns out that these were fraught topics
+about which most of the audience were not very familiar.
+So I made a promise:
+the PyCon 2016 trivia night would be all Python 2, all the time!
+The questions below dive into and celebrate
+the retro roots of the legacy Python language.
 
 With the dinner complete,
 I can now reveal the questions and answers!
@@ -127,7 +136,65 @@ Final Round Questions
 The Winning Teams
 -----------------
 
+So how did the assembled teams do at tackling these questions?
 
+I am startled to announce a first-ever 3-way tie
+between the trivia night winning teams!
+Out of a total of 9 × 3 = 27 possible points,
+each of the three winning teams scored 17½ total.
+
+============================== ==== ==== ==== =====
+Trivia Team                       1    2    3 Total
+============================== ==== ==== ==== =====
+Palm Dakota Dessert Testers     7    7    3½   17½ 
+Site Packages                   6    6    5½   17½ 
+The Government                  6    5    6½   17½ 
+Bikeshed                        8    5    4    17  
+Team Ukraine                    6    6    4½   16½ 
+team from down\_\_              5    6½   5    16½ 
+wtfj                            6    6    4    16  
+Hey Siri, Call Mom              5    7    4    16  
+Jessica                         6    5    4    15  
+Team Python 4000                5½   6    3½   15  
+Portland Satellites             5    4½   5½   15  
+AI                              7    5    2½   14½ 
+__del__                         5    4    4    13  
+Star-args                       7    4    1    12  
+Stripper.py                     6    3½   2½   12  
+Meowmeow                          —  7    5    12  
+Python 3½                       5    5    1½   11½ 
+The Python 3 Developers         3    6    2½   11½ 
+Just A Flesh Wound              6    2½   2½   11  
+team 5/8                        3    3    4½   10½ 
+The Dissociative Arrays         6    3    1    10  
+import this                     4    4    1½    9½ 
+import antigravity              4    4    1     9  
+Nevada                          5    3½   0     8½ 
+Serpent Trainer                 4      —  2     6  
+j.j.w.e.                        5      —    —   5  
+PyNoobs                         3    2      —   5  
+blue viper                      2    1    0     3  
+Pink Panthers                   1    1    1     3  
+============================== ==== ==== ==== =====
+
+A dash in the table above indicates a missing answer sheet,
+that was either never written
+or that did not make it from the team’s table
+to my own table up at the front of the venue.
+
+One team,
+when they realized that they were not going to be able to answer
+a single one of the difficult final-round questions,
+decided to offer art instead as their contribution:
+
+.. raw:: html
+
+   <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">One team at PyCon trivia night, finding themselves without a single final-round answer, decided to offer art instead <a href="https://t.co/9oMf3m0RUt">pic.twitter.com/9oMf3m0RUt</a></p>&mdash; Brandon Rhodes (@brandon_rhodes) <a href="https://twitter.com/brandon_rhodes/status/740961349740560385">June 9, 2016</a></blockquote>
+   <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+As I could not, of course,
+award any points for unsolicited artwork,
+I recognized the team’s effort through the above tweet instead.
 
 ----------
 

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 scores_text = """\
 wtfj | 6 | 6 | 4
@@ -31,14 +32,24 @@ PyNoobs | 3 | 2 | x
 j.j.w.e. | 5 | x | x
 """
 
+def fix(n):
+    if n is None:
+        return u'—'
+    return str(n)
+
 if __name__ == '__main__':
     data = []
     for line in scores_text.splitlines():
         fields = [f.strip() for f in line.split('|')]
         name = fields[0]
-        scores = [0 if s == 'x' else float(s) for s in fields[1:]]
-        total = sum(scores)
-        data.append((total, name))
-    data.sort()
-    for line in data:
-        print line
+        scores = [None if s == 'x' else float(s) for s in fields[1:]]
+        total = sum(s for s in scores if s is not None)
+        data.append((total,) + tuple(scores) + (name,))
+    data.sort(reverse=True)
+    print('============================== ==== ==== ==== =====')
+    print('Trivia Team                       1    2    3 Total')
+    print('============================== ==== ==== ==== =====')
+    for total, round1, round2, round3, name in data:
+        print('%-30s %4s %4s %4s %5s'
+              % (name, fix(round1), fix(round2), fix(round3), total))
+    print('============================== ==== ==== ==== =====')
