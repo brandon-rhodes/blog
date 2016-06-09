@@ -5,8 +5,31 @@ permalink: http://rhodesmill.org/brandon/2016/pycon-trivia/
 title: PyCon Trivia Night, Third Edition
 ---
 
+At PyCon 2016 it was my honor,
+for a third year in a row,
+to host a Trivia Dinner on the first evening of the conference!
+This year’s venue was the storied
+`Crystal Ballroom <http://www.mcmenamins.com/CrystalBallroom>`_,
+a music venue in Downtown Portland’s west end.
+To make sure that our event took full advantage of the big stage,
+I booked the `Adventure Capitalists <http://adcap.biz/>`_,
+who followed up the trivia dinner
+with a rousing set of punk startup tunes:
 
+.. raw:: html
 
+   <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Have a conference pass? Come by the Crystal Ballroom and see the Adventure Capitalists! <a href="https://t.co/sg0GxqiDpF">pic.twitter.com/sg0GxqiDpF</a></p>&mdash; PyCon (@pycon) <a href="https://twitter.com/pycon/status/737502417797799936">May 31, 2016</a></blockquote>
+   <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+With the dinner complete,
+I can now reveal the questions and answers!
+I will list the questions first,
+in case any readers want to tackle them themselves
+without the danger of the answers scrolling too quickly into view.
+Next, I will list the teams and their scores.
+Finally, I will finish with the answers.
+
+----------
 
 First Round Questions
 ---------------------
@@ -74,8 +97,8 @@ Second Round Questions
 Final Round Questions
 ---------------------
 
-0. What writable attribute should your file-like object offer if it
-   wants to fully support Python’s ``print`` statement?
+0. | What writable attribute should your file-like object offer if it
+   | wants to fully support Python’s ``print`` statement?
 
 1. How many bytes long is the string that results from typing this into
    Python 2? ``'\a\b\c'``
@@ -101,8 +124,12 @@ Final Round Questions
 
 ----------
 
+The Winning Teams
+-----------------
 
 
+
+----------
 
 First Round Answers
 -------------------
