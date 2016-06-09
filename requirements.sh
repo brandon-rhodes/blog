@@ -6,13 +6,13 @@ set -e
 
 conda install \
     'ipython-notebook<3' \
-    docutils=0.12 \
-    jinja2=2.8 \
-    pygments=2.1.3 \
+    docutils=0.11 \
+    jinja2=2.7.3 \
+    pygments=1.6 \
     pytz \
-    pyyaml \
+    pyyaml=3.10 \
 
 pip install \
-    bottle==0.12.9 \
+    bottle==0.11.6 \
     https://github.com/brandon-rhodes/contingent/archive/master.zip \
 
