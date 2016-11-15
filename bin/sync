@@ -1,13 +1,7 @@
 #!/bin/bash
 
+set -e
+
 cd $(dirname "$0")/..
-if [ "$1" = "yes" ]
-then
-    rsync -crlv \
-        output/ ~/Dropbox/rhodesmill.org/
-else
-    rsync -crlv --dry-run \
-        output/ ~/Dropbox/rhodesmill.org/
-    echo
-    echo 'NO CHANGES MADE - re-run with "yes" to make these changes'
-fi
+rsync -r output/ ~/repos/rhodesmill.org
+,push

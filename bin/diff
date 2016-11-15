@@ -1,5 +1,0 @@
-#!/bin/bash
-
-exec colordiff -b -w -ur ~/Dropbox/rhodesmill.org/ output/ |
-grep -v "Only in $HOME/Dropbox/" |
-less
