@@ -444,6 +444,8 @@ h1 {
     text-align: center;
 }
 table {
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
     font-size: 13pt;
 }
 td {
