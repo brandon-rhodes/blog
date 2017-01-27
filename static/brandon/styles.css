@@ -518,6 +518,9 @@ hr:after {
 p a, p img {
     display: inline-block;
 }
+.anchor-link {
+    display: none;
+}
 .byline {
     clear: both;
     margin-top: 0;

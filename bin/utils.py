@@ -75,7 +75,7 @@ def build_docinfo_block_for_notebook(notebook):
         return ''
 
 def find_title_in_html(html):
-    pieces = re.split(r'<h1[^>]*>([^>]*)</h1>', html)
+    pieces = re.split(r'<h1[^>]*>([^<]*)', html)
     if len(pieces) == 3:
         before, title, after = pieces
         return html_parser.unescape(title)
@@ -102,9 +102,9 @@ def pygmentize_pre_blocks(html):
             try:
                 lexer = guess_lexer(code)
             except ClassNotFound:
-                return code
+                return u'<pre{}>{}</pre>'.format(match.group(1), code)
         return highlight(code, lexer, formatter)
 
-    body_html = re.sub(r'(?s)<pre([^>]*)>(.*?)</pre>', _highlight, html)
+    body_html = re.sub(r'(?sm)<pre([^>]*)>\n?(.*?)</pre>', _highlight, html)
     body_html = body_html.replace('\n</pre>', '</pre>')
     return body_html

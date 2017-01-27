@@ -4,8 +4,8 @@
 import os
 import re
 import utils
-from IPython.nbconvert import HTMLExporter
-from IPython.nbformat import current as nbformat
+import nbformat.v4 as nbformat
+from nbconvert import HTMLExporter
 from bottle import SimpleTemplate
 from datetime import datetime
 from docutils.core import publish_doctree
@@ -34,7 +34,7 @@ filters = {'fixdollars': fixdollars}
 
 dl = DictLoader({'full.tpl': """\
 {%- extends 'display_priority.tpl' -%}
-{% block input scoped %}{{ cell.input | highlight2html(language=resources.get('language'), metadata=cell.metadata) }}
+{% block input scoped %}{{ cell.source | highlight2html(language=resources.get('language'), metadata=cell.metadata) }}
 {% endblock %}
 {% block pyout scoped %}
 <pre class="output">
@@ -131,10 +131,11 @@ def parse(path):
             result['title'] = parts['title']
 
     elif path.endswith('.ipynb'):
-        notebook = nbformat.reads_json(source)
+        notebook = nbformat.reads(source)
         docinfo = utils.build_docinfo_block_for_notebook(notebook)
         exporter = HTMLExporter(config=None, extra_loaders=[dl],
                                 filters=filters)
+        #notebook = nbformat.convert(notebook, nbformat.current_nbformat)
         body, resources = exporter.from_notebook_node(notebook)
         body = body.replace('\n</pre>', '</pre>')
         body = body.replace('</h1>', '</h1>\n' + docinfo.rstrip())
@@ -146,7 +147,7 @@ def parse(path):
         result['body'] = body
         result['date'] = date
         result['needs_disqus'] = notebook['metadata'].get('needs_disqus')
-        result['title'] = (notebook['metadata']['name']
+        result['title'] = (notebook['metadata'].get('name', None)
                            or utils.find_title_in_html(body))
 
     return result
