@@ -44,10 +44,14 @@ if __name__ == '__main__':
         print(total, name)
         data.append((total,) + tuple(scores) + (name,))
     data.sort(reverse=True)
-    print('================================== ==== ==== ==== =====')
-    print('Trivia Team                           1    2    3 Total')
-    print('================================== ==== ==== ==== =====')
+    print('================================== === === === =====')
+    print('Trivia Team                          1   2   3 Total')
+    print('================================== === === === =====')
     for total, round1, round2, round3, name in data:
-        print('%-34s %4s %4s %4s %5s'
-              % (name, fix(round1), fix(round2), fix(round3), total))
-    print('================================== ==== ==== ==== =====')
+        print(('%-34s %4s %4s %4s %5s'
+               % (name, fix(round1), fix(round2), fix(round3), total))
+              .replace('.0', ' ')
+              .replace('.5', '½')
+              .replace('  —', '— ')
+        )
+    print('================================== === === === =====')
