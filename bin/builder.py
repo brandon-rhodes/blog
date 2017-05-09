@@ -57,7 +57,7 @@ dl = DictLoader({'full.tpl': """\
 {%- if output.png_filename %}
 <img src="{{output.png_filename | posix_path}}"
 {%- else %}
-<img src="data:image/png;base64,{{ output.png }}"
+<img src="data:image/png;base64,{{ output.data['image/png'] }}"
 {%- endif %}
 {%- if 'metadata' in output and 'width' in output.metadata.get('png', {}) %}
 width={{output.metadata['png']['width']}}
