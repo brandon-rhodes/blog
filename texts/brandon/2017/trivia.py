@@ -5,24 +5,24 @@ scores_text = """\
 ???,4
 exceptions,7,6.5,6
 1/0,6,7,5.5
-Stack Overflow trademark violators,7,7,9.67
+Stack Overflow trademark violators,7,7,9 2/3
 CPosest to the bar!,4,,3 2/3
 Longhorns,6,5.5
 __main__,8,,10.5
-St Python,6,,5
+St Python,6,6.5,5
 Portland Perl User's Group,5.5,,4 2/3
-ssssss,5,,4.167
+ssssss,5,,4 1/6
 Perl,5,4,5.5
 Major Tom,5.5,,5
 Fire Roads,5.5,6.5,5 2/3
-RU,3.5,,3.67
-Not a Dead Parrot,4,5.5,6.33
-Omega dot and co.,5,5,4.67
+RU,3.5,,3 2/3
+Not a Dead Parrot,4,5.5,6 1/3
+Omegadot and co.,5,5,4 2/3
 __struct__,5,7,8.5
 pyfecta!!,5,,3 1/3
-Bobby Tables,5.5,3.67
+Bobby Tables,5.5,,3 2/3
 __teamname__,4,6,4.5
-The Dunderdogs,4,5.5,4.167
+The Dunderdogs,4,5.5,4 1/6
 EAFP,4,,5.5
 Spam & Eggs,5.5,6.5,4.5
 """
