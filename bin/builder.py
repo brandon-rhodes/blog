@@ -5,6 +5,7 @@ import os
 import re
 import utils
 import nbformat.v4 as nbformat
+from CommonMark import commonmark
 from nbconvert import HTMLExporter
 from bottle import SimpleTemplate
 from datetime import datetime
@@ -105,6 +106,17 @@ def parse(path):
         result['next_link'] = None
         result['previous_link'] = None
 
+    elif path.endswith('.md'):
+        if utils.detect_blogofile(source):
+            heading, info, body = utils.convert_blogofile(source)
+            source = body
+            result['date'] = info['date']
+            result['title'] = info['title']
+            result['needs_disqus'] = True
+        else:
+            result['needs_disqus'] = False
+        result['body'] = commonmark(source)
+
     elif path.endswith('.rst'):
         if utils.detect_blogofile(source):
             heading, info, body = utils.convert_blogofile(source)
@@ -149,6 +161,9 @@ def parse(path):
         result['needs_disqus'] = notebook['metadata'].get('needs_disqus')
         result['title'] = (notebook['metadata'].get('name', None)
                            or utils.find_title_in_html(body))
+
+    else:
+        raise ValueError('unrecognized path: {}'.format(path))
 
     return result
 
@@ -288,6 +303,7 @@ def main():
 
     text_paths = tuple(
         []
+        + glob('texts/brandon/*/*.md')
         + glob('texts/brandon/*/*.rst')
         + glob('texts/brandon/*/*.html')
         + glob('texts/brandon/*/*.ipynb')

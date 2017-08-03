@@ -9,6 +9,7 @@ conda install \
     notebook \
 
 pip install \
+    CommonMark \
     docutils==0.11 \
     jinja2==2.7.3 \
     pygments==1.6 \
