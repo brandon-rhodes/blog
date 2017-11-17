@@ -171,9 +171,11 @@ that were not even imagined in the 1970s.
 
 If you are interested in more early UNIX documentation —
 including the Second Edition of Kernighan's “Beginners” guide —
-check out the `7th Edition manuals <http://cm.bell-labs.com/7thEdMan/>`_
+check out the
+`7th Edition manuals <https://s3.amazonaws.com/plan9-bell-labs/7thEdMan/index.html>`_
 which Bell Labs has kindly made available online,
-both as `PDF files <http://cm.bell-labs.com/7thEdMan/bswv7.html>`_
+both as
+`PDF files <https://s3.amazonaws.com/plan9-bell-labs/7thEdMan/bswv7.html>`_
 and also as plain-text files marked up for the ``troff`` typesetter.
 Note that you can still compile the ``troff`` files
 successfully on a modern system —
