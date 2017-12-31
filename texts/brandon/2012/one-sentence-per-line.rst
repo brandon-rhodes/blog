@@ -119,7 +119,7 @@ that my inspiration is none other than
 `Brian W. Kernighan <http://www.cs.princeton.edu/~bwk/>`_!
 
 He published “UNIX for Beginners”
-`[PDF] <http://miffy.tom-yam.or.jp/2238/ref/beg.pdf>`_
+`[PDF] <https://web.archive.org/web/20130108163017if_/http://miffy.tom-yam.or.jp:80/2238/ref/beg.pdf>`_
 as Bell Labs Technical Memorandum 74-1273-18
 on 29 October 1974.
 It describes a far more primitive version of the operating system
@@ -127,7 +127,10 @@ than his more famous and more widely available
 “UNIX for Beginners — Second Edition” from 1978.
 After a long search I have found the lone copy linked above,
 hosted on an obscure Japanese web page about
-`UNIX 6th Edition <http://miffy.tom-yam.or.jp/2238/ref/>`_.
+`UNIX 6th Edition <https://web.archive.org/web/20130107033411/http://miffy.tom-yam.or.jp:80/2238/ref/>`_
+which has now disappeared
+but can still be viewed on the Internet Archive’s Wayback Machine
+(to which both of the links above point).
 In the section “Hints for Preparing Documents,”
 Kernighan shares this wisdom:
 
