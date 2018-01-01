@@ -1,0 +1,164 @@
+---
+date: 2017/08/03 10:09:46
+permalink: http://rhodesmill.org/brandon/2017/openconnect-split-dns/
+title: 'Fixing OpenConnect’s VPN Search Domains on Ubuntu'
+---
+<p>A quick technical note about VPN hostnames on Ubuntu Linux,
+since otherwise I will forget:</p>
+<p>If other users of your VPN can refer to hosts by an unqualified hostname,
+but an Ubuntu user like you receives a <code>not found</code> error
+for the same hostname,
+then try creating the following file
+(you will need to create the directory by hand).</p>
+<p><code>/etc/vpnc/connect.d/cisco_split_dns</code></p>
+<pre><code># Take each &quot;Cisco split domain&quot; defined by the VPN and add
+# it to the &quot;search&quot; line in resolv.conf, so unqualified
+# hostnames are searched for in all the subdomains that
+# the network architects intended.
+
+if [ -n &quot;$CISCO_SPLIT_DNS&quot; ]; then
+    for domain in $(echo &quot;$CISCO_SPLIT_DNS&quot; | sed &quot;s/,/ /g&quot;)
+    do
+        CISCO_DEF_DOMAIN=&quot;$CISCO_DEF_DOMAIN
+domain $domain&quot;
+    done
+fi
+</code></pre>
+<p>After creating the above file,
+disconnect and reconnect to the VPN.
+All of the unqualified hostnames that your co-workers enjoy
+should now start working for you!</p>
+<p>How did I develop this fix?</p>
+<p>I suspected that the problem with hostname resolution
+involved how <code>openconnect</code> sets the <code>search</code> line in <code>/etc/resolv.conf</code>.
+For example,
+connecting to a VPN might configure <code>/etc/resolv.conf</code>
+with a line like:</p>
+<pre><code>search example.com
+</code></pre>
+<p>When a network program is given
+a hostname that does not include a period —
+an “unqualified” hostname that doesn’t specify its full domain —
+it uses this <code>search</code> line to suggest possible domains for the host.
+The command <code>ssh foo</code>, for example,
+would check whether <code>foo.example.com</code> exists.
+My guess was that the search line
+was actually supposed to be longer
+after connecting to the VPN, like:</p>
+<pre><code>search example.com corp.example.com dev.example.com
+</code></pre>
+<p>This would make <code>ssh foo</code>
+also check for <code>foo.corp.example.com</code> and <code>foo.dev.example.com</code>
+if the name <code>foo.example.com</code> turned out to not exist.
+But for some reason my <code>search</code> line was listing only a single subdomain.</p>
+<p>I was daunted at the thought of trying to find a fix.
+How could I possibly affect something as intricate
+as how VPN software decides to configure my network,
+without iterating through the time-consuming process
+of patching the source and recompiling its binary?</p>
+<p>It turns out, as I was delighted to discover,
+that <code>openconnect</code> defers the step of configuring the local host’s network
+to a plain-text shell script!
+This is one of the glories of the UNIX tradition:
+solving even system configuration problems, where possible,
+with standard and transparent tooling.</p>
+<p>When <code>openconnect</code> finishes negotiating the secure channel,
+it calls a shell script named <code>vpnc-script</code>,
+which is briefly described on its manual page:</p>
+<pre><code>$ man openconnect
+
+...
+
+-s,--script=SCRIPT
+       Invoke  SCRIPT  to  configure  the network after
+       connection. Without this, routing and name  ser‐
+       vice  are unlikely to work correctly. The script
+       is  expected   to   be   compatible   with   the
+       vpnc-script which is shipped with the &quot;vpnc&quot; VPN
+       client.  See   http://www.infradead.org/opencon‐
+       nect/vpnc-script.html for more information. This
+       version of  OpenConnect  is  configured  to  use
+       /usr/share/vpnc-scripts/vpnc-script by default.
+</code></pre>
+<p>I opened the default version of the script
+and was happy to see that it was profusely commented.
+Right at the top, it featured a long list of the environment variables
+that <code>openconnect</code> sets before calling it.
+Did there exist a setting on this particular VPN
+that the script was not equipped to use?
+I tried running <code>openconnect</code> with the verbose <code>-v</code> option
+that was mentioned on the manual page,
+and whole screenfulls of configuration data from the VPN
+poured across my terminal window.
+I perused them and quickly found:</p>
+<pre><code>...
+X-CSTP-Default-Domain: example.com
+...
+X-CSTP-Split-DNS: corp.example.com
+X-CSTP-Split-DNS: dev.example.com
+...
+</code></pre>
+<p>These “Split DNS” entries were the ones missing
+from the <code>search</code> clause of my <code>resolv.conf</code>!
+But how were these values delivered to the shell script?
+I made a temporary edit atop the <code>vpnc-script</code>
+to save all of its environment variables to a file:</p>
+<pre><code>set &gt; /tmp/my-environment
+</code></pre>
+<p>Reconnecting to the VPN and then reading through this temporary file,
+I saw that the environment variable
+<code>CISCO_SPLIT_DNS</code> was the one I was looking for:
+a comma-separated list of the missing subdomains.
+How could I arrange for them to be added to <code>resolv.conf</code>?
+One possibility would be to maintain my own version of <code>vpnc-script</code> —
+but, happily, I found that the script’s behavior
+could be manipulated from a separate file!</p>
+<p>Using a few temporary <code>echo here &gt;&gt; /tmp/log</code> statements
+to make sure I understood which decisions the script was making,
+I learned that it assembled a small configuration file
+in a variable <code>$NEW_RESOLVCONF</code>
+that it then passed as input to a program I had never heard of
+named <code>/sbin/resolvconf</code>,
+that apparently is how modern Linuxes like Ubuntu
+automate updates to their <code>resolv.conf</code> file.
+Expecting <code>$CISCO_DEF_DOMAIN</code> to be a lone domain name,
+the shell script adds it to the input it is building for <code>resolvconf</code>:</p>
+<pre><code>domain $CISCO_DEF_DOMAIN
+</code></pre>
+<p>But there is no rule that <code>$CISCO_DEF_DOMAIN</code>
+has to contain only one line —
+if I supplemented it to include several additional lines of text,
+then they would also be included in the input to <code>resolvconf</code>!
+Is there any way I could get in
+and tweak the value of <code>$CISCO_DEF_DOMAIN</code> before the script uses it?</p>
+<p>I kept reading and, happily, discovered
+that the script calls an internal routine <code>run_hooks connect</code>
+before performing an actual connection.
+The routine runs every file of shell commands
+that it finds in the directory <code>/etc/vpnc/connect.d</code>.</p>
+<p>And so the problem was solved!</p>
+<ol>
+<li>
+<p>I could add a file of my own to <code>/etc/vpnc/connect.d</code>
+to supply code to run before <code>vpnc-script</code> did the rest of its work.</p>
+</li>
+<li>
+<p>The environment variable <code>$CISCO_DEF_DOMAIN</code>
+would hold the hostnames I needed to add.</p>
+</li>
+<li>
+<p>The only impedance mismatch
+was that <code>$CISCO_DEF_DOMAIN</code> is comma separated,
+whereas the text I needed was several separate <code>search …</code> lines,
+but a quick <code>for</code> loop could easily generate one from the other.</p>
+</li>
+</ol>
+<p>And so I wrote the short shell script at the top of this post,
+disconnected from the VPN, reconnected,
+and for the first time was able to use the unqualified hostnames
+that had always worked for my coworkers on their Macs
+but had never worked for me.</p>
+<p>And the fix was easy, thanks to the time-tested UNIX practice
+of plain-text shell scripts driving system configuration,
+making even the details of VPN network setup
+visible and extensible when they need to be.</p>
