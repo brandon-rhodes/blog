@@ -2,14 +2,13 @@
 <h1>All Posts Ever</h1>
 
 <table>
-
-  %for post in blog.sorted_posts():
+  %for path in sorted_posts(text_paths)[::-1]:
   <tr>
-    <td><i>{{ post.date.strftime('%Y %B %d').replace(' 0', ' ') }}</i></td>
+    <td><i>{{ date_of(path).strftime('%Y %B %d').replace(' 0', ' ') }}</i></td>
     <td>
-      <a href="{{ post.url_path }}">{{ post.title }}</a>
+      <a href="{{ url_of(path) }}">{{ title_of(path) }}</a>
       <p>
-        {{! helpers.simple_preview(post.body_html) }}
+        {{ preview_body_of(path) }}
       </p>
     </td>
   </tr>

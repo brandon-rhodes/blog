@@ -213,6 +213,29 @@ def body_of(path):
     return body
 
 @project.task
+def preview_body_of(path):
+    body = body_of(path)
+
+    if '<table class="docinfo"' in body:
+        i = body.find('</table>') + len('</table>')
+    else:
+        i = body.find('</h1>') + len('</h1>')
+
+    preview = ''
+    preview_limit = 256
+
+    while len(preview) < preview_limit and i < len(body):
+        j = body.find('<', i)
+        preview += body[i:j]
+        i = body.find('>', j) + 1
+
+    j = preview.find(' ', preview_limit)
+    if j != -1:
+        preview = preview[:j]
+
+    return preview.strip() + u'…'
+
+@project.task
 def sorted_posts(paths):
     dates = {path: date_of(path) for path in paths}
     dated_paths = [path for path in paths if dates[path]]
@@ -307,8 +330,7 @@ def main():
         + glob('texts/brandon/*/*.rst')
         + glob('texts/brandon/*/*.html')
         + glob('texts/brandon/*/*.ipynb')
-        + glob('texts/brandon/talks.html')
-        + glob('texts/brandon/index.html')
+        + glob('texts/brandon/*.html')
         )
 
     for path in text_paths:
