@@ -515,7 +515,7 @@ hr:after {
     content: "❖";
     display: inline-block;
 }
-p a, p img {
+p img {
     display: inline-block;
 }
 .anchor-link {
