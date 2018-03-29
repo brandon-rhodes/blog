@@ -3,7 +3,7 @@
 set -e
 
 function resize {
-    convert "$1" -resize 600x600 "$2"
+    convert "$1" -resize 600x600 -quality 90 "$2"
 }
 
 X=$HOME/dropbox/personal/Photos/darktable_exported/
