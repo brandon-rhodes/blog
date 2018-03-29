@@ -3,6 +3,7 @@
 
 import os
 import re
+import sys
 import utils
 import nbformat.v4 as nbformat
 from CommonMark import commonmark
@@ -33,7 +34,7 @@ def fixdollars(string):
 
 filters = {'fixdollars': fixdollars}
 
-dl = DictLoader({'full.tpl': """\
+dl = DictLoader({'brandon.tpl': """\
 {%- extends 'display_priority.tpl' -%}
 {% block input scoped %}{{ cell.source | highlight2html(language=resources.get('language'), metadata=cell.metadata) }}
 {% endblock %}
@@ -147,6 +148,7 @@ def parse(path):
         docinfo = utils.build_docinfo_block_for_notebook(notebook)
         exporter = HTMLExporter(config=None, extra_loaders=[dl],
                                 filters=filters)
+        exporter.template_file = 'brandon.tpl'
         #notebook = nbformat.convert(notebook, nbformat.current_nbformat)
         body, resources = exporter.from_notebook_node(notebook)
         body = body.replace('\n</pre>', '</pre>')
@@ -351,6 +353,10 @@ def main():
 
     all_paths = text_paths + static_paths
     project.verbose = True
+
+    if len(sys.argv) > 1:
+        return
+
     while True:
         print('=' * 72)
         print('Watching for files to change')
