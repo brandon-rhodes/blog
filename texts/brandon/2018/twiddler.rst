@@ -3,7 +3,7 @@
  A New Driver for the Original Twiddler
 ========================================
 
-:Date: 16 January 2018
+:Date: 29 March 2018
 
 The practical take-away from this post
 is that if you’re ever trying to debug serial communications
@@ -14,10 +14,15 @@ transmit only when Data Terminal Ready is set),
 then never run ``stty`` on the serial port
 to double-check your settings.
 
+.. image:: http://rhodesmill.org/brandon/2018/twiddler.jpg
+   :alt: The original Twiddler one-handed keyboard
+
 Why?
 
 Because ``stty`` turns Data Terminal Ready back on.
 Without even asking you!
+
+.. more
 
 So the device will never communicate with you,
 and you may very nearly conclude that your device is broken
@@ -39,27 +44,25 @@ I decided to try out my old Twiddler keyboard for browsing,
 since Gmail shortcuts
 should be easy enough to type with one hand.
 
-[pic of Twiddler]
-
 The Twiddler keyboard uses *chords*
 to allow a single hand
-to type all the codes on a typical keyboard.
-You press down several keys, instead of just one key,
+to produce all the keystrokes possible on a typical keyboard.
+You press a combination of buttons, instead of just one,
 to type a single letter or symbol.
 Normal keyboards issue a letter or symbol
 the moment you put a key down.
-But because a chording keyboard doesn’t know yet
-if you’re pressing that first key for its own sake
-or because you want to combine it with other keys to make a chord,
-it has to wait until the moment you finish pressing keys down
-and lift a key back up
-before it knows which symbol to send to the computer.
+But because a chording keyboard doesn’t know the complete chord
+until all your fingers are down,
+it waits until the moment you finish and lift a finger back up
+to type the character corresponding to that chord.
 
-But I disliked the Twiddler’s native keyboard mapping,
+I disliked the Twiddler’s native keyboard mapping,
 so I came up with my own mapping that I named “TabSpace”
 and that’s `still available from my old projects page <http://rhodesmill.org/brandon/projects.html>`_:
 
-[pic]
+.. image:: http://rhodesmill.org/brandon/2018/tabspace-reference.png
+   :target: http://rhodesmill.org/brandon/projects/tabspace-guide.pdf
+   :alt: The PDF guide to my Twiddler keymap
 
 It may surprise you
 to learn that even though I’m the author
@@ -69,11 +72,12 @@ I bought it in grad school
 when I was briefly interested in wearable computing —
 back when that meant running Emacs in a glasses-mounted display
 powered by a computer in an over-the-shoulder satchel.
-I wound up pursuing other avenues
-after my workplace issued me a `Palm V <https://en.wikipedia.org/wiki/Palm_V>`_
-and I realized that I preferred a mobile experience
-that I could stash away in a pocket
-instead of a device that would be constantly intruding in my line of sight.
+I wound up interested in other forms of mobile computing
+after my workplace issued me
+a `Palm V <https://en.wikipedia.org/wiki/Palm_V>`_.
+I realized that I preferred a mobile experience
+that could be stashed away in a pocket
+to a device that would be constantly intruding in my line of sight.
 
 So many cables
 --------------
@@ -83,10 +87,10 @@ seemed like a great chance to finally use the device.
 The first surprise was the reminder that its cables
 are quite a bit different from those of a modern keyboard:
 
-[pic of cables]
+.. image:: http://rhodesmill.org/brandon/2018/cables.jpg
+   :alt: The original Twiddler’s cabling
 
-It took a few tries to remember why it needs two connectors.
-Why two?
+It took a few tries to remember why the Twiddler needs two connectors.
 The Twiddler design constraints seem to have been:
 
 * They wanted to support custom user-defined keymaps.
@@ -101,42 +105,49 @@ The Twiddler design constraints seem to have been:
   adding complexity to both the protocol and software.
 
 * They therefore decided that the Twiddler itself
-  would only transmit the raw chords that the user pressed,
-  and perform the translation from chords to text on the computer.
+  would only transmit the raw chords that the user pressed.
+  Translation from chords to keystrokes
+  would happen in a driver on the computer itself.
 
 * This meant that the Twiddler could *not* send its input
-  to the PS/2 keyboard port,
-  since the operating system would have interpreted the data
+  to the PS/2 keyboard port.
+  The operating system would have interpreted the data
   as real keystrokes.
 
-* But which incoming data port were operating systems agnostic about?
+* Which incoming data port were operating systems of the late 1990s
+  agnostic about?
   The serial port!
   Desktop operating systems tended to ignore it by default,
-  and their driver could interpret the data as it pleased.
+  so a Twiddler driver could interpret the data as it pleased.
 
 * The Twiddler might thus have been designed
   purely for the serial port.
   But how would it then have been powered?
   One possibility would have been its own A/C power supply.
   Another would have been a compartment for batteries.
-  Instead, the designers opted for the same power supply
-  as is used by normal keyboards:
+  Instead, the designers opted to use the same power supply
+  that normal keyboards use:
   the 5 volts offered at the PS/2 port.
   Thus the Twiddler comes with a double cord,
   offering a serial connector that communicates but provides no power,
   and a PS/2 keyboard DIN connector that accepts power
-  but performs no communication.
+  but performs no communication!
 
-So I wasn’t able to connect the Twiddler to my laptop —
-while I found a small PS/2-to-USB converter in a drawer,
-that left the device without any way to communicate.
-To both give it power and also receive data
-I had to move over to my Linux desktop,
+* So that users could also connect a traditional keyboard,
+  the Twiddler added a female PS/2 connector to the end of the cord
+  where — once the device has grabbed the 5 volts it needs —
+  a normal keyboard can take power from and provide data to the port.
+
+I wasn’t able to connect the Twiddler to my laptop.
+While I found a small PS/2-to-USB converter in a drawer,
+that left the Twiddler without any way to communicate.
+To both give it power and also receive data,
+I had to move over to my Linux desktop —
 apparently the last computer in the entire house with a serial port.
 This means I’ll stand at its monitor
-to check my email instead of sitting in the easy chair —
-and while I am not as comfortable or productive
-when I try coding at a standing desk,
+to check my email instead of sitting in the easy chair.
+While I’m not as comfortable or productive
+when I try writing code at a standing desk,
 it should be fine for reading email.
 
 Driver archaeology
@@ -160,15 +171,15 @@ This of course makes perfect sense
 for a daemon that’s really designed as a mouse driver,
 not a keyboard driver.
 
-
 A quick experiment suggested that gpm doesn’t know to select the correct
 baud rate for the Twiddler
 (though, confusingly enough, gpm `does mention the correct baud rate in a source code comment <https://github.com/telmich/gpm/blob/1fd19417b8a4dd9945347e98dfa97e4cfd798d77/src/headers/twiddler.h#L4>`_),
 so I wasn’t able to get gpm working with the Twiddler
 even for typing at the Linux console.
 
+But there is an alternative to gpm.
 Happily, it appears that a single lone copy still exists
-of the open source Linux drivers I remember using originally,
+of the open-source Linux drivers I remember using originally,
 though they required a bit more searching:
 the old MIT Wearable Computing site’s
 `Keyboards page <https://www.media.mit.edu/wearables/lizzy/keyboards.html>`_
@@ -176,8 +187,8 @@ offers a copy of Jeff Levine’s
 `twid-linux.tar.gz <https://www.media.mit.edu/wearables/lizzy/twid-linux.tar.gz>`_
 driver.
 
-Even after all of these years
-I was able to coax it into compiling —
+Even after all of these years,
+I was able to coax it into compiling on modern Linux —
 but the result was only that my mouse
 began to jitter around on my screen
 without the Twiddler appearing to be in control.
@@ -186,8 +197,7 @@ was at least reading data successfully from the serial port,
 but it was evidently not making sense to the driver.
 
 Was my old device simply broken,
-and I had wasted all of those years
-of keeping it carefully in its box?
+and it was in vain that I had kept it carefully in its box all these years?
 Or was the driver not communicating correctly?
 
 It was clearly time to step in with some simple Python code
@@ -197,7 +207,6 @@ and see if reliable communication could be established.
 Establishing communication
 --------------------------
 
-I very nearly despaired.
 The worst kind of debugging
 is where you start in a broken state
 and have no idea whether one tweak or a dozen tweaks
@@ -209,18 +218,19 @@ But I did have one glimmering source of hope
 as I stepped my Python code
 through many permutations of baud rate, stop bits,
 and other serial port and TTY settings:
-the fact that I could still see data flowing with `strace`
+I was heartened by the fact that I could still see data flowing with `strace`
 whenever I powered back up the old legacy drivers.
-So my old Twiddler — I had to keep reminding myself —
+In fact I kept doing that, every half hour or so,
+just to convince myself the device wasn’t broken and silent.
+My old Twiddler — I had to keep reminding myself —
 could, somehow, still be induced to send bits.
 
 The problem was that when I tried establishing
 the same communications settings in my own script
 as had been used in the original drivers —
-even being careful to drop DTR
+even being careful to drop DTR, exactly like the original driver does
 (the “Data Terminal Ready” serial line,
 which would normally be set if the computer were ready to receive)
-exactly like the original driver
 — I still saw no data.
 What was going on?
 
@@ -232,7 +242,7 @@ looked roughly like::
   f = open('/dev/ttyS0', 'r+b', buffering=0)
   ...
 
-  # Print out the settings to double-check.
+  # Print the settings to the screen to double-check.
   os.system('stty -a < /dev/ttyS0')
 
   # Try reading from the port.
