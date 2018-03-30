@@ -14,10 +14,14 @@ from docutils.core import publish_doctree
 from docutils import nodes
 from glob import glob
 from jinja2 import DictLoader
+from pytz import timezone
 
 from contingent.projectlib import Project
 # from contingent.cachelib import Cache, _absent
 from contingent.io import looping_wait_on
+from feedgen.feed import FeedGenerator
+
+from helpers import truncate_at_more
 
 project = Project()
 
@@ -106,6 +110,7 @@ def parse(path):
         result['body'] = body_html
         result['next_link'] = None
         result['previous_link'] = None
+        result['tags'] = [tag for tag in result['tags'] if tag]
 
     elif path.endswith('.md'):
         if utils.detect_blogofile(source):
@@ -188,6 +193,11 @@ def title_of(path):
 def date_of(path):
     info = parse(path)
     return info['date']
+
+@project.task
+def tags_of(path):
+    info = parse(path)
+    return info.get('tags', None)
 
 @project.task
 def needs_disqus(path):
@@ -281,14 +291,91 @@ def render(paths, path):
 @project.task
 def save_text(paths, path, outpath):
     text = render(paths, path)
-    with open(outpath, 'w') as f:
-        f.write(text)
+    save(outpath, text)
+
+@project.task
+def post_info(path):
+    return {
+        'body_html': body_of(path),
+        'date': date_of(path),
+        'title': title_of(path),
+        'url_path': url_of(path),
+    }
+
+@project.task
+def render_feed(text_paths, outpath):
+    # http://rhodesmill.org/brandon/feed
+    # http://rhodesmill.org/brandon/category/python/feed
+    # http://rhodesmill.org/brandon/feed/atom/
+
+    t0 = datetime.min.time()
+
+    def fix(d):
+        dt = datetime.combine(d, t0)
+        return timezone('US/Eastern').localize(dt)
+
+    posts = [post_info(path) for path in text_paths if date_of(path)]
+    posts = sorted(posts, key=lambda post: post['date'])
+    posts = posts[-1:]
+    most_recent_date = max(post['date'] for post in posts)
+
+    def full(url):
+        return 'http://rhodesmill.org/' + url.lstrip('/')
+
+    fg = FeedGenerator()
+    fg.id(full('/'))
+    fg.author({'name': 'Brandon Rhodes'})
+    fg.language('en')
+    fg.link(href=full('/brandon/'), rel='alternate')
+    if 'python' in outpath:
+        fg.link(href=full('/brandon/category/python/feed/'), rel='self')
+    else:
+        fg.link(href=full('/brandon/feed/'), rel='self')
+    fg.subtitle('Thoughts and ideas from Brandon Rhodes')
+    fg.title("Let's Discuss the Matter Further")
+    fg.updated(fix(most_recent_date))
+
+    for post in posts:
+        url = full(post['url_path'])
+        excerpt = truncate_at_more(post['body_html'], url)
+
+        fe = fg.add_entry()
+        fe.content(excerpt, type='html')
+        fe.guid(url, permalink=True)
+        fe.id(url)
+        fe.link({'href': url})
+        fe.published(fix(post['date']))
+        fe.title(post['title'])
+
+    rss = fg.rss_str(pretty=True)
+    fg.link(href=full('/brandon/feed/atom/'), rel='self', replace=True)
+    fg.updated(fix(most_recent_date))
+    atom = fg.atom_str(pretty=True)
+
+    return rss, atom
+
+@project.task
+def save_atom_feed(text_paths, outpath):
+    rss_text, atom_text = render_feed(text_paths, outpath)
+    save(outpath, atom_text)
+
+@project.task
+def save_rss_feed(text_paths, outpath):
+    rss_text, atom_text = render_feed(text_paths, outpath)
+    save(outpath, rss_text)
 
 @project.task
 def save_static(path, outpath):
     data = read_binary_file(path)
-    with open(outpath, 'wb') as f:
-        f.write(data)
+    save(path, data)
+
+def save(path, text):
+    d = os.path.dirname(path)
+    if not os.path.exists(d):
+        os.makedirs(d)
+    mode = 'wb' if isinstance(text, bytes) else 'w'
+    with open(path, mode) as f:
+        f.write(text)
 
 # class BlogBuilder:
 #     def __init__(self, verbose=False):
@@ -342,14 +429,16 @@ def main():
         os.makedirs(os.path.dirname(outpath), exist_ok=True)
         save_text(text_paths, path, outpath)
 
+    save_rss_feed(text_paths, 'output/brandon/feed/index.xml')
+    save_atom_feed(text_paths, 'output/brandon/feed/atom/index.xml')
+    save_rss_feed(text_paths, 'output/brandon/category/python/feed/index.xml')
+
     static_paths = tuple(find('static'))
 
     for path in static_paths:
         outpath = os.path.join(outdir, path.split('/', 1)[1])
         os.makedirs(os.path.dirname(outpath), exist_ok=True)
         save_static(path, outpath)
-
-    #return
 
     all_paths = text_paths + static_paths
     project.verbose = True

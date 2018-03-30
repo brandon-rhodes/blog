@@ -3,7 +3,7 @@
  A New Driver for the Original Twiddler
 ========================================
 
-:Date: 29 March 2018
+:Date: 30 March 2018
 
 The practical take-away from this post
 is that if you’re ever trying to debug serial communications
@@ -22,14 +22,14 @@ Why?
 Because ``stty`` turns Data Terminal Ready back on.
 Without even asking you!
 
-.. more
-
 So the device will never communicate with you,
 and you may very nearly conclude that your device is broken
 before you happen to remove the ``stty`` call
 and see the device finally work.
 So that’s the take-away.
 But the full story is a bit longer.
+
+.. more
 
 Typing with one hand
 --------------------

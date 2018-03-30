@@ -11,6 +11,7 @@ conda install \
 pip install \
     CommonMark==0.7.5 \
     docutils==0.11 \
+    feedgen==0.6.1 \
     jinja2==2.7.3 \
     pygments==1.6 \
     pytz \

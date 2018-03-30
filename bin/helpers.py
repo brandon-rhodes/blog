@@ -8,10 +8,20 @@ more_template = '<p><a href="{}">Read the full article...</a></p>'
 preview_limit = 256
 
 def truncate_at_more(body, url):
+    if '<table class="docinfo"' in body:
+        i = body.find('</table>') + len('</table>')
+    else:
+        i = body.find('</h1>') + len('</h1>')
+    body = body[i:]
     pieces = re.split(r'<!-- *more *-->', body)
     if len(pieces) == 1:
         return body
-    return pieces[0] + more_template.format(url)
+    return ''.join([
+        #'<div>',
+        pieces[0],
+        more_template.format(url),
+        #'</div>',
+    ])
 
 def simple_preview(body):
     if '<table class="docinfo"' in body:
