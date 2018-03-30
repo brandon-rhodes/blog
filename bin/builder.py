@@ -346,10 +346,10 @@ def render_feed(text_paths, outpath):
         fe.link({'href': url})
         fe.published(fix(post['date']))
         fe.title(post['title'])
+        fe.updated(fix(post['date']))
 
     rss = fg.rss_str(pretty=True)
     fg.link(href=full('/brandon/feed/atom/'), rel='self', replace=True)
-    fg.updated(fix(most_recent_date))
     atom = fg.atom_str(pretty=True)
 
     return rss, atom
