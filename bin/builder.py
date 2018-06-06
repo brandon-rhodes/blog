@@ -159,7 +159,7 @@ def parse(path):
         body = body.replace('\n</pre>', '</pre>')
         body = body.replace('</h1>', '</h1>\n' + docinfo.rstrip())
 
-        date = notebook['metadata']['date']
+        date = notebook['metadata'].get('date')
         if date is not None:
             date = datetime.strptime(date, '%d %B %Y').date()
 
@@ -187,12 +187,12 @@ def url_of(path):
 @project.task
 def title_of(path):
     info = parse(path)
-    return info['title']
+    return info.get('title', 'UNTITLED')
 
 @project.task
 def date_of(path):
     info = parse(path)
-    return info['date']
+    return info.get('date')
 
 @project.task
 def tags_of(path):
