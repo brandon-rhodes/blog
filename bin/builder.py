@@ -367,7 +367,7 @@ def save_rss_feed(text_paths, outpath):
 @project.task
 def save_static(path, outpath):
     data = read_binary_file(path)
-    save(path, data)
+    save(outpath, data)
 
 def save(path, text):
     d = os.path.dirname(path)
