@@ -49,6 +49,11 @@ dl = DictLoader({'brandon.tpl': """\
 {% endblock %}
 {% block markdowncell scoped %}{{ cell.source  | markdown2html | fixdollars }}
 {% endblock %}
+{% block execute_result -%}
+<pre class="output">
+{{ output.data['text/plain'] | ansi2html }}
+</pre>
+{% endblock execute_result %}
 {% block stream_stdout -%}
 <pre class="output">
 {{ output.text | ansi2html }}
