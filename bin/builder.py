@@ -53,7 +53,7 @@ dl = DictLoader({'brandon.tpl': r"""\
 {% if 'image/png' in output.data %}
 <img src="data:image/png;base64,{{ output.data['image/png'] }}">
 {% elif 'text/latex' in output.data %}
-{{ output.data['text/latex'] }}
+<div class="output">{{ output.data['text/latex'] }}</div>
 {% else %}
 <pre class="output">
 {{ output.data['text/plain'] | ansi2html }}

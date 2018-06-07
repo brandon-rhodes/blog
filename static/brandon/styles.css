@@ -531,7 +531,8 @@ p img {
     display: inline-block;
     color: #820002;
 }
-pre.output {
+.output {
+    border: 1px dashed #93A1A1;
     background-color: #f8f8f8;
     color: #073642;
 }
