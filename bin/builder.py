@@ -38,8 +38,7 @@ def fixdollars(string):
 
 filters = {'fixdollars': fixdollars}
 
-dl = DictLoader({'brandon.tpl': r"""\
-{%- extends 'display_priority.tpl' -%}
+dl = DictLoader({'brandon.tpl': r"""{%- extends 'display_priority.tpl' -%}
 {% block input scoped %}{{ cell.source | highlight2html(language=resources.get('language'), metadata=cell.metadata) }}
 {% endblock %}
 {% block pyout scoped %}
