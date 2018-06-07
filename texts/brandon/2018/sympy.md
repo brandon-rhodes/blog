@@ -1,5 +1,5 @@
 
-# Slowly learning SymPy while eliminating trigonometry from rotations
+# Learning SymPy while eliminating trigonometry from rotations
 
 
 wanted to rotate without trig
@@ -35,6 +35,7 @@ With these angles one computes two matrices.
 The first rotates any star $-θ$ around the $z$ axis
 and the second rotates it up towards $+z$ by the angle $blah$.
 
+    get_ipython
 
 Given an input star's position vector $x_i, y_i, z_i$,
 the result of multiplication by these matrices
@@ -43,7 +44,13 @@ where the stars grouped around the target star in the sky
 are now neatly grouped about the top of the $+z$ axis
 and are ready for projection on to the flat surface of a chart.
 
+    %pylab inline
     from sympy import *
+    #init_printing(use_latex='png')
+    init_printing(use_latex='mathjax')
+
+And thus:
+
     z, k = symbols('z k')
     solve(Eq(z, sin(k)), k)
 

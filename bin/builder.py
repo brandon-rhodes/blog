@@ -38,7 +38,7 @@ def fixdollars(string):
 
 filters = {'fixdollars': fixdollars}
 
-dl = DictLoader({'brandon.tpl': """\
+dl = DictLoader({'brandon.tpl': r"""\
 {%- extends 'display_priority.tpl' -%}
 {% block input scoped %}{{ cell.source | highlight2html(language=resources.get('language'), metadata=cell.metadata) }}
 {% endblock %}
@@ -50,9 +50,15 @@ dl = DictLoader({'brandon.tpl': """\
 {% block markdowncell scoped %}{{ cell.source  | markdown2html | fixdollars }}
 {% endblock %}
 {% block execute_result -%}
+{% if 'image/png' in output.data %}
+<img src="data:image/png;base64,{{ output.data['image/png'] }}">
+{% elif 'text/latex' in output.data %}
+{{ output.data['text/latex'] }}
+{% else %}
 <pre class="output">
 {{ output.data['text/plain'] | ansi2html }}
 </pre>
+{% endif %}
 {% endblock execute_result %}
 {% block stream_stdout -%}
 <pre class="output">
