@@ -8,10 +8,10 @@ In the process I had to confront three errors
 in my understanding of how SymPy works:
 
 1. I had somehow imagined that SymPy was secretly storing
-   all the equations I was feeding it
-   and would automatically use them later.
+   all the equations I was writing
+   and would use them automatically later.
 2. I thought I could convince SymPy to eliminate intermediate symbols.
-3. And I thought each variable in my problem needed to be a SymPy symbol.
+3. I thought each variable in my problem needed to be a SymPy symbol.
 
 While working through these misunderstandings to a solution,
 I ran across two features that made SymPy’s results
@@ -24,11 +24,11 @@ easier to use in my Python code than I had expected!
    to prevent your code
    from computing any sub-result twice.
 
-The sections of this post tackle in turn each of the items above.
+The sections of this post tackle each of the items above in turn.<!--more-->
 
 ## Why did I wind up enlisting SymPy?
 
-My gradual elaboration of my
+The gradual elaboration of my
 [Python astronomy library Skyfield](http://rhodesmill.org/skyfield/)
 has now reached the verge of producing star charts.
 To produce a chart,
@@ -56,15 +56,15 @@ The first rotates any star $-\phi$ around the $z$-axis.
     from sympy import *
     init_printing(use_latex='mathjax')
     π = pi
-    x, y, z, xi, yi, zi, xo, yo, zo, θ, 𝜙 = symbols(
+    x, y, z, xi, yi, zi, xo, yo, zo, 𝜃, 𝜙 = symbols(
         r'x y z x_i y_i z_i x_o y_o z_o \theta \phi'
     )
 
     rot_axis3(-𝜙)
 
-The second rotates it up towards $+z$ by the angle $blah$.
+The second rotates it up towards the $+z$ axis.
 
-    rot_axis2(π/2-θ)
+    rot_axis2(π/2-𝜃)
 
 Given an input star's position vector $x_i, y_i, z_i$,
 the result of multiplication by these matrices
@@ -95,6 +95,7 @@ around the equator varies wildly.
 Its effect is greatest
 when the vector points along the sphere’s equator,
 but drops all the way to zero —
+it becomes meaningless
 and its floating-point precision is _completely squandered_ —
 when the vector points at one of the poles.
 
@@ -106,7 +107,8 @@ for bringing to my attention
 William Kahan’s work on floating point precision
 — see, for example, §12 “Mangled Angles”
 of his paper
-[How Futile are Mindless Assessments of Roundoffin Floating-Point Computation](https://people.eecs.berkeley.edu/~wkahan/Mindless.pdf).
+[How Futile are Mindless Assessments of Roundoff
+in Floating-Point Computation](https://people.eecs.berkeley.edu/~wkahan/Mindless.pdf).
 
 But I knew there was a way out.
 Since the angles $\theta$ and $\phi$
@@ -117,8 +119,7 @@ using no trigonometry at all —
 the angles can disappear entirely!
 
 But I wasn’t eager to perform all the substitutions by hand,
-so I turned to Python’s `SymPy` library
-to perform the symbolic math.
+so I turned to Python’s `SymPy` library.
 
 ## First mistake: thinking there was global state
 
@@ -136,15 +137,15 @@ When you say something like:
 
     Eq(y, z - 2)
 
-— you are not enrolling this fact in a magical SymPy data store
-that is going to remember it later
+— you are not enrolling this fact in a magical SymPy data store,
+and SymPy will not remember the equation later
 when you then ask it to solve for something:
 
     solve(y, z)
 
-The `solve()` routine found no solutions here
-because it doesn’t remember that I typed the earlier equation.
-The `solve()` routine is, in fact, a true function:
+The `solve()` routine here found no solutions,
+because it doesn’t remember that I typed the earlier equation —
+`solve()` is, in fact, a true function:
 it knows only the information you provide as arguments.
 The equation object needs to be provided
 as one of the arguments to `solve()`:
@@ -161,8 +162,7 @@ destroys the symbol `a` and replaces it with an expression object.
 I suppose I should have been more careful
 to actually read Sympy’s documentation straight through,
 instead of dipping in to sample it —
-after all,
-SymPy is a project whose
+especially given the fact that SymPy is a project whose
 [Tutorial](http://docs.sympy.org/latest/tutorial/index.html)
 ominously puts the section “Gotchas” _ahead_ of the section “Basic Operations”!
 
@@ -182,7 +182,7 @@ $$ \theta = sin^{-1}(z) $$
 SymPy was indeed willing to invert the trigonometry
 when only two variables were involved:
 
-    solve(Eq(z, sin(θ)), θ)
+    solve(Eq(z, sin(𝜃)), 𝜃)
 
 The problem is that I never figured out how to ask SymPy
 to eliminate intermediate variables that I wasn’t interested in —
@@ -195,8 +195,8 @@ from this system of two equations
 so that the output $z_o$ is expressed directly as a function of $z$:
 
     solve([
-        Eq(z, sin(θ)),
-        Eq(zo, cos(θ)),
+        Eq(z, sin(𝜃)),
+        Eq(zo, cos(𝜃)),
     ], zo)
 
 
@@ -207,17 +207,17 @@ left me without any insight into how to accomplish it.
 
 ## Third mistake: Thinking everything needed to be a SymPy symbol
 
-The entire reason that I thrashed around trying to eliminate symbols was,
+The reason that I thrashed around trying to eliminate symbols was,
 it turns out, because I had created too many!
 
 I had expected that my angles $\theta$ and $\phi$
 would be SymPy symbols in my Python code.
-But as I thrashed about trying to convince SymPy to eliminate them,
+But as I tried to convince SymPy to eliminate them,
 I stumbled on the approach
-of treating `θ` and `𝜙` as plain Python names
+of treating `𝜃` and `𝜙` as plain Python names
 for SymPy expression objects:
 
-    θ = asin(z)
+    𝜃 = asin(z)
     𝜙 = atan2(y, x)
 
 The surprise came when I used these expressions to build a rotation matrix:
@@ -228,14 +228,15 @@ Amazing!
 Without my even asking,
 SymPy has gone ahead and applied a series of trigonometric identities
 to rewrite the matrix so that it can be computed directly
-from my input variables.
+from my Cartesian inputs.
 
-All I needed was to express the complete coordinate transformation,
-confident that SymPy would simplify everywhere it was possible:
+All that was needed
+was to express the complete coordinate transformation in Python,
+confident that SymPy would simplify the result:
 
-    xo, yo, zo = rot_axis2(π/2-θ) * rot_axis3(-𝜙) * Matrix([xi, yi, zi])
+    xo, yo, zo = rot_axis2(π/2-𝜃) * rot_axis3(-𝜙) * Matrix([xi, yi, zi])
 
-This results in a formula for the first output coordinate:
+This produces a formula for the first output coordinate:
 
     xo
 
@@ -257,15 +258,15 @@ back into my Python code.
 
 With many mathematical libraries,
 the procedure would have been tedious —
-I would have had to manually type each multiplication, addition, and ``sqrt()``
-without committing one of my typical sign errors.
+I would have had to manually type
+each multiplication, addition, and ``sqrt()``
+into Python without committing even a single one of my typical sign errors.
 
 But, happily, a stray ``print()`` that I’d run
 had revealed a delightful property of SymPy:
-while it's capable of producing beautiful fully rendered math
+while it’s capable of producing beautiful fully rendered math
 when used in a Jupyter notebook,
-its native language when asked to print plain text
-is to produce fully valid Python
+when asked to print plain text it produces fully valid Python
 for the entire mathematically expression!
 
     print(xo)
@@ -274,21 +275,23 @@ I could paste the resulting expressions directly into Skyfield.
 
 ## Icing #2: SymPy supports sub-expression elimination
 
-As you read the output expressions, above,
+As you examined the output expressions, above,
 you probably felt your redundancy hackles rising
-as you read all of the repeated sub-expressions.
-Pasting the three formulae into a Python function
+as you noticed all of the repeated sub-expressions.
+Pasting the three formulae into Python code
 would result in a common value like ``sqrt(x**2 + y**2)``
-being recomputed a half-dozen times.
+getting recomputed a half-dozen times.
 
-Happily, I by accident ran across another SymPy routine, ``cse()``,
+Happily, I ran across another SymPy routine named ``cse()``
 which performs exactly the operation
-I had been planning to do by hand:
+I had been planning to do by hand —
 it recognizes common sub-expressions and pulls them out:
 
     common, (xo, yo, zo) = cse([xo, yo, zo], numbered_symbols('t'))
+
     for symbol, expression in common:
         print(symbol, '=', expression)
+
     print()
     print('xo =', xo)
     print('yo =', yo)
@@ -297,5 +300,5 @@ it recognizes common sub-expressions and pulls them out:
 The result is Python code
 that I can paste directly into Skyfield
 without the temptation to perform any further tweaks —
-letting me return to my star chart code
+letting me return to my star chart rendering
 in the confidence that the underlying rotations have been computed flawlessly.

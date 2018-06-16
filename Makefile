@@ -2,5 +2,7 @@
 # add this to builder.py
 
 ./texts/brandon/2018/sympy.ipynb: ./texts/brandon/2018/sympy.md
-	notedown --run $< > OUT
+	notedown --run $< | \
+		sed 's/^ "metadata": {/ "metadata": {"date": "16 June 2018"/' \
+		> OUT
 	mv OUT $@
