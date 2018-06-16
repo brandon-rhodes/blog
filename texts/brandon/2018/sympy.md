@@ -55,7 +55,7 @@ The first rotates any star $-\phi$ around the $z$-axis.
     %pylab inline
     from sympy import *
     init_printing(use_latex='mathjax')
-    π = pi
+    𝜋 = pi
     x, y, z, xi, yi, zi, xo, yo, zo, 𝜃, 𝜙 = symbols(
         r'x y z x_i y_i z_i x_o y_o z_o \theta \phi'
     )
@@ -64,7 +64,7 @@ The first rotates any star $-\phi$ around the $z$-axis.
 
 The second rotates it up towards the $+z$ axis.
 
-    rot_axis2(π/2-𝜃)
+    rot_axis2(𝜋/2-𝜃)
 
 Given an input star's position vector $x_i, y_i, z_i$,
 the result of multiplication by these matrices
@@ -234,7 +234,7 @@ All that was needed
 was to express the complete coordinate transformation in Python,
 confident that SymPy would simplify the result:
 
-    xo, yo, zo = rot_axis2(π/2-𝜃) * rot_axis3(-𝜙) * Matrix([xi, yi, zi])
+    xo, yo, zo = rot_axis2(𝜋/2-𝜃) * rot_axis3(-𝜙) * Matrix([xi, yi, zi])
 
 This produces a formula for the first output coordinate:
 
