@@ -2,7 +2,7 @@
 # Learning SymPy while eliminating trigonometry from rotations
 
 I have played with Python’s
-[SimPy symbolic math library](http://simpy.readthedocs.io/en/latest/) before,
+[SymPy symbolic math library](http://docs.sympy.org/latest/index.html) before,
 but for the first time last week I used it to solve a real problem!
 In the process I had to confront three errors
 in my understanding of how SymPy works:
