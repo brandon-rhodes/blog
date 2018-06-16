@@ -3,37 +3,39 @@
 
 I have played with Python’s
 [SimPy symbolic math library](http://simpy.readthedocs.io/en/latest/) before,
-but for the first time last week used it to solve a real problem!
+but for the first time last week I used it to solve a real problem!
 In the process I had to confront three errors
 in my understanding of how SymPy works:
 
-1. I had somehow imagined SymPy carrying global state
-   that accumulated all the equations I was feeding it.
+1. I had somehow imagined that SymPy was secretly storing
+   all the equations I was feeding it
+   and would automatically use them later.
 2. I thought I could convince SymPy to eliminate intermediate symbols.
-3. Why did I want symbols eliminated?
-   Because I had started out thinking
-   that each variable in my problem needed to be a SymPy symbol.
+3. And I thought each variable in my problem needed to be a SymPy symbol.
 
-While working through this misunderstandings to a solution,
+While working through these misunderstandings to a solution,
 I ran across two features that made SymPy’s results
-far easier to use in my code than I had expected!
+easier to use in my Python code than I had expected!
 
-1. SymPy supports not only fancy formatting of math formulae,
+1. SymPy not only supports fancy formatting of math formulae,
    but can print them as pure Python expressions
    ready to be pasted into a Python program.
 2. SymPy can perform subexpression elimination
-   to prevent the code you’re pasting
-   from computing any expensive sub-result twice.
+   to prevent your code
+   from computing any sub-result twice.
 
-## How did I wind up enlisting SymPy?
+The sections of this post tackle in turn each of the items above.
+
+## Why did I wind up enlisting SymPy?
 
 My gradual elaboration of my
 [Python astronomy library Skyfield](http://rhodesmill.org/skyfield/)
-has now reached the subject of star charts.
+has now reached the verge of producing star charts.
 To produce a chart,
-the vectors for the sky full of stars
+the unit vectors for the sky full of stars
 need to be rotated
-so that one particular chosen vector winds up at the chart's center.
+so that the center of the chart
+winds up pointing along one of the coordinate system’s axes.
 
 The naive approach requires two fraught crossings
 of the boundary
@@ -42,57 +44,57 @@ and the more troubled realm of spherical coordinates.
 Given the position $(x, y, z)$ of the star one wants
 at the center of the chart,
 the first step is determining its spherical longitude and latitude —
-the angle $\theta$ of the vector around the $xy$ plane
-and its angle $\phi$ above the $xy$ plane:
+the angle $\phi$ of the vector around the $xy$ plane
+and its angle $\theta$ above or below the $xy$ plane:
 
 $$ \eqalign{ \phi &= \tan^{-1}(y, x) \cr \theta &= \sin^{-1}(z) } $$
 
 These two angles are then used to build two matrices.
-The first rotates any star $-θ$ around the $z$-axis.
+The first rotates any star $-\phi$ around the $z$-axis.
 
     %pylab inline
     from sympy import *
     init_printing(use_latex='mathjax')
     π = pi
-    x, y, z, xi, yi, zi, xo, yo, zo, θ, φ = symbols(
+    x, y, z, xi, yi, zi, xo, yo, zo, θ, 𝜙 = symbols(
         r'x y z x_i y_i z_i x_o y_o z_o \theta \phi'
     )
 
-    rot_axis3(-φ)
+    rot_axis3(-𝜙)
 
 The second rotates it up towards $+z$ by the angle $blah$.
 
-    rot_axis2(π-θ)
+    rot_axis2(π/2-θ)
 
 Given an input star's position vector $x_i, y_i, z_i$,
 the result of multiplication by these matrices
 will be an output vector $x_o, y_o, z_o$
 where the stars that were originally grouped around the target star in the sky
 will now be neatly grouped about the top of the $+z$ axis
-and are ready for projection on to the flat surface of a chart.
+and are ready for projection on to the flat surface of a star chart.
 
 ## Here be dragons
 
-But it’s inelegant to implement the matrix math directly,
-because it involves a sharp descent
+But it’s inelegant to implement the above formulae directly,
+because they involve a sharp descent
 from the bright heights of Cartesian coordinates
 into the dim sublunary world of spherical coordinates.
 
 The brilliance of Cartesian coordinates
-is the admirable symmetry with which they splay significance
-across the precision of the numbers we use to represent them.
-Whatever the values $x$ and $y$, for example,
-an adjustment $\epsilon$ to one of the coordinates of $z$
-moves the tip of the vector by the exact same amount —
+is the admirable symmetry
+with which they freight their coordinates with significance.
+Whatever the values of $x$ and $y$, for example,
+an adjustment $\epsilon$ to $z$
+will move the tip of the vector by the exact same amount —
 whether the vector's length is a mere kilometer
 or a parsec.
 
 By contrast,
-the significance of the angle around the equator $\theta$ varies wildly.
-Its effect on the position of the vector’s tip
-is greatest when the vector points along the sphere’s equator,
+the significance of the spherical angle $\phi$
+around the equator varies wildly.
+Its effect is greatest
+when the vector points along the sphere’s equator,
 but drops all the way to zero —
-its value loses all significance
 and its floating-point precision is _completely squandered_ —
 when the vector points at one of the poles.
 
@@ -124,7 +126,7 @@ While I know that well-written software
 avoids maintaining global state,
 SymPy was so similar to older systems I had experience with —
 particularly Mathematica —
-that as I typed formula
+that as I typed each formula
 I repeatedly imagined
 that I was feeding knowledge into a central SymPy data store
 from which it would draw conclusions.
@@ -140,30 +142,31 @@ when you then ask it to solve for something:
 
     solve(y, z)
 
-It found no solutions because `solve()`
-doesn’t even know that I typed the earlier equation.
+The `solve()` routine found no solutions here
+because it doesn’t remember that I typed the earlier equation.
 The `solve()` routine is, in fact, a true function:
-it knows only the information you provide as its arguments.
-The earlier equation object that I constructed with `Eq()` has no effect
-unless I provide it afresh as an argument to `solve()`:
+it knows only the information you provide as arguments.
+The equation object needs to be provided
+as one of the arguments to `solve()`:
 
     solve(Eq(y, z - 2), z)
 
-It also did not help that —
+It also did not help —
 as I labored under the delusion
 that I was slowly feeding new facts into SymPy —
-I kept writing `a = b` when I should have written `Eq(a, b)` —
-destroying the symbol `a` I had carefully built
-and replacing it with an `Eq()` object.
+that each time I should have written `Eq(a, b + 2)`
+I instead tended to write `a = b + 2`
+which, per the usual rules of Python assignment,
+destroys the symbol `a` and replaces it with an expression object.
 I suppose I should have been more careful
 to actually read Sympy’s documentation straight through,
 instead of dipping in to sample it —
 after all,
-this is a project whose
-[SymPy Tutorial](http://docs.sympy.org/latest/tutorial/index.html)
+SymPy is a project whose
+[Tutorial](http://docs.sympy.org/latest/tutorial/index.html)
 ominously puts the section “Gotchas” _ahead_ of the section “Basic Operations”!
 
-## Second mistake: I though SymPy could eliminate variables
+## Second mistake: I though I could convince SymPy to eliminate variables
 
 I prefer thinking about trigonometry in the "forwards" direction:
 
@@ -171,7 +174,8 @@ $$ z = sin(\theta) $$
 
 It always feels backwards for the human,
 rather than the machine,
-to be in charge of flipping the equation around to arc-trigonometry:
+to be in charge of flipping the equation around
+to unnatural arc-trigonometry:
 
 $$ \theta = sin^{-1}(z) $$
 
@@ -196,11 +200,10 @@ so that the output $z_o$ is expressed directly as a function of $z$:
     ], zo)
 
 
-If SymPy has that capability,
+If SymPy does have the capacity to eliminate intermediate variables,
 then several of hours of work with the library —
 and numerous visits to Stack Overflow —
-have left me without any insight into how to accomplish it
-automatically.
+left me without any insight into how to accomplish it.
 
 ## Third mistake: Thinking everything needed to be a SymPy symbol
 
@@ -211,15 +214,15 @@ I had expected that my angles $\theta$ and $\phi$
 would be SymPy symbols in my Python code.
 But as I thrashed about trying to convince SymPy to eliminate them,
 I stumbled on the approach
-of treating `θ` and `φ` as plain Python names
+of treating `θ` and `𝜙` as plain Python names
 for SymPy expression objects:
 
     θ = asin(z)
-    φ = atan2(y, x)
+    𝜙 = atan2(y, x)
 
 The surprise came when I used these expressions to build a rotation matrix:
 
-    rot_axis3(-φ)
+    rot_axis3(-𝜙)
 
 Amazing!
 Without my even asking,
@@ -227,12 +230,12 @@ SymPy has gone ahead and applied a series of trigonometric identities
 to rewrite the matrix so that it can be computed directly
 from my input variables.
 
-All I needed to do was to express the complete coordinate transformation,
-confident that SymPy would simplify everywhere it was possible.
+All I needed was to express the complete coordinate transformation,
+confident that SymPy would simplify everywhere it was possible:
 
-    xo, yo, zo = rot_axis1(π/2-θ) * rot_axis3(-φ) * Matrix([xi, yi, zi])
+    xo, yo, zo = rot_axis2(π/2-θ) * rot_axis3(-𝜙) * Matrix([xi, yi, zi])
 
-The first output coordinate:
+This results in a formula for the first output coordinate:
 
     xo
 
@@ -249,12 +252,12 @@ without leaving the Cartesian domain!
 
 ## Icing #1: SymPy can print Python syntax
 
-Next, I needed to substitute the resulting formula
+Next, I needed to substitute the formulae
 back into my Python code.
 
 With many mathematical libraries,
 the procedure would have been tedious —
-manually typing each multiplication, addition, and ``sqrt()``
+I would have had to manually type each multiplication, addition, and ``sqrt()``
 without committing one of my typical sign errors.
 
 But, happily, a stray ``print()`` that I’d run
