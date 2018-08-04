@@ -17,7 +17,7 @@ I chose Saturn —
 progressing slowly eastward across the sky
 over several seasons and several years.
 
-<video autoplay loop height="648" width="648">
+<video controls autoplay loop height="648" width="648">
 <source type="video/mp4" src="http://rhodesmill.org/brandon/2018/saturn.mp4">
 </video>
 
