@@ -494,7 +494,7 @@ div.figure p {
     color: #2AA198;
     font-style: italic;
 }
-img, iframe {
+img, iframe, video {
     display: block;
     margin-left: auto;
     margin-right: auto;

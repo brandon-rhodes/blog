@@ -3,5 +3,5 @@
 set -e
 
 cd $(dirname "$0")/..
-rsync -r output/ ~/src/rhodesmill.org
+rsync -r output/ ~/rhodesmill.org
 ,push "$@"
