@@ -171,9 +171,9 @@ But, in fact, they would also see a third:
 in between those two great valleys
 is a tiny drainage that my map does not even name.
 Over the long eons during which the great Creeks
-have carved many miles into the Bedrock xxx,
-this smaller drainage has only managed to cut 2000 feet xxx
-back from the Colorado River's edge
+have carved many miles south into the Kaibab Plateau,
+this smaller drainage has only managed to cut
+a few thousand feet back from the Colorado River's edge
 into the spur of land between the other two creeks.
 This tiny amphitheatre —
 its own small contribution to the art of carving the Canyon —
