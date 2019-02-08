@@ -4,3 +4,5 @@ AddCharset UTF-8 .txt
 <FilesMatch \.(cgi|py)$>
   SetHandler default-handler
 </FilesMatch>
+
+RedirectMatch 404 /\.git
