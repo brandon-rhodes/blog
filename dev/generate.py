@@ -3,11 +3,15 @@
 import argparse
 import datetime as dt
 import json
+import pytz
 import subprocess
 import sys
 from dataclasses import dataclass
 
+from bottle import SimpleTemplate
+
 ISO = '%Y-%m-%dT%H:%M:%SZ'
+MILES_PER_METER = 0.000621371
 
 def main(argv):
     with open('test.template.html') as f:
@@ -22,41 +26,53 @@ def main(argv):
     )
     import xml.etree.ElementTree as etree
     x = etree.fromstring(xml)
-    print(x)
 
     c = []
-    j = c
 
     icons = []
     next_mile = 0
     splits = []
 
-    trackpoints = x.findall('.//Trackpoint')
-    datapoints = list(parse_trackpoints(trackpoints))
-    print(list(compute_mileposts(datapoints)))
+    trackpoints = list(parse_trackpoints(x))
 
-    for t in x.findall('.//Trackpoint'):
-        time = dt.datetime.strptime(t.find('Time').text, ISO)
-        alt = float(t.find('AltitudeMeters').text)
-        distance = float(t.find('DistanceMeters').text)
-        p = t.find('Position')
-        lat = float(p.find('LatitudeDegrees').text)
-        lon = float(p.find('LongitudeDegrees').text)
-        c.append([lat, lon])
-        miles = distance * 0.000621371
-        if miles > next_mile:
-            icons.append({
-                'lat': lat,
-                'lon': lon,
-                'label': '{} mi'.format(next_mile),
-            })
-            next_mile += 1
-            splits.append(next_mile)
-        # TODO: DistanceMeters
+    from timezonefinder import TimezoneFinder
+    tf = TimezoneFinder()
+    name = tf.timezone_at(lng=trackpoints[0].longitude_degrees,
+                          lat=trackpoints[0].latitude_degrees)
+    tz = pytz.timezone(name)
+    utc = pytz.utc
+    print(tz)
+    for p in trackpoints:
+        p.time = utc.localize(p.time).astimezone(tz)
 
-    content = content.replace('$LATLNGS', json.dumps(j))
-            #print(t)
-    content = content.replace('$ICONS', json.dumps(icons))
+    route = [[p.latitude_degrees, p.longitude_degrees] for p in trackpoints]
+
+    icons = [
+        {
+            'lat': p.latitude_degrees,
+            'lon': p.longitude_degrees,
+            'label': '{} mi<br>{:%-I:%M} {}'.format(
+                p.distance_meters * MILES_PER_METER,
+                p.time,
+                p.time.strftime('%p').lower(),
+            ),
+        }
+        for p in compute_mileposts(trackpoints)
+    ]
+
+    miles = trackpoints[-1].distance_meters * MILES_PER_METER
+    duration = trackpoints[-1].time - trackpoints[0].time
+    mph = miles / duration.total_seconds() * 60 * 60
+
+    template = SimpleTemplate(content)
+    content = template.render(
+        duration=duration,
+        icons=json.dumps(icons),
+        route=json.dumps(route),
+        miles=miles,
+        mph=mph,
+        start=trackpoints[0].time,
+    )
 
     print(splits)
 
@@ -67,13 +83,14 @@ def main(argv):
 @dataclass
 class Trackpoint(object):
     time: dt.datetime
-    altitude_meters: float
-    distance_meters: float
-    latitude_degrees: float
-    longitude_degrees: float
+    altitude_meters: float = 0.0
+    distance_meters: float = 0.0
+    latitude_degrees: float = 0.0
+    longitude_degrees: float = 0.0
 
-def parse_trackpoints(trackpoints):
-    for t in trackpoints:
+def parse_trackpoints(document):
+    elements = document.findall('.//Trackpoint')
+    for t in elements:
         p = t.find('Position')
         yield Trackpoint(
             time = dt.datetime.strptime(t.find('Time').text, ISO),
@@ -88,19 +105,39 @@ def compute_mileposts(datapoints):
     next_mile = 1
     previous_time = 0
     previous_miles = 0
-    for d in datapoints:
-        miles = d.distance_meters * 0.000621371
-        if miles > next_mile:
-            # TODO: what if it jumped ahead multiple miles?
-            # print('A', next_mile - previous_miles)
-            # print('B', miles - previous_miles)
+    for point in datapoints:
+        d = point
+        miles = d.distance_meters * MILES_PER_METER
+        while miles > next_mile:
             fraction = (next_mile - previous_miles) / (miles - previous_miles)
             delta = d.time - previous_time
-            yield previous_time + delta * fraction, next_mile
+            yield Trackpoint(
+                time = previous_time + delta * fraction,
+                distance_meters = next_mile / MILES_PER_METER,
+                altitude_meters = interpolate(
+                    previous_point.altitude_meters,
+                    point.altitude_meters,
+                    fraction,
+                ),
+                latitude_degrees = interpolate(
+                    previous_point.latitude_degrees,
+                    point.latitude_degrees,
+                    fraction,
+                ),
+                longitude_degrees = interpolate(
+                    previous_point.longitude_degrees,
+                    point.longitude_degrees,
+                    fraction,
+                ),
+            )
             print(fraction)
             next_mile += 1
         previous_time = d.time
         previous_miles = miles
+        previous_point = point
+
+def interpolate(a, b, fraction):
+    return a + (b - a) * fraction
 
 # def compute_splits(mileposts):
 #

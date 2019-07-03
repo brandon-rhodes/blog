@@ -5,28 +5,32 @@
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
       integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
-      crossorigin=""/>
+      crossorigin=""
+      />
     <script
       src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
       integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
-      crossorigin=""></script>
-    <script src="https://unpkg.com/leaflet-ajax@2.1.0/dist/leaflet.ajax.js"></script>
-<script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
-
+      crossorigin=""
+      ></script>
+    <script src="L.timezones.js"></script>
+    <script
+      src="https://unpkg.com/leaflet-ajax@2.1.0/dist/leaflet.ajax.js"
+      ></script>
+    <script
+      type="text/javascript"
+      src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"
+      ></script>
     <style>
-      #map {height: 80%; width: 100%;}
+      #map {height: 80%; width: 98%;}
       .my-div-icon {
           border: 2px solid black;
           border-radius: 4px;
-/* margin-left: -3px; */
-/*     margin-top: -3px; */
-/*     width: 6px; */
-/*     height: 6px; */
       }
       .my-tooltip {
           border: none;
           background: none;
           box-shadow: none;
+          line-height: 1em;
       }
       .my-tooltip::before {
           content: none;
@@ -34,6 +38,8 @@
     </style>
   </head>
   <body>
+    {{start.strftime('%Y %B %-d')}} —
+    {{'%.2f' % miles}} miles in {{duration}} at {{'%.2f' % mph}} miles per hour
     <div id="map" style="border: 5px solid black"></div>
     <script>
 
@@ -43,7 +49,7 @@ var s_layer = new L.StamenTileLayer("terrain");
 map.addLayer(s_layer);
 
       //var layer = new L.GeoJSON.AJAX("test.json");
-      latlngs = $LATLNGS;
+      latlngs = {{!route}};
       // [
       //               [
       //                   39.34472609280829,
@@ -64,7 +70,7 @@ layer.addTo(map);
           map.fitBounds(layer.getBounds());
 //      });
 
-      var icons = $ICONS;
+      var icons = {{!icons}};
 
       for (i=0; i < icons.length; i++) {
           var icon = icons[i];
