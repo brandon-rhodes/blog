@@ -46,6 +46,7 @@ def main(argv):
         p.time = utc.localize(p.time).astimezone(tz)
 
     route = [[p.latitude_degrees, p.longitude_degrees] for p in trackpoints]
+    mileposts = list(compute_mileposts(trackpoints))
 
     icons = [
         {
@@ -57,12 +58,29 @@ def main(argv):
                 p.time.strftime('%p').lower(),
             ),
         }
-        for p in compute_mileposts(trackpoints)
+        for p in mileposts
     ]
 
-    miles = trackpoints[-1].distance_meters * MILES_PER_METER
+    def compute_splits(trackpoints, mileposts):
+        previous = trackpoints[0]
+        for milepost in mileposts + [trackpoints[-1]]:
+            meters = milepost.distance_meters - previous.distance_meters
+            duration = milepost.time - previous.time
+            yield Split(
+                start = previous.time,
+                end = milepost.time,
+                duration = duration,
+                meters = meters,
+                mph = mph(meters, duration),
+            )
+            previous = milepost
+
+    splits = list(compute_splits(trackpoints, mileposts))
+
+    meters = trackpoints[-1].distance_meters
+    miles = meters * MILES_PER_METER
     duration = trackpoints[-1].time - trackpoints[0].time
-    mph = miles / duration.total_seconds() * 60 * 60
+    #mph = miles / duration.total_seconds() * 60 * 60
 
     template = SimpleTemplate(content)
     content = template.render(
@@ -70,7 +88,8 @@ def main(argv):
         icons=json.dumps(icons),
         route=json.dumps(route),
         miles=miles,
-        mph=mph,
+        mph=mph(meters, duration),
+        splits=splits,
         start=trackpoints[0].time,
     )
 
@@ -87,6 +106,17 @@ class Trackpoint(object):
     distance_meters: float = 0.0
     latitude_degrees: float = 0.0
     longitude_degrees: float = 0.0
+
+@dataclass
+class Split(object):
+    start: dt.datetime
+    end: dt.datetime
+    duration: dt.timedelta
+    meters: float = 0.0
+    mph: float = 0.0
+
+def mph(meters, duration):
+    return meters * MILES_PER_METER / duration.total_seconds() * 60 * 60
 
 def parse_trackpoints(document):
     elements = document.findall('.//Trackpoint')

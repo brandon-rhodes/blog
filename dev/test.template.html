@@ -41,6 +41,20 @@
     {{start.strftime('%Y %B %-d')}} —
     {{'%.2f' % miles}} miles in {{duration}} at {{'%.2f' % mph}} miles per hour
     <div id="map" style="border: 5px solid black"></div>
+    <table>
+      <tr>
+        <th>Mile</th>
+        <th>Duration</th>
+        <th>MPH</th>
+      </tr>
+      % for n, split in enumerate(splits, 1):
+      <tr>
+        <td>{{n}}</td>
+        <td>{{str(split.duration).split('.')[0].lstrip('0:')}}</td>
+        <td>{{'%.2f' % split.mph}}</td>
+      </tr>
+      % end
+    </table>
     <script>
 
 var map = L.map('map');
