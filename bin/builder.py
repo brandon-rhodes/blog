@@ -259,9 +259,9 @@ def preview_body_of(path):
 
 @project.task
 def sorted_posts(paths):
-    dates = {path: date_of(path) for path in paths}
-    dated_paths = [path for path in paths if dates[path]]
-    return sorted(dated_paths, key=dates.get)
+    keys = {path: (date_of(path), title_of(path)) for path in paths}
+    dated_paths = [path for path in paths if date_of(path)]
+    return sorted(dated_paths, key=keys.get)
 
 @project.task
 def most_recent_posts(paths, n):
