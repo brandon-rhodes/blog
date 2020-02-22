@@ -6,15 +6,18 @@
   <title>{{ title or 'by Brandon Rhodes' }}</title>
   <link rel="stylesheet" type="text/css" href="/brandon/styles.css" />
   %if needs_mathjax:
-  <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-      "HTML-CSS": {matchFontHeight: false},
-      NativeMML: {matchFontHeight: false},
-      SVG: {matchFontHeight: false}
-     });
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
   </script>
-  <script type="text/javascript"
-          src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  <script type="text/javascript" id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-svg.js">
   </script>
   %end
 </head>

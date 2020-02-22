@@ -25,19 +25,6 @@ from helpers import truncate_at_more
 
 project = Project()
 
-def fixdollars(string):
-    while '$$' in string:
-        string = string.replace('$$', r'\[', 1)
-        string = string.replace('$$', r'\]', 1)
-    string = string.replace(r'\$', 'PUT A REAL DOLLAR SIGN HERE')
-    while '$' in string:
-        string = string.replace('$', r'\(', 1)
-        string = string.replace('$', r'\)', 1)
-    string = string.replace('PUT A REAL DOLLAR SIGN HERE', '$')
-    return string
-
-filters = {'fixdollars': fixdollars}
-
 dl = DictLoader({'brandon.tpl': r"""{%- extends 'display_priority.tpl' -%}
 {% block input scoped %}{{ cell.source | highlight2html(language=resources.get('language'), metadata=cell.metadata) }}
 {% endblock %}
@@ -46,7 +33,7 @@ dl = DictLoader({'brandon.tpl': r"""{%- extends 'display_priority.tpl' -%}
 {{ output.text | ansi2html }}
 </pre>
 {% endblock %}
-{% block markdowncell scoped %}{{ cell.source  | markdown2html | fixdollars }}
+{% block markdowncell scoped %}{{ cell.source  | markdown2html }}
 {% endblock %}
 {% block execute_result -%}
 {% if 'image/png' in output.data %}
@@ -163,8 +150,7 @@ def parse(path):
     elif path.endswith('.ipynb'):
         notebook = nbformat.reads(source)
         docinfo = utils.build_docinfo_block_for_notebook(notebook)
-        exporter = HTMLExporter(config=None, extra_loaders=[dl],
-                                filters=filters)
+        exporter = HTMLExporter(config=None, extra_loaders=[dl])
         exporter.template_file = 'brandon.tpl'
         #notebook = nbformat.convert(notebook, nbformat.current_nbformat)
         body, resources = exporter.from_notebook_node(notebook)
@@ -291,7 +277,7 @@ def render(paths, path):
         next_link=None,
         body_html=body_html,
         needs_disqus=needs_disqus(path),
-        needs_mathjax=r'\(' in body_html or r'\[' in body_html,
+        needs_mathjax=r'$$' in body_html or r'\displaystyle' in body_html,
         )
     # text = '<h1>{}</h1>\n<p>Date: {}</p>\n<p>Previous post: {}</p>\n{}'.format(
     #     call(title_of, path), call(date_of, path),

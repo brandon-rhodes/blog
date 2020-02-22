@@ -408,20 +408,16 @@ table {
 /* start of styles for the web site of Brandon Rhodes */
 
 @font-face {
-    font-family: 'Andada';
+    font-family: 'Gentium';
     font-style: normal;
     font-weight: 400;
-    src: url(/fonts/Andada.woff) format('woff');
+    src: url(/fonts/gentium-basic-v11-latin-ext_latin-regular.woff) format('woff');
 }
 @font-face {
     font-family: 'Prociono';
     font-style: normal;
     font-weight: 400;
     src: url(/fonts/Prociono-Regular.woff) format('woff');
-}
-i {
-    /* Andada italics need a bit of space on their right */
-    margin-right: 0.15em;
 }
 body {
     margin-left: auto;
@@ -431,9 +427,9 @@ body {
     padding-left: 1em;
     padding-right: 1em;
     color: #473A2F;
-    font-size: 13pt;
-    font-family: Andada, serif;
-    line-height: 1.5;
+    font-size: 14pt;
+    font-family: Gentium, serif;
+    line-height: 1.4;
 }
 h1, h2 {
     font-family: Prociono, serif;
@@ -464,7 +460,7 @@ blockquote {
     padding: 0.5em 1.5em;
 }
 code, pre, tt {
-    font-size: 0.875em;
+    font-size: 10pt;
     background-color: #FDF6E3;
 }
 code, tt {
