@@ -20,7 +20,7 @@ def convert_blogofile(source):
     """Replace an old blogofile header with a modern RST title and fields."""
 
     empty_string, yaml_text, body = source.split('---', 2)
-    yams = yaml.load(StringIO(yaml_text))
+    yams = yaml.safe_load(StringIO(yaml_text))
 
     title = yams.pop('title')
     date = datetime.strptime(yams.pop('date'), '%Y/%m/%d %H:%M:%S').date()

@@ -13,6 +13,7 @@ from datetime import datetime
 from docutils.core import publish_doctree
 from docutils import nodes
 from glob import glob
+from html import unescape
 from jinja2 import DictLoader
 from pytz import timezone
 
@@ -26,7 +27,7 @@ from helpers import truncate_at_more
 project = Project()
 
 dl = DictLoader({'brandon.tpl': r"""{%- extends 'display_priority.tpl' -%}
-{% block input scoped %}{{ cell.source | highlight2html(language=resources.get('language'), metadata=cell.metadata) }}
+{% block input scoped %}{{ cell.source | highlight2html(language=resources.get('language') or 'python3', metadata=cell.metadata) }}
 {% endblock %}
 {% block pyout scoped %}
 <pre class="output">
@@ -95,7 +96,7 @@ def parse(path):
             body_html = parts['docinfo'] + other_html
             body_html = utils.pygmentize_pre_blocks(body_html)
             body_html = body_html.replace('\n</pre>', '</pre>')
-            result['title'] = utils.html_parser.unescape(parts['title'])
+            result['title'] = unescape(parts['title'])
             result['needs_disqus'] = True
             result['date'] = info['date']
             result['tags'] = info['tags']
