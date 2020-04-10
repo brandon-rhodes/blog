@@ -463,7 +463,7 @@ code, pre, tt {
     font-size: 10pt;
     background-color: #FDF6E3;
 }
-code, tt {
+p > code, p > tt { /* Give code inside a paragraph a little room. */
     padding: 0 0.25em;
 }
 pre {
