@@ -194,7 +194,7 @@ that `autoreload` started to run into trouble.
 I would add `print()` calls but they wouldn't print.
 I would edit files, but the edits would have no effect.
 Only when I restarted the notebook kernel
-would I receive output and see the effects of new code
+would I receive output and see the effects of new code.
 
 How was matplotlib defeating
 the clever techniques built in to `autoreload` in IPython?
