@@ -576,6 +576,9 @@ p img {
     text-decoration: none;
     padding: 14px 10px 0 56px;
 }
+.media-buttons .button-instagram {
+    background-image: url(/brandon/instagram.png);
+}
 .media-buttons .button-stack-overflow {
     background-image: url(/brandon/stackoverflow.png);
 }

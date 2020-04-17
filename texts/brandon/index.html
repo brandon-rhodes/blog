@@ -5,30 +5,59 @@
   <a href="http://www.flickr.com/photos/brandonrhodes/4439207389/">
     <img src="http://farm5.staticflickr.com/4047/4439207389_44b4cd4d11_q.jpg"
          title="by brandonrhodes"
-         alt="Brandon and his wife Jackie in Napa, California">
-  </a>
+         alt="Brandon and his wife Jackie in Napa, California"></a>
   <a href="http://www.flickr.com/photos/romanlily/5083723/">
     <img src="http://farm1.staticflickr.com/3/5083723_e31a17f2af_q.jpg"
          title="by romanlily"
-         alt="Brandon and his cat Persephone">
-  </a>
+         alt="Brandon and his cat Persephone"></a>
   <a href="http://www.flickr.com/photos/jackiewyse/8315809616/">
     <img src="http://farm9.staticflickr.com/8211/8315809616_3a31d057f2_q.jpg"
          title="by jackiewyse"
-         alt="Brandon at a diner for breakfast">
-  </a>
+         alt="Brandon at a diner for breakfast"></a>
 </p>
 
 <h1>Brandon Rhodes</h1>
 
-<p class="figure media-buttons">
-  <a href="https://twitter.com/brandon_rhodes"
-     class="button-twitter">Twitter</a>
-  <a href="http://stackoverflow.com/users/85360/brandon-rhodes"
-     class="button-stack-overflow">Stack Overflow</a>
-  <a href="http://www.flickr.com/photos/brandonrhodes/"
-     class="button-flickr">Flickr</a>
-</p>
+<ul>
+  <li><a href="https://twitter.com/brandon_rhodes">Twitter</a>
+    is where I interact with the community.
+  <li><a href="https://www.instagram.com/brandon_rhodes/">Instagram</a>
+    is my most active social media.
+  <li><a href="https://github.com/brandon-rhodes">GitHub</a>
+    is where I share my code.
+  <li>Less active these days:
+    <a href="http://www.flickr.com/photos/brandonrhodes/">Flickr</a>,
+    <a href="http://stackoverflow.com/users/85360/brandon-rhodes">Stack Overflow</a>
+</ul>
+
+<h2>Greatest Hits</h2>
+
+<ul>
+  <li><a href="talks/#mighty-dictionary">“The Mighty Dictionary” Talk</a>
+    — My first big PyCon talk, and probably still my most popular.
+  <li><a href="https://github.com/brandon-rhodes/pycon-pandas-tutorial"
+         >“Pandas From the Ground Up” Tutorial</a>
+    — Hundreds of people have gotten started with the Pandas data library
+    thanks to this tutorial,
+    available as a YouTube video plus matching Jupyter notebooks.
+    (Alas, the video also includes the conference coffee breaks.)
+    I still keep the exercises up to date
+    and make sure they work with the latest version of Pandas.
+  <li><a href="https://python-patterns.guide/">Python Design Patterns</a>
+    — A site where I’m writing up all of the old Gang of Four design patterns
+    for Python programmers,
+    weighing which ones are still useful in a modern dynamic language.
+  <li><a href="https://github.com/skyfielders/python-skyfield">Skyfield</a>
+    — A library that generates coordinates for stars, planets, and satellites
+    using modern idiomatic Python.
+  <li><a href="https://github.com/brandon-rhodes/pyephem">PyEphem</a>
+    — My earlier foray into generating astronomy coordinates for Python.
+    Still popular despite its awkward type conventions.
+  <li><a href="https://github.com/brandon-rhodes/logging_tree">logging_tree</a>
+    — A small elegant companion for Python’s logging module.
+    I am happy that one of my libraries, at least,
+    still supports every Python version back to Python 2.3.
+</ul>
 
 <h2>Talks</h2>
 
@@ -77,41 +106,30 @@ using one of the links below:
 
 <h2>Foundations of Python Network Programming</h2>
 
-<a class="image-aside image-reference" href="http://www.amazon.com/gp/product/1430230037/ref=as_li_ss_il?ie=UTF8&amp;tag=letsdisthemat-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=1430230037"><img alt="book cover" border="0" src="http://ws.assoc-amazon.com/widgets/q?_encoding=UTF8&amp;Format=_SL160_&amp;ASIN=1430230037&amp;MarketPlace=US&amp;ID=AsinImage&amp;WS=1&amp;tag=letsdisthemat-20&amp;ServiceVersion=20070822" ></a>
+<a class="image-aside image-reference" href="https://amzn.to/2VhFy1v"><img alt="book cover" border="0" src="http://ws.assoc-amazon.com/widgets/q?_encoding=UTF8&amp;Format=_SL160_&amp;ASIN=1430258543&amp;MarketPlace=US&amp;ID=AsinImage&amp;WS=1&amp;tag=letsdisthemat-20&amp;ServiceVersion=20070822" ></a>
 
 <p>
-  I recently revised the popular book
-  <i>Foundations of Python Network Programming</i>
-  for Apress Media,
-  adding several chapters and updating all of its 2004 source code
-  to use modern Python libraries and techniques.
-  I replaced its guides to obsolete technologies
-  (like the old <tt>HTMLParser</tt> and <tt>mod_python</tt> modules)
-  with more modern libraries
-  including <tt>lxml</tt> <tt>wsgiref</tt> and <tt>json</tt>.
-</p>
-
-<p>
-  While the code in the printed book uses Python 2 syntax,
-  the public source code repository contains Python 3 versions
-  of all of the examples as well
-  (unless a library has not been ported yet).
-  Here are links to the source code and a free sample chapter:
+  I have twice revised the book
+  <a href="https://amzn.to/2VhFy1v"
+     ><i>Foundations of Python Network Programming</i></a>
+  for Apress Media.
+  For the most recent Third Edition,
+  I updated its code to Python 3
+  and expanded coverage of libraries
+  like Requests, Paramiko, and ØMQ.
+  I have made all of the book’s example code
+  available in this GitHub repository:
 </p>
 
 <p>
   <a href="https://github.com/brandon-rhodes/fopnp"
-     ><b>Public source code</b> — includes every listing in the book</a>
-  <br>
-  <a href="http://rhodesmill.org/brandon/chapters/screen-scraping/"
-     ><b>Free sample</b> — Chapter 10, “Screen Scraping”</a>
+     ><b>All 108 Python example scripts from the book</b></a>
 </p>
 
 <p>
-  I am now revising the book again
-  to produce a third edition featuring Python 3
-  plus a whole list of new technologies
-  including <tt>requests</tt> and <tt>scapy</tt>!
+  Note that both of the links to the book (text and image) above
+  are Amazon affiliate links,
+  which generate a bit more income for an author
+  than does an anonymous link —
+  but you can also find the book through a quick search for its title.
 </p>
-
-<hr>
