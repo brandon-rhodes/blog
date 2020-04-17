@@ -1,5 +1,9 @@
-
-# Animating Saturn with matplotlib, a subclass, and mock.patch()
+---
+categories: Computing, Python
+date: 2018/08/04 14:51:50
+permalink: http://rhodesmill.org/brandon/2018/matplotlib-blit-repair/
+title: Animating Saturn with matplotlib, a subclass, and mock.patch()
+---
 
 _Based on my lightning talk at PyOhio 2018_
 
