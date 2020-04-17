@@ -565,26 +565,6 @@ p img {
 .gallery img {
     box-shadow: 2px 2px 7px #5b511b;
 }
-.media-buttons {
-    text-align: center;
-}
-.media-buttons a {
-    display: inline-block;
-    border-radius: 10px;
-    min-height: 36px;
-    background: #f7f4e4 1px 1px url(/brandon/twitter.png) no-repeat;
-    text-decoration: none;
-    padding: 14px 10px 0 56px;
-}
-.media-buttons .button-instagram {
-    background-image: url(/brandon/instagram.png);
-}
-.media-buttons .button-stack-overflow {
-    background-image: url(/brandon/stackoverflow.png);
-}
-.media-buttons .button-flickr {
-    background-image: url(/brandon/flickr.png);
-}
 .admonition, .note {
     margin: 2em auto;
     color: #820002;
