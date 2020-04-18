@@ -57,10 +57,16 @@ def load_pyvideo_data():
             )
             video_urls = [jj['url'] for jj in j['videos']]
             video_urls.append(pyvideo_native_url)
+            video_urls = [normalize(url) for url in video_urls]
             yield Talk(
                 title=title,
                 video_urls=video_urls,
             )
+
+def normalize(url):
+    if '//youtu.be/' in url:
+        return 'https://www.youtube.com/watch?v=' + url.split('/')[-1]
+    return url
 
 LINK = r'<a href="([^"]*)"[\n ]*>([^<]*)</a>'
 LINK_PATTERN = re.compile(LINK)
