@@ -81,6 +81,7 @@ def transform(talk_text, pyvideo_dict):
     # Upgrade links to HTTPS where appropriate.
 
     links = [(upgrade(url), text) for url, text in links]
+    urls_already = set(url for url, text in links)
 
     # Compare it to PyVideo.
 
@@ -95,7 +96,18 @@ def transform(talk_text, pyvideo_dict):
     if talk is None:
         print('Not found:', title)
     else:
-        pass #print(talk)
+        for url in talk.video_urls:
+            if url in urls_already:
+                continue
+            if 'pyvideo.org' in url:
+                text = 'PyVideo'
+            else:
+                continue
+            i = len(links)
+
+            if links[-1][1] == 'slides':
+                i -= 1
+            links.insert(i, (url, text))
 
     # Put entry back together.
 
@@ -249,7 +261,9 @@ def old_main_2():
 
 def slugify(s):
     s = ''.join(c for c in s if c.isalnum() or c == ' ')
-    return s.lower().replace(' ', '-')[:48]
+    s = s.lower().replace(' ', '-')[:48]
+    s = re.sub(r'-+', '-', s)
+    return s
 
 if __name__ == '__main__':
     main()
