@@ -15,6 +15,9 @@ def main():
     heading, *talk_texts = content.split(separator)
     pyvideo_talks = list(load_pyvideo_data())
     pyvideo_dict = {talk.title: talk for talk in pyvideo_talks}
+    pyvideo_dict.update({
+        url: talk for talk in pyvideo_talks for url in talk.video_urls
+    })
     talk_texts = [transform(talk_text, pyvideo_dict)
                   for talk_text in talk_texts]
     content = separator.join([heading, separator.join(talk_texts)])
@@ -60,7 +63,7 @@ def load_pyvideo_data():
                 ],
             )
 
-LINK = r'<a href="([^"]*)">([^<]*)</a>'
+LINK = r'<a href="([^"]*)"[\n ]*>([^<]*)</a>'
 LINK_PATTERN = re.compile(LINK)
 LINKS_PATTERN = re.compile(
     '(' + LINK + '[\n •]*)*' + LINK,
@@ -68,11 +71,34 @@ LINKS_PATTERN = re.compile(
 )
 
 def transform(talk_text, pyvideo_dict):
+    # Take entry apart.
+
     title = re.search(r'<h2>([^<]*)</h2>', talk_text)[1]
+    title = title.replace('Keynote: ', '')
     #print(title)
     m = LINKS_PATTERN.search(talk_text)
     links = LINK_PATTERN.findall(m[0])
-    print(links)
+
+    # Upgrade links to HTTPS where appropriate.
+
+    links = [(upgrade(url), text) for url, text in links]
+
+    # Compare it to PyVideo.
+
+    for url, text in links:
+        talk = pyvideo_dict.get(url)
+        if talk is not None:
+            break
+    else:
+        talk = pyvideo_dict.get(title)
+
+    if talk is None:
+        print('Not found:', title)
+    else:
+        pass #print(talk)
+
+    # Put entry back together.
+
     link_texts = [
         '<a href="{}">{}</a>'.format(url, text) for url, text in links
     ]
@@ -81,8 +107,20 @@ def transform(talk_text, pyvideo_dict):
         '\n    •\n    '.join(link_texts),
         talk_text[m.end():],
     ))
-    print(talk_text)
     return talk_text
+
+def upgrade(url):
+    if url.startswith('http:'):
+        upgradable = (
+            'http://i.ytimg.com/',
+            'http://pyvideo.org/',
+            'http://rhodesmill.org/',
+            'http://vimeo.com/',
+            'http://www.youtube.com/',
+        )
+        if url.startswith(upgradable):
+            return url.replace('http:', 'https:', 1)
+    return url
 
 def old_main_1():
     dn = os.path.dirname
