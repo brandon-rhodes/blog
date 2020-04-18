@@ -103,7 +103,10 @@ def transform(talk_text, pyvideo_dict):
                 text = 'PyVideo'
             elif 'archive.org/' in url:
                 text = 'Archive.org'
+            elif '//www.youtube.com/' in url:
+                text = 'YouTube'
             else:
+                print(url)
                 continue
             i = len(links)
 
