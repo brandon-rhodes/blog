@@ -50,17 +50,16 @@ def load_pyvideo_data():
                 continue
             j = json.loads(content)
             title = j['title']
-            title_slug = slugify(title)
+            title_slug = j.get('slug') or slugify(title)
             pyvideo_native_url = 'https://pyvideo.org/{}/{}.html'.format(
                 conference_slug,
                 title_slug,
             )
+            video_urls = [jj['url'] for jj in j['videos']]
+            video_urls.append(pyvideo_native_url)
             yield Talk(
                 title=title,
-                video_urls=[
-                    j['videos'][0]['url'],
-                    pyvideo_native_url,
-                ],
+                video_urls=video_urls,
             )
 
 LINK = r'<a href="([^"]*)"[\n ]*>([^<]*)</a>'
@@ -85,6 +84,7 @@ def transform(talk_text, pyvideo_dict):
 
     # Compare it to PyVideo.
 
+    #print('https://www.youtube.com/watch?v=_SBwUTx6Y7U' in pyvideo_dict)
     for url, text in links:
         talk = pyvideo_dict.get(url)
         if talk is not None:
