@@ -71,6 +71,12 @@ def build_docinfo_block_for_notebook(notebook):
             )
         parts = parse_rst(heading)
         return parts['docinfo']
+    elif date:
+        heading = ':Date: {}\n'.format(
+            date.strftime('%d %B %Y').lstrip('0'),
+        )
+        parts = parse_rst(heading)
+        return parts['docinfo']
     else:
         return ''
 
