@@ -1,5 +1,0 @@
-Redirect permanent /brandon/projects/pyephem.html http://rhodesmill.org/pyephem/
-Redirect permanent /brandon/projects/pyephem-manual.html http://rhodesmill.org/pyephem/
-
-# For http://www.rish.kyoto-u.ac.jp/digitalbeacon/tle2azel.htm
-Redirect permanent /brandon/projects/pyephem-3.7b.tar.gz https://pypi.python.org/pypi/pyephem/
