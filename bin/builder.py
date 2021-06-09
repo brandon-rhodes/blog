@@ -122,6 +122,8 @@ def parse(path):
         else:
             result['needs_disqus'] = False
         result['body'] = commonmark(source)
+        if 'title' not in result:
+            result['title'] = utils.find_title_in_html(result['body'])
 
     elif path.endswith('.rst'):
         if utils.detect_blogofile(source):
@@ -419,6 +421,7 @@ def main():
         + glob('texts/brandon/*/*.html')
         + glob('texts/brandon/*/*.ipynb')
         + glob('texts/brandon/*.html')
+        + glob('texts/brandon/*.md')
         )
 
     for path in text_paths:
