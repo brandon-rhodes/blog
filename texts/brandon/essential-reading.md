@@ -23,3 +23,16 @@ that I could imagine trying it out myself.
 Its advice on how to treat customers
 offers sterling guidelines
 for simply how to treat other humans in general.
+
+**“A Whirlwind Tutorial on Creating Really Teensy ELF Executables for Linux”**
+[muppetlabs.com](http://www.muppetlabs.com/~breadbox/software/tiny/teensy.html)
+—
+A delight!
+Starting with the question of why even the smallest C program
+compiles to a Linux file nearly 4k bytes long,
+this deep dive into the ELF executable format
+is at first admirably clever,
+then startlingly clever,
+and finally fiendishly clever
+in its quest to create the smallest viable Linux executable.
+Several useful tools are introduced along the way.
