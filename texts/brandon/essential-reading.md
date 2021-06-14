@@ -24,8 +24,20 @@ Its advice on how to treat customers
 offers sterling guidelines
 for simply how to treat other humans in general.
 
+**“Choose Boring Technology”**
+[mcfunley.com](https://mcfunley.com/choose-boring-technology)
+—
+“Let’s say every company gets about three innovation tokens.”
+Starting from this premise,
+a veteran of Etsy’s early startup years
+explores the risks of building new projects
+on new and unfamiliar technologies.
+Even my personal projects are often improved
+if I remember this article
+and weigh the benefits of novelty versus the benefits of boring!
+
 **“A Whirlwind Tutorial on Creating Really Teensy ELF Executables for Linux”**
-[muppetlabs.com](http://www.muppetlabs.com/~breadbox/software/tiny/teensy.html)
+[muppetlabs.com](https://www.muppetlabs.com/~breadbox/software/tiny/teensy.html)
 —
 A delight!
 Starting with the question of why even the smallest C program
