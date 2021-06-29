@@ -36,6 +36,17 @@ Even my personal projects are often improved
 if I remember this article
 and weigh the benefits of novelty versus the benefits of boring!
 
+**“The Tau Manifesto”**
+[tauday.com](https://tauday.com/tau-manifesto)
+—
+This delightful essay
+explores a facet of modern math notation
+for which tradition has stranded us with a sub-optimal solution:
+the use of 𝜋 for the irrational circumference of a circle
+instead of the far more natural 𝜏 = 2𝜋.
+It’s a masterwork in how to evaluate rival notations
+when seeking clarity, economy, and deep meaning.
+
 **“A Whirlwind Tutorial on Creating Really Teensy ELF Executables for Linux”**
 [muppetlabs.com](https://www.muppetlabs.com/~breadbox/software/tiny/teensy.html)
 —
@@ -48,3 +59,17 @@ then startlingly clever,
 and finally fiendishly clever
 in its quest to create the smallest viable Linux executable.
 Several useful tools are introduced along the way.
+
+**“The Really Big One”**
+[The New Yorker](https://www.newyorker.com/magazine/2015/07/20/the-really-big-one)
+—
+I enjoyed re-reading this article several times after it was published.
+After an opening that perfectly blends tension, humor, and science,
+Kathryn Schulz brings the energy of a mystery novel
+to a recent advance in seismology.
+I always get a shiver down my spine
+when the year that the trees drowned
+winds up matching the date from Genroku Japan!
+More broadly, the article reminds us that scientific consensus —
+no matter how often we enjoy wielding it against each other in debates —
+can be dead wrong.
