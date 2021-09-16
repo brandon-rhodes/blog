@@ -45,7 +45,7 @@ for which tradition has stranded us with a sub-optimal solution:
 the use of 𝜋 for the irrational circumference of a circle
 instead of the far more natural 𝜏 = 2𝜋.
 It’s a masterwork in how to evaluate rival notations
-when seeking clarity, economy, and deep meaning.
+when seeking clarity, economy, and meaning.
 
 **“A Whirlwind Tutorial on Creating Really Teensy ELF Executables for Linux”**
 [muppetlabs.com](https://www.muppetlabs.com/~breadbox/software/tiny/teensy.html)
