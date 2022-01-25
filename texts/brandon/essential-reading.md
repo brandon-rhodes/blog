@@ -63,7 +63,8 @@ Several useful tools are introduced along the way.
 **“The Really Big One”**
 [The New Yorker](https://www.newyorker.com/magazine/2015/07/20/the-really-big-one)
 —
-I enjoyed re-reading this article several times after it was published.
+I enjoyed re-reading this article several times after it was published,
+and was delighted when it won the Pulitzer.
 After an opening that perfectly blends tension, humor, and science,
 Kathryn Schulz brings the energy of a mystery novel
 to a recent advance in seismology.
@@ -73,3 +74,14 @@ winds up matching the date from Genroku Japan!
 More broadly, the article reminds us that scientific consensus —
 no matter how often we enjoy wielding it against each other in debates —
 can be dead wrong.
+
+
+**“The play deficit”**
+[Aeon](https://aeon.co/essays/children-today-are-suffering-a-severe-deficit-of-play)
+—
+An amazing article
+that draws on cross-cultural anthropology
+to trace the baleful effects upon children
+of replacing their freedom and play with structure and regiment.
+It diagnoses specific skills that children will lack in adulthood—deficits
+that I recognize in myself.
