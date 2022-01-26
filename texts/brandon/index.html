@@ -75,7 +75,7 @@ You can either browse my <a href="talks/">full list of recorded talks</a>,
 or else jump to the description of a particular talk
 using one of the links below:
 
-<table summary="List of all my talks">
+<table>
   % for date, target, title in talks:
   <tr>
     <td><i>{{ date.replace(u' ', u' ') }}</i></td>
@@ -96,7 +96,7 @@ using one of the links below:
   The posts I’ve made here on my personal site are:
 </p>
 
-<table summary="My recent blog post dates and titles">
+<table>
   %for path in most_recent_posts(text_paths, 7):
   <tr>
     <td><i>{{ date_of(path).strftime('%Y %B %d').replace(' 0', ' ') }}</i></td>
