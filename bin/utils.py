@@ -92,11 +92,14 @@ def parse_rst(source):
     return publish_parts(source, writer_name='html',
                          settings_overrides={'initial_header_level': 2})
 
-def pygmentize_pre_blocks(html):
+def pygmentize_pre_blocks(html, override=None):
     formatter = HtmlFormatter()
 
     def _highlight(match):
         code = match.group(2).strip('\n')
+        if code.startswith('<code class="language-python">'):
+            assert code.endswith('</code>')
+            code = code[30:-7]
         already_marked_up = '<' in code
         if already_marked_up:
             return u'<pre{}>{}</pre>'.format(match.group(1), code)
@@ -104,6 +107,8 @@ def pygmentize_pre_blocks(html):
         if code.startswith('#!'):
             lexer_name, code = code[2:].split('\n', 1)
             lexer = get_lexer_by_name(lexer_name)
+        elif override is not None:
+            lexer = get_lexer_by_name(override)
         else:
             try:
                 lexer = guess_lexer(code)

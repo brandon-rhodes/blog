@@ -6,7 +6,10 @@ import re
 import sys
 import utils
 import nbformat.v4 as nbformat
-from CommonMark import commonmark
+try:
+    from CommonMark import commonmark
+except ImportError:
+    from commonmark import commonmark
 from nbconvert import HTMLExporter
 from bottle import SimpleTemplate
 from datetime import datetime
@@ -121,7 +124,9 @@ def parse(path):
             result['needs_disqus'] = True
         else:
             result['needs_disqus'] = False
-        result['body'] = commonmark(source)
+        body = commonmark(source)
+        body = utils.pygmentize_pre_blocks(body, 'python')
+        result['body'] = body
         if 'title' not in result:
             result['title'] = utils.find_title_in_html(result['body'])
 
@@ -144,9 +149,12 @@ def parse(path):
         # parts = publish_from_doctree(source, writer_name='html',
         #                       settings_overrides={'initial_header_level': 2})
         body = parts['docinfo'] + utils.pygmentize_pre_blocks(parts['fragment'])
+        try:
+            date = datetime.strptime(docinfo.get('date'), '%d %B %Y').date()
+        except:
+            date = datetime.strptime(docinfo.get('date'), '%Y %B %d').date()
         result['body'] = body
-        result['date'] = datetime.strptime(
-            docinfo.get('date'), '%d %B %Y').date()
+        result['date'] = date
         if 'title' not in result:
             result['title'] = parts['title']
 
