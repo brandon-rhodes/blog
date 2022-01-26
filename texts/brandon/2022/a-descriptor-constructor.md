@@ -9,10 +9,11 @@ it becomes a constructor and returns a new instance of the class.
 
 Does that sound like a good idea?
 
-<!-- After you’ve read the saga below,
-feel free to reply to my tweet about this post:
+After you’ve read the saga below,
+feel free to share your opinion
+by replying to my tweet about this post!
 
-PUT TWEET HERE -->
+<https://twitter.com/brandon_rhodes/status/1486435857607311368>
 
 The background is that my astronomy library Skyfield
 uses objects to represent measures like distance and velocity.
@@ -96,7 +97,8 @@ but then I remembered that Python descriptors
 were very carefully designed
 so that you could write a descriptor
 that only gets called if there isn’t yet a `.km` attribute!
-Otherwise Python skips the whole method call.
+Otherwise Python skips the whole method call,
+which both makes the logic simpler and saves valuable time.
 I never remember the formula,
 so I had to look it up (I got it from Pyramid’s source code):
 
@@ -160,7 +162,8 @@ when a distance is instantiated using `km`,
 we can cache the actual value that the user provided!
 Note that we are now returning the exact `km` value the user provided,
 instead of trying to re-convert the value from `au`
-and getting the slight rounding error we saw in the first example.
+and getting the slight rounding error we saw in the first example:
+`km` is now `217` instead of `217.00000000000003`.
 
 But how can we avoid the ugly `if…elif` block,
 and the need to have `__init__()` accept as many parameters
@@ -169,7 +172,9 @@ as there are units of measurement?
 I already illustrated, above,
 a `from_au()` method that does things the ‘right way’
 by multiplexing on method name rather than on combinations of arguments.
-Is that the way forward?
+Is that the way forward,
+adding something like `from_km()`
+for each additional unit supported?
 That way forward still seems a little sad:
 if I need to support _n_ units,
 then I need to write _n_ constructors in addition to my _n_ reified properties,
@@ -394,9 +399,9 @@ And while the knowledge ‘which class was this called on’ has evaporated
 by the time `__call__()` is invoked,
 _it’s available inside the ‘get’ dunder!_
 
-Recall that at this point we’re still running with the `__get__()`
-method that I copied-and-pasted from the Internet
-without actually understanding the whole thing.
+Recall that at this point we’re using a `__get__()` method
+that I copied-and-pasted from the Internet
+without actually understanding what it does.
 Let’s look at it again —
 this time, pay attention to its first two lines:
 
@@ -411,16 +416,16 @@ this time, pay attention to its first two lines:
 
 Yeah, I didn’t understand them at first either.
 Why would `instance` be `None`?
-Well, it turns out, that’s what tells the descriptor
-when you type `Distance.km`
-that it’s been invoked to look up the `km` attribute on a class —
-and it just so happens that in that case,
+Well, it turns out, that’s what tells the descriptor that you,
+instead of asking for an instance attribute `d.km`,
+have asked for a class attribute `Distance.km`.
+And it just so happens that in that case,
 `objtype` is `Distance`!
 
 So we can get rid of `__call__()` entirely!
 We didn’t know it,
 but it turns out that we were already intercepting
-the `Distance.km()` class method call —
+the `Distance.km()` class method —
 we just weren’t doing anything interesting yet.
 Let’s fix that:
 
@@ -561,6 +566,6 @@ What do you think?
 
 Will I regret this later if I push this to production?
 
-<!-- Again, replies to my tweet are welcome!
-
-PUT TWEET HERE -->
+Again, replies to
+[my tweet](https://twitter.com/brandon_rhodes/status/1486435857607311368)
+are welcome!
