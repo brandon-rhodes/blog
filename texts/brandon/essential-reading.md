@@ -36,6 +36,20 @@ Even my personal projects are often improved
 if I remember this article
 and weigh the benefits of novelty versus the benefits of boring!
 
+**“Files are fraught with peril”**
+[Dan Luu](https://danluu.com/deconstruct-files/)
+—
+It’s hard to choose which Dan Luu essay to include here;
+I hope you will go read them all.
+My favorites follow the same approach as this article:
+they start by quoting some highly-voted answers from a programming forum,
+then dig into the issue
+to discover how spectacularly wrong
+the conventional wisdom is.
+(He writes very pure HTML,
+so I recommend hitting Ctrl-+ a few times,
+or better yet applying [your own styling to his blog](https://github.com/brandon-rhodes/homedir/blob/master/local/extensions/my-styles/style-luu.css).)
+
 **“The Tau Manifesto”**
 [tauday.com](https://tauday.com/tau-manifesto)
 —
@@ -85,3 +99,32 @@ to trace the baleful effects upon children
 of replacing their freedom and play with structure and regiment.
 It diagnoses specific skills that children will lack in adulthood—deficits
 that I recognize in myself.
+
+**“Untangling the Tale of Ada Lovelace”**
+[Stephen Wolfram](https://writings.stephenwolfram.com/2015/12/untangling-the-tale-of-ada-lovelace/)
+—
+“To some she is a great hero in the history of computing; to others an
+overestimated minor figure. I’ve been curious for a long time what the
+real story is.”
+A deep dive into the printed and handwritten evidence
+of the collaboration between Babbage and Lovelace,
+copiously illustrated with both.
+Conclusively demonstrates that, of the two,
+Ada was the real programmer:
+the first member of our species
+to experience the joy of hacking a general purpose computing engine
+to do things that even its inventor didn’t realize it could do.
+Babbage comes across as a somewhat impractical startup founder
+and Ada as the hacker who really understands the technology.
+
+## Inessential reading
+
+A few articles
+that aren’t important enough to warrant inclusion in the above list,
+but that I enjoyed and remember.
+
+* [Perl Meets COBOL](https://www.perl.com/pub/2000/05/cobol.html/)
+* [What Your Computer Does While You
+  Wait](https://manybutfinite.com/post/what-your-computer-does-while-you-wait/)
+* [The Disastrous Twisted Middleware Rewrite at Etsy](https://twitter.com/mcfunley/status/1194713711337852928)
+  (Twitter thread)
