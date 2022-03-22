@@ -36,6 +36,20 @@ Even my personal projects are often improved
 if I remember this article
 and weigh the benefits of novelty versus the benefits of boring!
 
+**“A Note About Git Commit Messages”**
+[Tim Pope](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
+—
+The quick essential guide to writing commit messages
+so that git’s features are as friendly as possible.
+This highlights the danger of using a tool
+without inheriting the practices of the culture that produced it.
+Yes,
+technically,
+you can make the first line of your git commit message as long as you want;
+but starting the message with a one-line summary of around 50 characters
+will make all your subsequent git operations
+so much more sleek and satisfying.
+
 **“Files are fraught with peril”**
 [Dan Luu](https://danluu.com/deconstruct-files/)
 —
@@ -88,7 +102,6 @@ winds up matching the date from Genroku Japan!
 More broadly, the article reminds us that scientific consensus —
 no matter how often we enjoy wielding it against each other in debates —
 can be dead wrong.
-
 
 **“The play deficit”**
 [Aeon](https://aeon.co/essays/children-today-are-suffering-a-severe-deficit-of-play)
