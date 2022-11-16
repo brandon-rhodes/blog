@@ -13,5 +13,5 @@ are:
 
 Optional fields are:
 
-'add_disqus' - whether to include Disqus comments at the page bottom
+'add_disqus' - whether to include Disqus comments at the page bottom (DISABLED)
 'add_mathjax' - whether the HTML needs post-processing with MathJax

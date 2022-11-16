@@ -532,15 +532,6 @@ p img {
     background-color: #f8f8f8;
     color: #073642;
 }
-#disqus_thread {
-    margin-top: 2.5em;
-}
-#disqus_thread:before {
-    display: block;
-    margin-bottom: 1.5em;
-    text-align: center;
-    content: "❖";
-}
 .docinfo {
     margin: 1.8em auto;
     font-size: 11pt;
