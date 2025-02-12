@@ -27,6 +27,8 @@ over several seasons and several years.
 
 Instead, I got to spend a weekend wrestling with matplotlib.
 
+<!-- more -->
+
 Once I had designed a static matplotlib figure
 with Saturn drawn atop a field of glittering stars,
 I was ready to try animating it.

@@ -30,6 +30,8 @@ the PyCon 2016 trivia night would be all Python 2, all the time!
 The questions below dive into and celebrate
 the retro roots of the legacy Python language.
 
+.. more
+
 With the dinner complete,
 I can now reveal the questions and answers!
 I will list the questions first,

@@ -27,6 +27,8 @@ from feedgen.feed import FeedGenerator
 
 from helpers import truncate_at_more
 
+RSS_LENGTH = 10
+
 project = Project()
 
 dl = DictLoader({'brandon.tpl': r"""{%- extends 'display_priority.tpl' -%}
@@ -325,11 +327,11 @@ def render_feed(text_paths, outpath):
 
     posts = [post_info(path) for path in text_paths if date_of(path)]
     posts = sorted(posts, key=lambda post: post['date'])
-    posts = posts[-1:]
+    posts = posts[-RSS_LENGTH:]
     most_recent_date = max(post['date'] for post in posts)
 
     def full(url):
-        return 'http://rhodesmill.org/' + url.lstrip('/')
+        return 'https://rhodesmill.org/' + url.lstrip('/')
 
     fg = FeedGenerator()
     fg.id(full('/'))
