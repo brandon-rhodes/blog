@@ -443,7 +443,6 @@ def main():
 
     save_rss_feed(text_paths, 'output/brandon/feed/index.xml')
     save_atom_feed(text_paths, 'output/brandon/feed/atom/index.xml')
-    save_rss_feed(text_paths, 'output/brandon/category/python/feed/index.xml')
 
     static_paths = tuple(find('static'))
 
