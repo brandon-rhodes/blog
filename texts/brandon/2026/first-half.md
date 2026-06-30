@@ -12,7 +12,7 @@ to produce several updates and releases.
 In case anyone is curious about what I’ve been up to,
 here are the milestones that were reached over the past few months.
 
-**January**
+## January
 
 The first month of the year
 saw a new release of my flagship astronomy library,
@@ -53,7 +53,7 @@ and so jplephem’s use of that maneuver
 was starting to annoy users with deprecation warnings.
 The library now uses NumPy’s `.reshape()` instead.
 
-**February**
+## February
 
 There are still folks out there
 who use my [PyEphem](https://rhodesmill.org/pyephem/)
@@ -75,7 +75,7 @@ It turns out that the Sphinx documentation build for PyEphem is broken
 because of breaking changes in Sphinx itself, in setuptools, _and_ in jinja2.
 Hopefully I’ll get it fixed later this year.)
 
-**March**
+## March
 
 For half a decade
 I have been the custodian of the
@@ -100,7 +100,7 @@ that were included in the new release,
 click “Change log” in the left-hand menu
 at the [project’s web site](https://xephem.github.io/XEphem/Site/xephem.html).
 
-**April–June**
+## April–June
 
 My main focus in the second quarter of the year
 was wrangling a series of pull requests from a generous contributor,
@@ -122,7 +122,7 @@ asking for a new release of sgp4.
 Instead, the existing binary wheel will continue working
 even as they make new releases of Python.
 
-**I wasn’t at PyCon this year**
+## I wasn’t at PyCon this year
 
 I didn’t attend PyCon 2026, in Long Beach, California, this year.
 
@@ -197,7 +197,7 @@ Maybe I’ll find myself shifting myself back
 to a majority-keyboard schedule within the next year or two?
 We’ll see!
 
-**What’s Next?**
+## What’s Next?
 
 So what will I focus on as we begin the second half of 2026?
 With the sgp4 release now complete,
